@@ -1,0 +1,21 @@
+track transMapGencodeVM4
+shortLabel transMap Gencode VM4
+longLabel transMap Gencode VM4
+type psl
+priority 37.004
+color 0,100,0
+visibility pack
+baseColorDefault diffCodons
+baseColorUseCds table musStrainShared.GencodeVM4Cds
+baseColorUseSequence extFile musStrainShared.GencodeVM4_SimpleChainSeq musStrainShared.GencodeVM4_SimpleChainExtFile
+indelDoubleInsert on
+indelQueryInsert on
+showDiffBasesAllScales .
+showDiffBasesMaxZoom 10000.0
+showCdsAllScales .
+showCdsMaxZoom 10000.0
+
+searchTable transMapAlnMRna
+searchType psl
+searchMethod prefix
+searchPriority 2.31
