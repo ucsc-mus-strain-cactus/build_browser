@@ -71,11 +71,12 @@ loadSql: ${databaseCheckpoint} ${referencePslCheckpoint}
 
 ${databaseCheckpoint}: ${agp} ${CHROM_INFO_DIR}/chromInfo.sql ${CHROM_INFO_DIR}/chromInfo.tab
 	@mkdir -p $(dir $@)
-	hgsql -e "create database IF NOT EXISTS ${DB};"
+	hgsql -e "CREATE DATABASE IF NOT EXISTS ${DB};"
 	hgGoldGapGl -noGl ${DB} ${agp}
+	hgsql ${DB} < ${KENT_DIR}/src/hg/lib/grp.sql
 	hgLoadSqlTab ${DB} chromInfo ${CHROM_INFO_DIR}/chromInfo.sql ${CHROM_INFO_DIR}/chromInfo.tab
-	cd ./trackDb && ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -grpSql=${KENT_DIR}/src/hg/lib/grp.sql \
-	-sqlDir=${KENT_DIR}/src/hg/lib trackDb hgFindSpec ${DB} && rm trackDb.tab hgFindSpec.tab
+	cd ./trackDb && ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -sqlDir=${KENT_DIR}/src/hg/lib \
+	trackDb hgFindSpec ${DB} && rm trackDb.tab hgFindSpec.tab
 	touch $@
 
 ${referencePslCheckpoint}: ${databaseCheckpoint}

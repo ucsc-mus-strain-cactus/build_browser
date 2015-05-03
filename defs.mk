@@ -15,6 +15,7 @@ include config_1411.mk
 #MSCA_VERSION = 
 #GENOMES_DIR = 
 #TRANS_MAP_DIR = 
+#GENCODE_VERSION = 
 #tmpExt = 
 
 # what type of chaining was preformed? TODO: should be in comparativeAnnotator's config files
@@ -29,7 +30,7 @@ sciName = "Mus musculus"
 sharedDb = musStrainShared
 
 # shared table names
-tableBase = gencode${MSCA_VERSION}${CHAINING}
+tableBase = gencode${GENCODE_VERSION}_${CHAINING}
 
 # this magic sets the umask for every shell call
 # https://groups.google.com/forum/?hl=en#!topic/gnu.utils.bug/J3r-QcxcDWc
