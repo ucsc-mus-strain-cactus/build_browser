@@ -6,8 +6,8 @@ priority 37.004
 color 0,100,0
 visibility pack
 baseColorDefault diffCodons
-baseColorUseCds table musStrainShared.GencodeVM4Cds
-baseColorUseSequence extFile musStrainShared.GencodeVM4_SimpleChainSeq musStrainShared.GencodeVM4_SimpleChainExtFile
+baseColorUseCds table musStrainShared.gencodeVM4_simpleChainCds
+baseColorUseSequence extFile musStrainShared.gencodeVM4_SimpleChainSeq musStrainShared.gencodeVM4_SimpleChainExtFile
 indelDoubleInsert on
 indelQueryInsert on
 showDiffBasesAllScales .

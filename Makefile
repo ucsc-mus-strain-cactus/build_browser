@@ -29,6 +29,7 @@ ${sourceTranscriptCheckpoint}: ${gbdbTranscriptFasta}
 	# WARNING: semi hard coded table name here
 	hgLoadSeq -seqTbl=${tableBase}Seq -extFileTbl=${tableBase}ExtFile ${sharedDb} ${gbdbTranscriptFasta}
 	hgLoadSqlTab ${sharedDb} ${tableBase}Cds ${KENT_DIR}/src/hg/lib/cdsSpec.sql ${srcCombinedCds}
+	rm ${tableBase}Seq.tab
 	touch $@
 
 transcriptFasta: ${gbdbTranscriptFasta}
