@@ -1,5 +1,6 @@
 include defs.mk
-
+# this makefile assumes that you have the kent source directory in your path
+# see defs.mk for the necessary inclusion of a config.mk from comparativeAnnotator
 sharedDatabaseCheckpoint = ./checkpoints/sharedDatabase/INIT
 sourceTranscriptCheckpoint = ./checkpoints/sharedDatabase/TRANSCRIPT
 gbdbTranscriptFasta = ${GBDB_SHARED_DIR}/$(notdir ${srcCombinedFasta})
@@ -12,9 +13,11 @@ ${genomes}:
 trackDbFiles: ./trackDb/trackDb.ra ./trackDb/tagTypes.tab
 
 ./trackDb/trackDb.ra:
+	@mkdir -p $(dir $@)
 	touch $@
 
 ./trackDb/tagTypes.tab:
+	@mkdir -p $(dir $@)
 	cp ${KENT_DIR}/src/hg/makeDb/trackDb/tagTypes.tab $@
 
 loadSharedSql: ${sharedDatabaseCheckpoint} ${sourceTranscriptCheckpoint}

@@ -11,10 +11,15 @@ fasta = ${BASE_DATA_DIR}/genomes/${DB}/${DB}.fa
 chromSizes = ${BASE_DATA_DIR}/genomes/${DB}/${DB}.chrom.sizes
 agp = ${BASE_DATA_DIR}/genomes/${DB}/${DB}.agp
 # placeholder DONE files - used to checkpoint sql loading commands
-databaseCheckpoint = ./checkpoints/database/${DB}/INIT
-referencePslCheckpoint = ./checkpoints/database/${DB}/REFERENCE_PSL
+databaseCheckpoint = ./checkpoints/database/${DB}/init
+referencePslCheckpoint = ./checkpoints/database/${DB}/referencePsl
 
-all: trackDb genomeFiles prepareTracks loadSql
+# the variables below dig through comparativeAnnotator output
+comparisons = $(shell /bin/ls ${ANNOTATION_DIR}/bedfiles/)
+comparisonCheckpoints = ${comparisons:%=./checkpoints/database/${DB}/%}
+
+
+all: trackDb genomeFiles prepareTracks loadSql loadBeds
 
 trackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${DB}/trackDb.ra
 
@@ -82,4 +87,14 @@ ${databaseCheckpoint}: ${agp} ${CHROM_INFO_DIR}/chromInfo.sql ${CHROM_INFO_DIR}/
 ${referencePslCheckpoint}: ${databaseCheckpoint}
 	@mkdir -p $(dir $@)
 	hgLoadPsl -table=${tableBase} ${DB} ${TRANS_MAP_DIR}/results/filtered/${GENOME}.filtered.psl
+	touch $@
+
+
+loadBeds: ${comparisonCheckpoints}
+
+./checkpoints/database/${DB}/%: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed ${databaseCheckpoint}
+	@echo ${comparisonCheckpoints}
+	@mkdir -p $(dir $@)
+	@mkdir -p $${TMPDIR}/${DB}
+	hgLoadBed -tmpDir=$${TMPDIR}/${DB} -allowStartEqualEnd -tab -type=bed12 ${DB} $* $<
 	touch $@
