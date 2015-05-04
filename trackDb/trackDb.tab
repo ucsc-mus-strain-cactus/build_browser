@@ -1,7 +1,0 @@
-gencodeVM4_simpleChainSeq	gencodeVM4_simpleChainSeq	prefix	psl	0		select tName,tStart,tEnd,qName from %s where qName like '%s%%'			1.000000	gencodeVM4_simpleChainSeq	
-allProblems	allProblems	prefix	bed	0		select chrom,chromStart,chromEnd,name from %s where name like '%s%%'			1.000000	allProblems	
-assemblyErrors	assemblyErrors	prefix	bed	0		select chrom,chromStart,chromEnd,name from %s where name like '%s%%'			1.000000	assemblyErrors	
-alignmentErrors	alignmentErrors	prefix	bed	0		select chrom,chromStart,chromEnd,name from %s where name like '%s%%'			1.000000	alignmentErrors	
-interestingBiology	interestingBiology	prefix	bed	0		select chrom,chromStart,chromEnd,name from %s where name like '%s%%'			1.000000	interestingBiology	
-comparativeAnnotation	comparativeAnnotation	prefix	bed	0		select chrom,chromStart,chromEnd,name from %s where name like '%s%%'			1.000000	comparativeAnnotation	
-inFrameStop	inFrameStop	prefix	bed	0		select chrom,chromStart,chromEnd,name from %s where name like '%s%%'			1.000000	inFrameStop	
