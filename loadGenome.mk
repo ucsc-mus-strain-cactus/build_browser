@@ -2,11 +2,10 @@ include defs.mk
 #########################################################################################
 # Creates databases and loads tracks for one specific genome. called by Makefile.
 #########################################################################################
-DB = ${GENOME}_${MSCA_VERSION}
+DB = Mus${GENOME}_${MSCA_VERSION}
 GBDB_DIR = ${BASE_DATA_DIR}/gbdb/${GENOME}/${DB}
 CHROM_INFO_DIR = ${BASE_DATA_DIR}/genomes/${DB}/bed/chromInfo
 twoBit = ${BASE_DATA_DIR}/genomes/${DB}/${DB}.2bit
-gbdbTwoBit = ${GBDB}
 fasta = ${BASE_DATA_DIR}/genomes/${DB}/${DB}.fa
 chromSizes = ${BASE_DATA_DIR}/genomes/${DB}/${DB}.chrom.sizes
 agp = ${BASE_DATA_DIR}/genomes/${DB}/${DB}.agp
@@ -55,7 +54,7 @@ ${agp}: ${GENOMES_DIR}/${GENOME}.fa
 
 ${GBDB_DIR}/${DB}.2bit:
 	@mkdir -p $(dir $@)
-	ln -s ${twoBit} ${GBDB_DIR}/${DB}.2bit
+	ln -sf ${twoBit} $@
 
 prepareTracks: ${CHROM_INFO_DIR}/chromInfo.sql ${CHROM_INFO_DIR}/chromInfo.tab
 

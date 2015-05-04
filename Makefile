@@ -30,6 +30,7 @@ ${sharedDatabaseCheckpoint}:
 ${sourceTranscriptCheckpoint}: ${gbdbTranscriptFasta}
 	@mkdir -p $(dir $@)
 	# WARNING: semi hard coded table name here
+	hgsql -e "DROP TABLE IF EXISTS ${tableBase}Seq" ${sharedDb}
 	hgLoadSeq -seqTbl=${tableBase}Seq -extFileTbl=${tableBase}ExtFile ${sharedDb} ${gbdbTranscriptFasta}
 	hgLoadSqlTab ${sharedDb} ${tableBase}Cds ${KENT_DIR}/src/hg/lib/cdsSpec.sql ${srcCombinedCds}
 	rm ${tableBase}Seq.tab
