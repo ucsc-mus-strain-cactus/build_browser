@@ -97,3 +97,26 @@ searchTable inFrameStop
 searchType bed
 searchMethod prefix
 searchPriority 1
+
+track gcPercent
+shortLabel GC Percent
+longLabel Percentage GC in 500-Base Windows
+visibility dense
+spectrum on
+type bed 4 +
+
+track gap
+shortLabel Gap
+longLabel Gap Locations
+group map
+visibility dense
+type bed 3 +
+
+track assembly
+shortLabel Assembly
+longLabel Assembly from Fragments
+group map
+visibility hide
+color 150,100,30
+altColor 230,170,40
+type bed 3 +
