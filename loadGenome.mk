@@ -16,6 +16,7 @@ referencePslCheckpoint = ./checkpoints/database/${DB}/referencePsl
 # the variables below dig through comparativeAnnotator output
 comparisons = $(shell /bin/ls ${ANNOTATION_DIR}/bedfiles/)
 comparisonCheckpoints = ${comparisons:%=./checkpoints/database/${DB}/%}
+trackDbCheckpoint = ./checkpoints/database/${DB}/trackDb
 
 
 all: trackDb genomeFiles prepareTracks loadSql loadBeds
@@ -52,7 +53,7 @@ ${agp}: ${GENOMES_DIR}/${GENOME}.fa
 	hgFakeAgp $< $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
-${GBDB_DIR}/${DB}.2bit:
+${GBDB_DIR}/${DB}.2bit: ${twoBit}
 	@mkdir -p $(dir $@)
 	ln -sf ${twoBit} $@
 
@@ -89,11 +90,15 @@ ${referencePslCheckpoint}: ${databaseCheckpoint}
 	touch $@
 
 
-loadBeds: ${comparisonCheckpoints}
+loadBeds: ${comparisonCheckpoints} ${trackDbCheckpoint}
 
 ./checkpoints/database/${DB}/%: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed ${databaseCheckpoint}
-	@echo ${comparisonCheckpoints}
 	@mkdir -p $(dir $@)
 	@mkdir -p $${TMPDIR}/${DB}
 	hgLoadBed -tmpDir=$${TMPDIR}/${DB} -allowStartEqualEnd -tab -type=bed12 ${DB} $* $<
+	touch $@
+
+${trackDbCheckpoint}: ${databaseCheckpoint}
+	@mkdir -p $(dir $@)
+	cd ./trackDb && hgTrackDb . ${DB} trackDb ${KENT_DIR}/src/hg/lib/trackDb.sql .
 	touch $@

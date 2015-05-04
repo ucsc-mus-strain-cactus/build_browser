@@ -38,7 +38,7 @@ ${sourceTranscriptCheckpoint}: ${gbdbTranscriptFasta}
 
 transcriptFasta: ${gbdbTranscriptFasta}
 
-${gbdbTranscriptFasta}:
+${gbdbTranscriptFasta}: ${srcCombinedFasta}
 	@mkdir -p $(dir $@)
 	cp -n ${srcCombinedFasta} $@.${tmpExt}
 	mv -f $@.${tmpExt} $@

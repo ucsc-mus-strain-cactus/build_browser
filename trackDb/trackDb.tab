@@ -1,0 +1,7 @@
+alignmentErrors	Alignment Errors	bed 12 .	MusWSBEiJ_1411 Alignment Errors	3	1.000000	0	0	0	127	127	127	0	0	0				x	1	
+allProblems	All Annotation Problems Problems	bed 12 .	MusWSBEiJ_1411 All Annotation Problems	3	1.000000	0	0	0	127	127	127	0	0	0				x	1	
+assemblyErrors	Assembly Errors	bed 12 .	MusWSBEiJ_1411 Assembly Errors	3	1.000000	0	0	0	127	127	127	0	0	0				x	1	
+comparativeAnnotation	Comparative Annotation	bed 12 .	MusWSBEiJ_1411 Comparative Annotation	3	1.000000	0	0	0	127	127	127	0	0	0				x	1	
+inFrameStop	InFrame Stop	bed 12 .	MusWSBEiJ_1411 In Frame Stops	3	1.000000	0	0	0	127	127	127	0	0	0				x	1	
+interestingBiology	Interesting Bioloy	bed 12 .	MusWSBEiJ_1411 Potentially Interesting Biology	3	1.000000	0	0	0	127	127	127	0	0	0				x	1	
+gencodeVM4_simpleChainSeq	transMap Gencode VM4	psl	transMap Gencode VM4	3	1.000000	0	100	0	127	177	127	0	0	0				x	1	

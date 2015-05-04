@@ -1,0 +1,99 @@
+    track gencodeVM4_simpleChainSeq
+    shortLabel transMap Gencode VM4
+    longLabel transMap Gencode VM4
+    type psl
+    priority 1
+    color 0,100,0
+    visibility pack
+    baseColorDefault diffCodons
+    baseColorUseCds table musStrainShared.gencodeVM4_simpleChainCds
+    baseColorUseSequence extFile musStrainShared.gencodeVM4_SimpleChainSeq musStrainShared.gencodeVM4_SimpleChainExtFile
+    indelDoubleInsert on
+    indelQueryInsert on
+    showDiffBasesAllScales .
+    showDiffBasesMaxZoom 10000.0
+    showCdsAllScales .
+    showCdsMaxZoom 10000.0
+
+searchTable gencodeVM4_simpleChainSeq
+searchType psl
+searchMethod prefix
+searchPriority 1
+
+    track allProblems
+    shortLabel All Annotation Problems Problems
+    longLabel $Organism All Annotation Problems
+    type bed 12 .
+    visibility pack
+    itemRgb On
+    priority 1
+
+searchTable allProblems
+searchType bed
+searchMethod prefix
+searchPriority 1
+
+    track assemblyErrors
+    shortLabel Assembly Errors
+    longLabel $Organism Assembly Errors
+    type bed 12 .
+    visibility pack
+    itemRgb On
+    priority 1
+
+searchTable assemblyErrors
+searchType bed
+searchMethod prefix
+searchPriority 1
+
+    track alignmentErrors
+    shortLabel Alignment Errors
+    longLabel $Organism Alignment Errors
+    type bed 12 .
+    visibility pack
+    itemRgb On
+    priority 1
+
+searchTable alignmentErrors
+searchType bed
+searchMethod prefix
+searchPriority 1
+
+    track interestingBiology
+    shortLabel Interesting Bioloy
+    longLabel $Organism Potentially Interesting Biology
+    type bed 12 .
+    visibility pack
+    itemRgb On
+    priority 1
+
+searchTable interestingBiology
+searchType bed
+searchMethod prefix
+searchPriority 1
+
+    track comparativeAnnotation
+    shortLabel Comparative Annotation
+    longLabel $Organism Comparative Annotation
+    type bed 12 .
+    visibility pack
+    itemRgb On
+    priority 1
+
+searchTable comparativeAnnotation
+searchType bed
+searchMethod prefix
+searchPriority 1
+
+    track inFrameStop
+    shortLabel InFrame Stop
+    longLabel $Organism In Frame Stops
+    type bed 12 .
+    visibility pack
+    itemRgb On
+    priority 1
+
+searchTable inFrameStop
+searchType bed
+searchMethod prefix
+searchPriority 1
