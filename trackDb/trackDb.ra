@@ -100,7 +100,7 @@ searchPriority 1
 
 track gcPercent
 shortLabel GC Percent
-longLabel Percentage GC in 500-Base Windows
+longLabel Percentage GC in 10kb Windows
 visibility dense
 spectrum on
 type bed 4 +

@@ -40,7 +40,7 @@ trackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${DB}/trackDb.ra
 	@mkdir -p $(dir $@)
 	touch $@
 
-genomeFiles: ${twoBit} ${fasta} ${chromSizes} ${agp} ${GBDB_DIR}/${DB}.2bit
+genomeFiles: ${twoBit} ${fasta} ${chromSizes} ${agp} ${GBDB_DIR}/${DB}.2bit ${repeatMasker}
 
 ${twoBit}: ${GENOMES_DIR}/${GENOME}.2bit
 	@mkdir -p $(dir $@)
@@ -65,6 +65,7 @@ ${agp}: ${GENOMES_DIR}/${GENOME}.fa
 ${GBDB_DIR}/${DB}.2bit: ${twoBit}
 	@mkdir -p $(dir $@)
 	ln -sf ${twoBit} $@
+
 
 prepareTracks: ${CHROM_INFO_DIR}/chromInfo.sql ${CHROM_INFO_DIR}/chromInfo.tab ${comparisonBeds}
 
@@ -120,7 +121,7 @@ ${gapTrack}: ${agp}
 
 ${gcPercentTrack}: ${twoBit}
 	@mkdir -p $(dir $@)
-	cd ${BED_DIR}/gcPercent/ && hgGcPercent -win=500 -verbose=0 -doGaps ${DB} ${twoBit}
+	cd ${BED_DIR}/gcPercent/ && hgGcPercent -win=10000 -verbose=0 -doGaps ${DB} ${twoBit}
 	mv -f ${BED_DIR}/gcPercent/gcPercent.bed $@
 
 
