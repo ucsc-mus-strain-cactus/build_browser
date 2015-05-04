@@ -28,7 +28,7 @@ comparisonBeds = ${comparisons:%=${BED_DIR}/%/${GENOME}.bed}
 comparisonCheckpoints = ${comparisons:%=./checkpoints/database/${DB}/%}
 
 
-all: trackDb genomeFiles prepareTracks loadSql loadBeds basicBrowserTracks
+all: trackDb genomeFiles prepareTracks loadSql basicBrowserTracks loadBeds
 
 trackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${DB}/trackDb.ra
 
@@ -104,24 +104,6 @@ ${referencePslCheckpoint}: ${databaseCheckpoint}
 	touch $@
 
 
-loadBeds: ${comparisonCheckpoints} ${trackDbCheckpoint} ${hgFindSpecCheckpoint}
-
-./checkpoints/database/${DB}/%: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed ${databaseCheckpoint}
-	@mkdir -p $(dir $@)
-	@mkdir -p $${TMPDIR}/${DB}
-	hgLoadBed -tmpDir=$${TMPDIR}/${DB} -allowStartEqualEnd -tab -type=bed12 ${DB} $* $<
-	touch $@
-
-${trackDbCheckpoint}: ${databaseCheckpoint}
-	@mkdir -p $(dir $@)
-	cd ./trackDb && hgTrackDb . ${DB} trackDb ${KENT_DIR}/src/hg/lib/trackDb.sql .
-	touch $@
-
-${hgFindSpecCheckpoint}: ${databaseCheckpoint}
-	@mkdir -p $(dir $@)
-	cd ./trackDb && hgFindSpec . ${DB} trackDb ${KENT_DIR}/src/hg/lib/hgFindSpec.sql .
-	touch $@
-
 basicBrowserTracks: ${assemblyTrack} ${gapTrack} ${gcPercentTrack}
 
 ${assemblyTrack}: ${agp}
@@ -140,3 +122,22 @@ ${gcPercentTrack}: ${twoBit}
 	@mkdir -p $(dir $@)
 	cd ${BED_DIR}/gcPercent/ && hgGcPercent -win=500 -verbose=0 -doGaps ${DB} ${twoBit}
 	mv -f ${BED_DIR}/gcPercent/gcPercent.bed $@
+
+
+loadBeds: ${comparisonCheckpoints} ${trackDbCheckpoint} ${hgFindSpecCheckpoint}
+
+./checkpoints/database/${DB}/%: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed ${databaseCheckpoint}
+	@mkdir -p $(dir $@)
+	@mkdir -p $${TMPDIR}/${DB}
+	hgLoadBed -tmpDir=$${TMPDIR}/${DB} -allowStartEqualEnd -tab -type=bed12 ${DB} $* $<
+	touch $@
+
+${trackDbCheckpoint}: ${databaseCheckpoint}
+	@mkdir -p $(dir $@)
+	cd ./trackDb && hgTrackDb . ${DB} trackDb ${KENT_DIR}/src/hg/lib/trackDb.sql .
+	touch $@
+
+${hgFindSpecCheckpoint}: ${databaseCheckpoint}
+	@mkdir -p $(dir $@)
+	cd ./trackDb && hgFindSpec . ${DB} trackDb ${KENT_DIR}/src/hg/lib/hgFindSpec.sql .
+	touch $@

@@ -4,7 +4,7 @@
 #########################################################################################
 
 # this should be the config file from comparativeAnnotator
-include config_1411.mk
+include /hive/users/ifiddes/comparativeAnnotator/config_1411.mk
 
 # what type of chaining was performed? TODO: should be in comparativeAnnotator's config files
 CHAINING = simpleChain
