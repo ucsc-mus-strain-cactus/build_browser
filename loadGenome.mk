@@ -12,11 +12,12 @@ agp = ${BASE_DATA_DIR}/genomes/${DB}/${DB}.agp
 # placeholder DONE files - used to checkpoint sql loading commands
 databaseCheckpoint = ./checkpoints/database/${DB}/init
 referencePslCheckpoint = ./checkpoints/database/${DB}/referencePsl
+trackDbCheckpoint = ./checkpoints/database/${DB}/trackDb
+hgFindSpecCheckpoint = ./checkpoints/database/${DB}/hgFindSpec
 
 # the variables below dig through comparativeAnnotator output
 comparisons = $(shell /bin/ls ${ANNOTATION_DIR}/bedfiles/)
 comparisonCheckpoints = ${comparisons:%=./checkpoints/database/${DB}/%}
-trackDbCheckpoint = ./checkpoints/database/${DB}/trackDb
 
 
 all: trackDb genomeFiles prepareTracks loadSql loadBeds
@@ -90,7 +91,7 @@ ${referencePslCheckpoint}: ${databaseCheckpoint}
 	touch $@
 
 
-loadBeds: ${comparisonCheckpoints} ${trackDbCheckpoint}
+loadBeds: ${comparisonCheckpoints} ${trackDbCheckpoint} ${hgFindSpecCheckpoint}
 
 ./checkpoints/database/${DB}/%: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed ${databaseCheckpoint}
 	@mkdir -p $(dir $@)
@@ -101,4 +102,9 @@ loadBeds: ${comparisonCheckpoints} ${trackDbCheckpoint}
 ${trackDbCheckpoint}: ${databaseCheckpoint}
 	@mkdir -p $(dir $@)
 	cd ./trackDb && hgTrackDb . ${DB} trackDb ${KENT_DIR}/src/hg/lib/trackDb.sql .
+	touch $@
+
+${hgFindSpecCheckpoint}: ${databaseCheckpoint}
+	@mkdir -p $(dir $@)
+	cd ./trackDb && hgFindSpec . ${DB} trackDb ${KENT_DIR}/src/hg/lib/hgFindSpec.sql .
 	touch $@
