@@ -5,20 +5,15 @@ sharedDatabaseCheckpoint = ./checkpoints/sharedDatabase/INIT
 sourceTranscriptCheckpoint = ./checkpoints/sharedDatabase/TRANSCRIPT
 gbdbTranscriptFasta = ${GBDB_SHARED_DIR}/$(notdir ${srcCombinedFasta})
 
-all: ${genomes} trackDbFiles loadSharedSql transcriptFasta
+all: ${halPath} ${genomes} loadSharedSql transcriptFasta
+
+${halPath}:
+	@mkdir -p $(dir $@)
+	ln -s ${HAL} $@.${tmpExt}
+	mv -f $@.${tmpExt} $@
 
 ${genomes}: 
 	${MAKE} -f loadGenome.mk GENOME=$@ all
-
-trackDbFiles: ./trackDb/trackDb.ra ./trackDb/tagTypes.tab
-
-./trackDb/trackDb.ra:
-	@mkdir -p $(dir $@)
-	touch $@
-
-./trackDb/tagTypes.tab:
-	@mkdir -p $(dir $@)
-	cp ${KENT_DIR}/src/hg/makeDb/trackDb/tagTypes.tab $@
 
 loadSharedSql: ${sharedDatabaseCheckpoint} ${sourceTranscriptCheckpoint}
 

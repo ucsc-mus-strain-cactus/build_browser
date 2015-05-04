@@ -1,0 +1,162 @@
+track cactus
+compositeTrack on
+shortLabel Cactus Alignments
+longLabel Snake Track of progressiveCactus Alignments
+priority 2
+visibility dense
+dragAndDrop subTracks
+
+
+track snakeAJ
+longLabel AJ
+shortLabel AJ
+otherSpecies AJ
+parent cactus on
+priority 1
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeAKRJ
+longLabel AKRJ
+shortLabel AKRJ
+otherSpecies AKRJ
+parent cactus on
+priority 2
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeBALBcJ
+longLabel BALBcJ
+shortLabel BALBcJ
+otherSpecies BALBcJ
+parent cactus on
+priority 3
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeC3HHeJ
+longLabel C3HHeJ
+shortLabel C3HHeJ
+otherSpecies C3HHeJ
+parent cactus on
+priority 4
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeC57B6J
+longLabel C57B6J
+shortLabel C57B6J
+otherSpecies C57B6J
+parent cactus on
+priority 5
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeC57B6NJ
+longLabel C57B6NJ
+shortLabel C57B6NJ
+otherSpecies C57B6NJ
+parent cactus on
+priority 6
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeCASTEiJ
+longLabel CASTEiJ
+shortLabel CASTEiJ
+otherSpecies CASTEiJ
+parent cactus on
+priority 7
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeCBAJ
+longLabel CBAJ
+shortLabel CBAJ
+otherSpecies CBAJ
+parent cactus on
+priority 8
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeDBA2J
+longLabel DBA2J
+shortLabel DBA2J
+otherSpecies DBA2J
+parent cactus on
+priority 9
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeFVBNJ
+longLabel FVBNJ
+shortLabel FVBNJ
+otherSpecies FVBNJ
+parent cactus on
+priority 10
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeLPJ
+longLabel LPJ
+shortLabel LPJ
+otherSpecies LPJ
+parent cactus on
+priority 11
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeNODShiLtJ
+longLabel NODShiLtJ
+shortLabel NODShiLtJ
+otherSpecies NODShiLtJ
+parent cactus on
+priority 12
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeNZOHlLtJ
+longLabel NZOHlLtJ
+shortLabel NZOHlLtJ
+otherSpecies NZOHlLtJ
+parent cactus on
+priority 13
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakePWKPhJ
+longLabel PWKPhJ
+shortLabel PWKPhJ
+otherSpecies PWKPhJ
+parent cactus on
+priority 14
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeRattus
+longLabel Rattus
+shortLabel Rattus
+otherSpecies Rattus
+parent cactus on
+priority 15
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeSPRETEiJ
+longLabel SPRETEiJ
+shortLabel SPRETEiJ
+otherSpecies SPRETEiJ
+parent cactus on
+priority 16
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+
+track snakeWSBEiJ
+longLabel WSBEiJ
+shortLabel WSBEiJ
+otherSpecies WSBEiJ
+parent cactus on
+priority 17
+bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+type halSnake
+

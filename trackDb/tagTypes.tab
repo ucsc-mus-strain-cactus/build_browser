@@ -11,7 +11,7 @@
 # Note that type "customTracks" is used to reserve a symbol that can be in a
 # custom track track line.  It is easier if this shares the same symbol space
 # as trackDb.
-
+otherSpecies halSnake
 accession *
 aggregate bigWig wig bedGraph
 aliQualRange bam
@@ -31,7 +31,7 @@ baseColorUseSequence *
 baseQualRange bam
 bedFilter bed
 bedNameLabel bed
-bigDataUrl customTracks bigBed bigWig bam vcfTabix
+bigDataUrl customTracks bigBed bigWig bam vcfTabix halSnake
 blastRef psl
 boxedCfg *
 browserLines customTracks

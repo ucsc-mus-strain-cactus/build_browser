@@ -26,3 +26,7 @@ SHELL = umask a+rw; exec /bin/sh
 
 # hard coding Ian's kent dir; I have a grp.sql file that drops the grp table
 KENT_DIR = /cluster/home/ifiddes/kent
+
+# where should we symlink the HAL?
+halPath = ${HOME}/public_html/MSCA_HAL_files/$(notdir ${HAL})
+halUrl = http://hgwdev.soe.ucsc.edu/~${USER}/MSCA_HAL_files/$(notdir ${HAL})
