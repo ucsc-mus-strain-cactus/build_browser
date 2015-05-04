@@ -81,7 +81,7 @@ ${CHROM_INFO_DIR}/chromInfo.sql: ${CHROM_INFO_DIR}/chromInfo.tab
 	rm ${CHROM_INFO_DIR}/t.chrSize
 	mv -f $@.${tmpExt} $@
 
-${BED_DIR}/%/${GENOME}.bed: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed
+${BED_DIR}/%/${DB}.bed: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed
 	@mkdir -p $(dir $@)
 	cp -u $< $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
