@@ -1,0 +1,5 @@
+
+2015-05-04 markd
+
+  # setup of cloned and edited subset of hgcentral tables
+ ./bin/hgCentralSetup --assembly=1411 hgcentraltest musStrainShared
