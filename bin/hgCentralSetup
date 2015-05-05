@@ -34,7 +34,7 @@ genomeDefs = (
     GDef("C57B6J",       "Mus musculus C57BL/6J",    10090),
     GDef("C57B6NJ",      "Mus musculus C57BL/6NJ",   10090),
     GDef("CAROLIEiJ",    "Mus caroli/EiJ",           10089),
-    GDef("CASTEiJ",      "Mus musculus CAST/EiJ",    10090),
+    GDef("CASTEiJ",      "Mus castaneus/EiJ",    10090),
     GDef("CBAJ",         "Mus musculus CBA/J",       10090),
     GDef("DBA2J",        "Mus musculus DBA/2J",      10090),
     GDef("FVBNJ",        "Mus musculus FVB/NJ",      10090),

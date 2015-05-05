@@ -26,7 +26,7 @@ longLabel $Organism All Annotation Problems
 type bed 12 .
 visibility pack
 itemRgb On
-priority 1
+priority 10
 
 searchTable allProblems
 searchType bed
@@ -39,7 +39,7 @@ longLabel $Organism Assembly Errors
 type bed 12 .
 visibility pack
 itemRgb On
-priority 1
+priority 3
 
 searchTable assemblyErrors
 searchType bed
@@ -52,7 +52,7 @@ longLabel $Organism Alignment Errors
 type bed 12 .
 visibility pack
 itemRgb On
-priority 1
+priority 4
 
 searchTable alignmentErrors
 searchType bed
@@ -65,7 +65,7 @@ longLabel $Organism Potentially Interesting Biology
 type bed 12 .
 visibility pack
 itemRgb On
-priority 1
+priority 5
 
 searchTable interestingBiology
 searchType bed
@@ -78,7 +78,7 @@ longLabel $Organism Comparative Annotation
 type bed 12 .
 visibility pack
 itemRgb On
-priority 1
+priority 2
 
 searchTable comparativeAnnotation
 searchType bed
@@ -91,7 +91,7 @@ longLabel $Organism In Frame Stops
 type bed 12 .
 visibility pack
 itemRgb On
-priority 1
+priority 6
 
 searchTable inFrameStop
 searchType bed
