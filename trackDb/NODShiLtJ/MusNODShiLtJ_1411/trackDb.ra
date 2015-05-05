@@ -12,7 +12,7 @@ longLabel 129S1
 shortLabel 129S1
 otherSpecies 129S1
 parent cactus on
-priority 1
+priority 15
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -21,7 +21,7 @@ longLabel AJ
 shortLabel AJ
 otherSpecies AJ
 parent cactus on
-priority 2
+priority 16
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -30,7 +30,7 @@ longLabel AKRJ
 shortLabel AKRJ
 otherSpecies AKRJ
 parent cactus on
-priority 3
+priority 17
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -39,7 +39,7 @@ longLabel BALBcJ
 shortLabel BALBcJ
 otherSpecies BALBcJ
 parent cactus on
-priority 4
+priority 18
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -48,7 +48,7 @@ longLabel C3HHeJ
 shortLabel C3HHeJ
 otherSpecies C3HHeJ
 parent cactus on
-priority 5
+priority 19
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -57,7 +57,7 @@ longLabel C57B6J
 shortLabel C57B6J
 otherSpecies C57B6J
 parent cactus on
-priority 6
+priority 20
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -66,7 +66,7 @@ longLabel C57B6NJ
 shortLabel C57B6NJ
 otherSpecies C57B6NJ
 parent cactus on
-priority 7
+priority 21
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -75,7 +75,7 @@ longLabel CASTEiJ
 shortLabel CASTEiJ
 otherSpecies CASTEiJ
 parent cactus on
-priority 8
+priority 22
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -84,7 +84,7 @@ longLabel CBAJ
 shortLabel CBAJ
 otherSpecies CBAJ
 parent cactus on
-priority 9
+priority 23
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -93,7 +93,7 @@ longLabel DBA2J
 shortLabel DBA2J
 otherSpecies DBA2J
 parent cactus on
-priority 10
+priority 24
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -102,7 +102,7 @@ longLabel FVBNJ
 shortLabel FVBNJ
 otherSpecies FVBNJ
 parent cactus on
-priority 11
+priority 25
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -111,7 +111,7 @@ longLabel LPJ
 shortLabel LPJ
 otherSpecies LPJ
 parent cactus on
-priority 12
+priority 26
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -120,7 +120,7 @@ longLabel NZOHlLtJ
 shortLabel NZOHlLtJ
 otherSpecies NZOHlLtJ
 parent cactus on
-priority 13
+priority 27
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -129,7 +129,7 @@ longLabel PWKPhJ
 shortLabel PWKPhJ
 otherSpecies PWKPhJ
 parent cactus on
-priority 14
+priority 28
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -138,7 +138,7 @@ longLabel Rattus
 shortLabel Rattus
 otherSpecies Rattus
 parent cactus on
-priority 15
+priority 29
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -147,7 +147,7 @@ longLabel SPRETEiJ
 shortLabel SPRETEiJ
 otherSpecies SPRETEiJ
 parent cactus on
-priority 16
+priority 30
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
@@ -156,7 +156,7 @@ longLabel WSBEiJ
 shortLabel WSBEiJ
 otherSpecies WSBEiJ
 parent cactus on
-priority 17
+priority 31
 bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
 type halSnake
 
