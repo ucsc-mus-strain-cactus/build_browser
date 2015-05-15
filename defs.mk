@@ -18,16 +18,20 @@ sciName = "Mus musculus"
 sharedDb = musStrainShared
 
 # shared table names
-tableBase = gencode${GENCODE_VERSION}_${CHAINING}
+gencodeTableBase = gencode${GENCODE_VERSION}${CHAINING}
 
 # insist on group-writable umask
 ifneq ($(shell umask),0002)
      $(error umask must be 0002)
 endif
 
-# hard coding Ian's kent dir; I have a grp.sql file that drops the grp table
-KENT_DIR = /cluster/home/ifiddes/kent
+ifeq (${TMPDIR},)
+     $(error TMPDIR environment variable not set)
+endif
+
+KENT_DIR = ${HOME}/kent
 
 # where should we symlink the HAL?
 halPath = ${HOME}/public_html/MSCA_HAL_files/$(notdir ${HAL})
 halUrl = http://hgwdev.soe.ucsc.edu/~${USER}/MSCA_HAL_files/$(notdir ${HAL})
+halFile = /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal 

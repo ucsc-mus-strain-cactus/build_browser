@@ -2,161 +2,180 @@ track cactus
 compositeTrack on
 shortLabel Cactus Alignments
 longLabel Snake Track of progressiveCactus Alignments
+group compGeno
+type bed 3
 priority 2
 visibility dense
 dragAndDrop subTracks
 
 
-track snake129S1
-longLabel 129S1
-shortLabel 129S1
-otherSpecies 129S1
+track snakeMus129S1_1411
+longLabel Mus129S1_1411
+shortLabel Mus129S1_1411
+otherSpecies Mus129S1_1411
 parent cactus on
 priority 15
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeAJ
-longLabel AJ
-shortLabel AJ
-otherSpecies AJ
+
+track snakeMusAJ_1411
+longLabel MusAJ_1411
+shortLabel MusAJ_1411
+otherSpecies MusAJ_1411
 parent cactus on
 priority 16
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeAKRJ
-longLabel AKRJ
-shortLabel AKRJ
-otherSpecies AKRJ
+
+track snakeMusAKRJ_1411
+longLabel MusAKRJ_1411
+shortLabel MusAKRJ_1411
+otherSpecies MusAKRJ_1411
 parent cactus on
 priority 17
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeBALBcJ
-longLabel BALBcJ
-shortLabel BALBcJ
-otherSpecies BALBcJ
+
+track snakeMusBALBcJ_1411
+longLabel MusBALBcJ_1411
+shortLabel MusBALBcJ_1411
+otherSpecies MusBALBcJ_1411
 parent cactus on
 priority 18
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeC3HHeJ
-longLabel C3HHeJ
-shortLabel C3HHeJ
-otherSpecies C3HHeJ
+
+track snakeMusC3HHeJ_1411
+longLabel MusC3HHeJ_1411
+shortLabel MusC3HHeJ_1411
+otherSpecies MusC3HHeJ_1411
 parent cactus on
 priority 19
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeC57B6J
-longLabel C57B6J
-shortLabel C57B6J
-otherSpecies C57B6J
+
+track snakeMusC57B6J_1411
+longLabel MusC57B6J_1411
+shortLabel MusC57B6J_1411
+otherSpecies MusC57B6J_1411
 parent cactus on
 priority 20
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeC57B6NJ
-longLabel C57B6NJ
-shortLabel C57B6NJ
-otherSpecies C57B6NJ
+
+track snakeMusC57B6NJ_1411
+longLabel MusC57B6NJ_1411
+shortLabel MusC57B6NJ_1411
+otherSpecies MusC57B6NJ_1411
 parent cactus on
 priority 21
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeCASTEiJ
-longLabel CASTEiJ
-shortLabel CASTEiJ
-otherSpecies CASTEiJ
+
+track snakeMusCASTEiJ_1411
+longLabel MusCASTEiJ_1411
+shortLabel MusCASTEiJ_1411
+otherSpecies MusCASTEiJ_1411
 parent cactus on
 priority 22
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeCBAJ
-longLabel CBAJ
-shortLabel CBAJ
-otherSpecies CBAJ
+
+track snakeMusCBAJ_1411
+longLabel MusCBAJ_1411
+shortLabel MusCBAJ_1411
+otherSpecies MusCBAJ_1411
 parent cactus on
 priority 23
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeDBA2J
-longLabel DBA2J
-shortLabel DBA2J
-otherSpecies DBA2J
+
+track snakeMusDBA2J_1411
+longLabel MusDBA2J_1411
+shortLabel MusDBA2J_1411
+otherSpecies MusDBA2J_1411
 parent cactus on
 priority 24
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeFVBNJ
-longLabel FVBNJ
-shortLabel FVBNJ
-otherSpecies FVBNJ
+
+track snakeMusFVBNJ_1411
+longLabel MusFVBNJ_1411
+shortLabel MusFVBNJ_1411
+otherSpecies MusFVBNJ_1411
 parent cactus on
 priority 25
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeNODShiLtJ
-longLabel NODShiLtJ
-shortLabel NODShiLtJ
-otherSpecies NODShiLtJ
+
+track snakeMusNODShiLtJ_1411
+longLabel MusNODShiLtJ_1411
+shortLabel MusNODShiLtJ_1411
+otherSpecies MusNODShiLtJ_1411
 parent cactus on
 priority 26
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeNZOHlLtJ
-longLabel NZOHlLtJ
-shortLabel NZOHlLtJ
-otherSpecies NZOHlLtJ
+
+track snakeMusNZOHlLtJ_1411
+longLabel MusNZOHlLtJ_1411
+shortLabel MusNZOHlLtJ_1411
+otherSpecies MusNZOHlLtJ_1411
 parent cactus on
 priority 27
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakePWKPhJ
-longLabel PWKPhJ
-shortLabel PWKPhJ
-otherSpecies PWKPhJ
+
+track snakeMusPWKPhJ_1411
+longLabel MusPWKPhJ_1411
+shortLabel MusPWKPhJ_1411
+otherSpecies MusPWKPhJ_1411
 parent cactus on
 priority 28
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeRattus
-longLabel Rattus
-shortLabel Rattus
-otherSpecies Rattus
+
+track snakeMusRattus_1411
+longLabel MusRattus_1411
+shortLabel MusRattus_1411
+otherSpecies MusRattus_1411
 parent cactus on
 priority 29
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeSPRETEiJ
-longLabel SPRETEiJ
-shortLabel SPRETEiJ
-otherSpecies SPRETEiJ
+
+track snakeMusSPRETEiJ_1411
+longLabel MusSPRETEiJ_1411
+shortLabel MusSPRETEiJ_1411
+otherSpecies MusSPRETEiJ_1411
 parent cactus on
 priority 30
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-track snakeWSBEiJ
-longLabel WSBEiJ
-shortLabel WSBEiJ
-otherSpecies WSBEiJ
+
+track snakeMusWSBEiJ_1411
+longLabel MusWSBEiJ_1411
+shortLabel MusWSBEiJ_1411
+otherSpecies MusWSBEiJ_1411
 parent cactus on
 priority 31
-bigDataUrl http://hgwdev.soe.ucsc.edu/~ifiddes/MSCA_HAL_files/1411.hal
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
+
 

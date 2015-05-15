@@ -1,13 +1,14 @@
-track gencodeVM4_simpleChainSeq
+track gencodeVM4simpleChain
 shortLabel transMap Gencode VM4
 longLabel transMap Gencode VM4
+group genes
 type psl
 priority 1
 color 0,100,0
 visibility pack
 baseColorDefault diffCodons
-baseColorUseCds table musStrainShared.gencodeVM4_simpleChainCds
-baseColorUseSequence extFile musStrainShared.gencodeVM4_SimpleChainSeq musStrainShared.gencodeVM4_SimpleChainExtFile
+baseColorUseCds table musStrainShared.gencodeVM4simpleChainCds
+baseColorUseSequence extFile musStrainShared.gencodeVM4simpleChainSeq musStrainShared.gencodeVM4simpleChainExtFile
 indelDoubleInsert on
 indelQueryInsert on
 showDiffBasesAllScales .
@@ -15,7 +16,7 @@ showDiffBasesMaxZoom 10000.0
 showCdsAllScales .
 showCdsMaxZoom 10000.0
 
-searchTable gencodeVM4_simpleChainSeq
+searchTable gencodeVM4simpleChain
 searchType psl
 searchMethod prefix
 searchPriority 1
@@ -23,8 +24,9 @@ searchPriority 1
 track allProblems
 shortLabel All Annotation Problems Problems
 longLabel $Organism All Annotation Problems
+group musStrain
 type bed 12 .
-visibility pack
+visibility hide
 itemRgb On
 priority 10
 
@@ -36,8 +38,9 @@ searchPriority 1
 track assemblyErrors
 shortLabel Assembly Errors
 longLabel $Organism Assembly Errors
+group musStrain
 type bed 12 .
-visibility pack
+visibility hide
 itemRgb On
 priority 3
 
@@ -49,8 +52,9 @@ searchPriority 1
 track alignmentErrors
 shortLabel Alignment Errors
 longLabel $Organism Alignment Errors
+group musStrain
 type bed 12 .
-visibility pack
+visibility hide
 itemRgb On
 priority 4
 
@@ -62,8 +66,9 @@ searchPriority 1
 track interestingBiology
 shortLabel Interesting Bioloy
 longLabel $Organism Potentially Interesting Biology
+group musStrain
 type bed 12 .
-visibility pack
+visibility hide
 itemRgb On
 priority 5
 
@@ -75,8 +80,9 @@ searchPriority 1
 track comparativeAnnotation
 shortLabel Comparative Annotation
 longLabel $Organism Comparative Annotation
+group musStrain
 type bed 12 .
-visibility pack
+visibility hide
 itemRgb On
 priority 2
 
@@ -88,8 +94,9 @@ searchPriority 1
 track inFrameStop
 shortLabel InFrame Stop
 longLabel $Organism In Frame Stops
+group musStrain
 type bed 12 .
-visibility pack
+visibility hide
 itemRgb On
 priority 6
 
@@ -101,6 +108,7 @@ searchPriority 1
 track gcPercent
 shortLabel GC Percent
 longLabel Percentage GC in 10kb Windows
+group map
 visibility dense
 spectrum on
 type bed 4 +

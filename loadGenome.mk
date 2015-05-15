@@ -3,12 +3,11 @@ include defs.mk
 # Creates databases and loads tracks for one specific genome. called by Makefile.
 #########################################################################################
 DB = Mus${GENOME}_${MSCA_VERSION}
+genomesDbs = ${genomes:%=Mus%_${MSCA_VERSION}}
 GBDB_DIR = ${BASE_DATA_DIR}/gbdb/${GENOME}/${DB}
 BED_DIR = ${BASE_DATA_DIR}/genomes/${DB}/bed
 CHROM_INFO_DIR = ${BED_DIR}/chromInfo
 twoBit = ${BASE_DATA_DIR}/genomes/${DB}/${DB}.2bit
-fasta = ${BASE_DATA_DIR}/genomes/${DB}/${DB}.fa
-chromSizes = ${BASE_DATA_DIR}/genomes/${DB}/${DB}.chrom.sizes
 agp = ${BASE_DATA_DIR}/genomes/${DB}/${DB}.agp
 
 # some basic tracks we will need to build
@@ -17,19 +16,37 @@ gapTrack = ${BED_DIR}/gapTrack/${DB}.bed
 gcPercentTrack = ${BED_DIR}/gcPercent/${DB}.bed
 repeatMaskerOut = ${BASE_DATA_DIR}/genomes/${DB}/${DB}/fa.out
 
+# GENCODE transMap input files (FIXME: duplication of pipeline/rules/transMap.mk)
+GENCODE_VERSION = VM4
+TRANS_MAP_VERSION = 2015-05-10
+TRANS_MAP_DIR = ${MSCA_DATA_DIR}/comparative/${MSCA_VERSION}/transMap/${TRANS_MAP_VERSION}
+srcGencodeBasic = wgEncodeGencodeBasic${GENCODE_VERSION}
+srcGencodeComp = wgEncodeGencodeComp${GENCODE_VERSION}
+srcGencodePseudo = wgEncodeGencodePseudoGene${GENCODE_VERSION}
+srcGencodeAttrs = wgEncodeGencodeAttrs${GENCODE_VERSION}
+srcGencodeSubsets = ${srcGencodeBasic} ${srcGencodeComp} ${srcGencodePseudo}
+
+transMapDataDir = ${TRANS_MAP_DIR}/transMap/${GENOME}
+transMapGencodeBasic = transMapGencodeBasic${GENCODE_VERSION}
+transMapGencodeComp = transMapGencodeComp${GENCODE_VERSION}
+transMapGencodePseudo = transMapGencodePseudoGene${GENCODE_VERSION}
+transMapGencodeAttrs = transMapGencodeAttrs${GENCODE_VERSION}
+transMapGencodeSubsets = ${transMapGencodeBasic} ${transMapGencodeComp} ${transMapGencodePseudo}
+
+
 # placeholder DONE files - used to checkpoint sql loading commands
-databaseCheckpoint = ./checkpoints/database/${DB}/init
-referencePslCheckpoint = ./checkpoints/database/${DB}/referencePsl
-loadTracksCheckpoint = ./checkpoints/database/${DB}/loadTracks
+checkpointDir = ./checkpoints/database/${DB}
+databaseCheckpoint = ${checkpointDir}/init
+transMapGencodeLoadCheckpoints = ${transMapGencodeSubsets:%=${checkpointDir}/%}
+loadTracksCheckpoint = ${checkpointDir}/loadTracks
 
 # the variables below dig through comparativeAnnotator output
 comparisons = $(shell /bin/ls ${ANNOTATION_DIR}/bedfiles/)
 comparisonBeds = ${comparisons:%=${BED_DIR}/%/${GENOME}.bed}
-comparisonCheckpoints = ${comparisons:%=./checkpoints/database/${DB}/%}
+comparisonCheckpoints = ${comparisons:%=${checkpointDir}/%}
 
 
-
-all: trackDb genomeFiles prepareTracks loadSql basicBrowserTracks loadBeds loadTracks
+all: trackDb genomeFiles prepareTracks loadTransMap basicBrowserTracks loadBeds loadTracks
 
 
 trackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${DB}/trackDb.ra
@@ -38,19 +55,14 @@ trackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${DB}/trackDb.ra
 	@mkdir -p $(dir $@)
 	touch $@
 
-./trackDb/${GENOME}/${DB}/trackDb.ra: ${halPath}
+./trackDb/${GENOME}/${DB}/trackDb.ra: bin/buildSnakeTrackDb.py
 	@mkdir -p $(dir $@)
-	python bin/buildSnakeTrackDb.py --genomes ${genomes} --this_genome ${GENOME} --hal ${halUrl} > $@.${tmpExt}
+	python bin/buildSnakeTrackDb.py --genomes ${genomesDbs} --this_genome ${DB} --hal ${halFile} > $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
-genomeFiles: ${twoBit} ${fasta} ${chromSizes} ${agp} ${GBDB_DIR}/${DB}.2bit ${repeatMasker}
+genomeFiles: ${twoBit} ${agp} ${GBDB_DIR}/${DB}.2bit ${repeatMasker}
 
 ${twoBit}: ${GENOMES_DIR}/${GENOME}.2bit
-	@mkdir -p $(dir $@)
-	cp -u $< $@.${tmpExt}
-	mv -f $@.${tmpExt} $@
-
-${fasta}: ${GENOMES_DIR}/${GENOME}.fa
 	@mkdir -p $(dir $@)
 	cp -u $< $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
@@ -90,19 +102,22 @@ ${BED_DIR}/%/${DB}.bed: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed
 	cp -u $< $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
-loadSql: ${databaseCheckpoint} ${referencePslCheckpoint}
-
+# use lock, as hgGoldGapGl uses static file name
 ${databaseCheckpoint}: ${agp} ${CHROM_INFO_DIR}/chromInfo.sql ${CHROM_INFO_DIR}/chromInfo.tab
-	@mkdir -p $(dir $@)
+	@mkdir -p $(dir $@) locks
 	hgsql -e "CREATE DATABASE IF NOT EXISTS ${DB};"
-	hgGoldGapGl -noGl ${DB} ${agp}
-	hgsql ${DB} < ${KENT_DIR}/src/hg/lib/grp.sql
+	flock locks/hgGoldGap.lock hgGoldGapGl -noGl ${DB} ${agp}
 	hgLoadSqlTab ${DB} chromInfo ${CHROM_INFO_DIR}/chromInfo.sql ${CHROM_INFO_DIR}/chromInfo.tab
 	touch $@
 
-${referencePslCheckpoint}: ${databaseCheckpoint}
+##
+# gencode mapped tracks
+##
+loadTransMap: ${transMapGencodeLoadCheckpoints}
+
+${checkpointDir}/transMap%: ${transMapDataDir}/transMap%.psl ${databaseCheckpoint}
 	@mkdir -p $(dir $@)
-	hgLoadPsl -table=${tableBase} ${DB} ${TRANS_MAP_DIR}/results/filtered/${GENOME}.filtered.psl
+	hgLoadPsl -table=transMap$* ${DB} $<
 	touch $@
 
 
@@ -128,7 +143,7 @@ ${gcPercentTrack}: ${twoBit}
 
 loadBeds: ${comparisonCheckpoints}
 
-./checkpoints/database/${DB}/%: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed ${databaseCheckpoint}
+${checkpointDir}/%: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed ${databaseCheckpoint}
 	@mkdir -p $(dir $@)
 	@mkdir -p $${TMPDIR}/${DB}
 	hgLoadBed -tmpDir=$${TMPDIR}/${DB} -allowStartEqualEnd -tab -type=bed12 ${DB} $* $<
@@ -138,6 +153,6 @@ loadBeds: ${comparisonCheckpoints}
 loadTracks: ${loadTracksCheckpoint}
 
 ${loadTracksCheckpoint}: ${comparisonCheckpoints}
-	cd ./trackDb && ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -sqlDir=${KENT_DIR}/src/hg/lib \
+	cd ./trackDb && ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib \
 	trackDb hgFindSpec ${DB} && rm trackDb.tab hgFindSpec.tab
 	touch $@

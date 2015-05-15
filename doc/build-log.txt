@@ -1,5 +1,12 @@
-
+ /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/
+ 
 2015-05-04 markd
 
   # setup of cloned and edited subset of hgcentral tables
  ./bin/hgCentralSetup --assembly=1411 hgcentraltest musStrainShared
+
+
+2015-05-14:
+       Joel mapped genome names to those used in the UCSC browser
+
+       ln  /hive/users/jcarmstr/msca/1411/1411_renamed.hal  /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal 

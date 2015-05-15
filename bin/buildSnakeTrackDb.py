@@ -12,17 +12,35 @@ def parse_args():
     args.genomes = sorted(tmp)
     return args
 
-comp = ("track cactus\ncompositeTrack on\nshortLabel Cactus Alignments\nlongLabel Snake Track of "
-        "progressiveCactus Alignments\npriority 2\nvisibility dense\ndragAndDrop subTracks\n\n")
+comp = """track cactus
+compositeTrack on
+shortLabel Cactus Alignments
+longLabel Snake Track of progressiveCactus Alignments
+group compGeno
+type bed 3
+priority 2
+visibility dense
+dragAndDrop subTracks
 
-template = ("track snake{0}\nlongLabel {0}\nshortLabel {0}\notherSpecies {0}\nparent cactus on\npriority {1}\n"
-            "bigDataUrl {2}\ntype halSnake\n")
+"""
+
+template = """track snake{0}
+longLabel {0}
+shortLabel {0}
+otherSpecies {0}
+parent cactus on
+priority {1}
+bigDataUrl {2}
+type halSnake
+
+"""
 
 def main():
     args = parse_args()
+    basePri = 15
     print comp
     for i, g in enumerate(args.genomes):
-        print template.format(g, i + 15, args.hal)
+        print template.format(g, basePri + i, args.hal)
 
 if __name__ == "__main__":
     main()
