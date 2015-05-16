@@ -4,7 +4,10 @@
 #########################################################################################
 
 # this should be the config file from comparativeAnnotator
-include /hive/users/ifiddes/comparativeAnnotator/config_1411.mk
+include ../comparativeAnnotator/config_1411.mk
+
+refGenomeSrcDb = ${refGenomeSQLName}
+refGenomeDb = Mus${refGenome}_${MSCA_VERSION}
 
 # what type of chaining was performed? TODO: should be in comparativeAnnotator's config files
 CHAINING = simpleChain

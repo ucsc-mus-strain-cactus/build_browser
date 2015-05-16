@@ -1,0 +1,22 @@
+#!/bin/bash
+usage='cloneEditGenePredTable srcDb destDb table
+
+Clone a genePred table with bin column, editing the chrome name
+to the Ensembl conventions'
+
+set -beEu -o pipefail  # make bash safer
+
+if [ $# != 3 ] ; then
+    echo "wrong # args: $usage" >&2
+    exit 1
+fi
+srcDb="$1"
+destDb="$2"
+table="$3"
+
+hgsql -e "drop table if exists $table" $destDb
+hgsql -e "create table $table like $srcDb.$table" $destDb
+hgsql -Ne "select * from $table" $srcDb \
+    | bin/ucscToEnsemblChrom -v chromCol=3 \
+    | hgsql -e "load data local infile '/dev/stdin' into table $table" $destDb
+

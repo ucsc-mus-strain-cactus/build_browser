@@ -55,9 +55,10 @@ trackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${DB}/trackDb.ra
 	@mkdir -p $(dir $@)
 	touch $@
 
-./trackDb/${GENOME}/${DB}/trackDb.ra: bin/buildSnakeTrackDb.py
+# also depend on included files
+./trackDb/${GENOME}/${DB}/trackDb.ra: bin/buildSnakeTrackDb.py $(wildcard ./trackDb/${GENOME}/${DB}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
-	python bin/buildSnakeTrackDb.py --genomes ${genomesDbs} --this_genome ${DB} --hal ${halFile} > $@.${tmpExt}
+	python bin/buildSnakeTrackDb.py --genomes ${genomesDbs} --this_genome ${DB} --hal ${halFile} $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
 genomeFiles: ${twoBit} ${agp} ${GBDB_DIR}/${DB}.2bit ${repeatMasker}
@@ -111,9 +112,13 @@ ${databaseCheckpoint}: ${agp} ${CHROM_INFO_DIR}/chromInfo.sql ${CHROM_INFO_DIR}/
 	touch $@
 
 ##
-# gencode mapped tracks
+# gencode mapped tracks, except on reference
 ##
+ifeq (${GENOME},${refGenome})
+loadTransMap:
+else
 loadTransMap: ${transMapGencodeLoadCheckpoints}
+endif
 
 ${checkpointDir}/transMap%: ${transMapDataDir}/transMap%.psl ${databaseCheckpoint}
 	@mkdir -p $(dir $@)
@@ -152,7 +157,7 @@ ${checkpointDir}/%: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed ${datab
 
 loadTracks: ${loadTracksCheckpoint}
 
-${loadTracksCheckpoint}: ${comparisonCheckpoints}
-	cd ./trackDb && ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib \
-	trackDb hgFindSpec ${DB} && rm trackDb.tab hgFindSpec.tab
+${loadTracksCheckpoint}: ./trackDb/trackDb.ra  ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${DB}/trackDb.ra $(wildcard ./trackDb/${GENOME}/${DB}/*.trackDb.ra)
+	cd ./trackDb && ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib trackDb hgFindSpec ${DB}
+	rm trackDb/trackDb.tab trackDb/hgFindSpec.tab
 	touch $@

@@ -1,4 +1,8 @@
-track gencodeVM4simpleChain
+
+# transMapGencodeCompVM4
+# transMapGencodePseudoGeneVM4
+
+track transMapGencodeBasicVM4
 shortLabel transMap Gencode VM4
 longLabel transMap Gencode VM4
 group genes
@@ -16,7 +20,7 @@ showDiffBasesMaxZoom 10000.0
 showCdsAllScales .
 showCdsMaxZoom 10000.0
 
-searchTable gencodeVM4simpleChain
+searchTable transMapGencodeBasicVM4
 searchType psl
 searchMethod prefix
 searchPriority 1
