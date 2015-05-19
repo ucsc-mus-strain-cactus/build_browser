@@ -1,5 +1,5 @@
 track allProblems
-shortLabel All Annotation Problems Problems
+shortLabel All Annotation Problems
 longLabel $Organism All Annotation Problems
 group musStrain
 type bed 12 .
@@ -41,7 +41,7 @@ searchMethod prefix
 searchPriority 1
 
 track interestingBiology
-shortLabel Interesting Bioloy
+shortLabel Interesting Biology
 longLabel $Organism Potentially Interesting Biology
 group musStrain
 type bed 12 .
@@ -69,7 +69,7 @@ searchMethod prefix
 searchPriority 1
 
 track inFrameStop
-shortLabel InFrame Stop
+shortLabel In Frame Stop
 longLabel $Organism In Frame Stops
 group musStrain
 type bed 12 .
