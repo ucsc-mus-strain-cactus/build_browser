@@ -31,10 +31,10 @@ comparisonBeds = ${comparisons:%=${BED_DIR}/%/${GENOME}.bed}
 comparisonCheckpoints = ${comparisons:%=${checkpointDir}/%}
 
 
-all: trackDb genomeFiles prepareTracks loadTransMap basicBrowserTracks loadBeds loadTracks
+all: createTrackDb genomeFiles prepareTracks loadTransMap basicBrowserTracks loadBeds loadTracks
 
 
-trackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${DB}/trackDb.ra
+createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${DB}/trackDb.ra
 
 ./trackDb/${GENOME}/trackDb.ra:
 	@mkdir -p $(dir $@)
@@ -150,7 +150,7 @@ ${checkpointDir}/%: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed ${datab
 
 loadTracks: ${loadTracksCheckpoint}
 
-${loadTracksCheckpoint}:  $(wildcard ./trackDb/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/${DB}/*trackDb.ra)
+${loadTracksCheckpoint}: createTrackDb  $(wildcard ./trackDb/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/${DB}/*trackDb.ra)
 	cd ./trackDb && ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib trackDb hgFindSpec ${DB}
 	rm trackDb/trackDb.tab trackDb/hgFindSpec.tab
 	touch $@

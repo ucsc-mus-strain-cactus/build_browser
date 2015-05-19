@@ -8,6 +8,150 @@ priority 2
 visibility dense
 dragAndDrop subTracks
 
+track snakeMus129S1_1411
+longLabel Mus129S1_1411
+shortLabel Mus129S1_1411
+otherSpecies Mus129S1_1411
+parent cactus on
+priority 15
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusAJ_1411
+longLabel MusAJ_1411
+shortLabel MusAJ_1411
+otherSpecies MusAJ_1411
+parent cactus on
+priority 16
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusAKRJ_1411
+longLabel MusAKRJ_1411
+shortLabel MusAKRJ_1411
+otherSpecies MusAKRJ_1411
+parent cactus on
+priority 17
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusC3HHeJ_1411
+longLabel MusC3HHeJ_1411
+shortLabel MusC3HHeJ_1411
+otherSpecies MusC3HHeJ_1411
+parent cactus on
+priority 18
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusC57B6J_1411
+longLabel MusC57B6J_1411
+shortLabel MusC57B6J_1411
+otherSpecies MusC57B6J_1411
+parent cactus on
+priority 19
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusC57B6NJ_1411
+longLabel MusC57B6NJ_1411
+shortLabel MusC57B6NJ_1411
+otherSpecies MusC57B6NJ_1411
+parent cactus on
+priority 20
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusCASTEiJ_1411
+longLabel MusCASTEiJ_1411
+shortLabel MusCASTEiJ_1411
+otherSpecies MusCASTEiJ_1411
+parent cactus on
+priority 21
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusCBAJ_1411
+longLabel MusCBAJ_1411
+shortLabel MusCBAJ_1411
+otherSpecies MusCBAJ_1411
+parent cactus on
+priority 22
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusDBA2J_1411
+longLabel MusDBA2J_1411
+shortLabel MusDBA2J_1411
+otherSpecies MusDBA2J_1411
+parent cactus on
+priority 23
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusFVBNJ_1411
+longLabel MusFVBNJ_1411
+shortLabel MusFVBNJ_1411
+otherSpecies MusFVBNJ_1411
+parent cactus on
+priority 24
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusLPJ_1411
+longLabel MusLPJ_1411
+shortLabel MusLPJ_1411
+otherSpecies MusLPJ_1411
+parent cactus on
+priority 25
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusNODShiLtJ_1411
+longLabel MusNODShiLtJ_1411
+shortLabel MusNODShiLtJ_1411
+otherSpecies MusNODShiLtJ_1411
+parent cactus on
+priority 26
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusNZOHlLtJ_1411
+longLabel MusNZOHlLtJ_1411
+shortLabel MusNZOHlLtJ_1411
+otherSpecies MusNZOHlLtJ_1411
+parent cactus on
+priority 27
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusPWKPhJ_1411
+longLabel MusPWKPhJ_1411
+shortLabel MusPWKPhJ_1411
+otherSpecies MusPWKPhJ_1411
+parent cactus on
+priority 28
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusRattus_1411
+longLabel MusRattus_1411
+shortLabel MusRattus_1411
+otherSpecies MusRattus_1411
+parent cactus on
+priority 29
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
+track snakeMusSPRETEiJ_1411
+longLabel MusSPRETEiJ_1411
+shortLabel MusSPRETEiJ_1411
+otherSpecies MusSPRETEiJ_1411
+parent cactus on
+priority 30
+bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
+type halSnake
+
 track snakeMusWSBEiJ_1411
 longLabel MusWSBEiJ_1411
 shortLabel MusWSBEiJ_1411

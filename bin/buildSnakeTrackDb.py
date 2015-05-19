@@ -44,23 +44,22 @@ type halSnake
 
 """
 
-def getIncludeFiles(trackDbFile):
+def getIncludeFiles(trackDbDir):
     "get include files, excluding directory"
-    return [os.path.basename(t) for t in glob.glob(os.path.dirname(trackDbFile)+"/*.trackDb.ra")]
+    return [os.path.basename(t) for t in glob.glob(trackDbDir+"/*.trackDb.ra")]
 
-def createSnakeTrackDb(genome, pri, hal, trackDbFile):
-    with file(trackDbFile, "w") as fh:
-        fh.write(comp)
-        fh.write(template.format(genome, pri, hal))
-        for inc in getIncludeFiles(trackDbFile):
-            fh.write("include " + inc + "\n")
+def createSnakeTrackDb(trackDbFh, genomes, hal, trackDbDir):
+    basePri = 15
+    trackDbFh.write(comp)
+    for pri, genome in enumerate(genomes):
+        trackDbFh.write(template.format(genome, basePri+pri, hal))
+    for inc in getIncludeFiles(trackDbDir):
+        trackDbFh.write("include " + inc + "\n")
 
 def main():
     args = parse_args()
-    basePri = 15
-    print comp
-    for i, g in enumerate(args.genomes):
-        createSnakeTrackDb(g, basePri + i, args.hal, args.trackDbFile)
-
+    trackDbDir = os.path.dirname(args.trackDbFile)
+    with file(args.trackDbFile, "w") as trackDbFh:
+        createSnakeTrackDb(trackDbFh, args.genomes, args.hal, trackDbDir)
 if __name__ == "__main__":
     main()
