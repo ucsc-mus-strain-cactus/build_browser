@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+"""load a transmap alignment table, filling in the srcDB: in front of each query"""
+import sys, os, re
+sys.path.append("/hive/groups/recon/local/pycbio/lib")
+import argparse
+import subprocess
+from pycbio.sys import fileOps
+from pycbio.tsv.tabFile import TabFileReader
+
+def parseArgs():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("srcDb", help="""insert this srcDb in qName""")
+    parser.add_argument("db", help="""load into this database""")
+    parser.add_argument("table", help="""name of table to load""")
+    parser.add_argument("transMapPsl", help="""psl file""")
+    return parser.parse_args()
+
+def editWritePslRow(srcDb, pslRow, outPslFh):
+    pslRow[9] = srcDb + ":" + pslRow[9]
+    fileOps.prRow(outPslFh, pslRow)
+
+def createEditedPsl(srcDb, transMapPsl, outPslFile):
+    "create PSL file with srcDB: for query"
+    with open(outPslFile, "w") as outPslFh:
+        for pslRow in TabFileReader(transMapPsl):
+            editWritePslRow(srcDb, pslRow, outPslFh)            
+
+def loadPslFile(db, table, outPslFile):
+    subprocess.check_call(["hgLoadPsl", "-table="+table, db, outPslFile])
+
+def main():
+    args = parseArgs()
+    tmpPslFile = fileOps.tmpFileGet("loadtransMapAln")
+    createEditedPsl(args.srcDb, args.transMapPsl, tmpPslFile)
+    loadPslFile(args.db, args.table, tmpPslFile)
+    os.unlink(tmpPslFile)
+
+main()

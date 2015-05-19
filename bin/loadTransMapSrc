@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+"""Load a transmap src table for the source genome into the shared database.
+"""
+import sys, os, re
+sys.path.append("/hive/groups/recon/local/pycbio/lib")
+import argparse
+import subprocess
+from pycbio.sys import fileOps
+from pycbio.tsv.tabFile import TabFileReader
+
+def parseArgs():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("srcDb", help="""name of srcDb""")
+    parser.add_argument("sharedDb", help="""load into this database""")
+    parser.add_argument("srcPsl", help="""source psl file""")
+    parser.add_argument("srcTable", help="""name of table to load""")
+    parser.add_argument("srcSql", help="""src table SQL file""")
+    return parser.parse_args()
+
+def writeSrcRow(srcDb, pslRow, outSrcFh):
+    #  db id chrom chromStart chromEnd strand ident aligned
+    strand = pslRow[8]
+    qName = pslRow[9]
+    tName, tSize, tStart, tEnd = pslRow[13:17]
+    fileOps.prRowv(outSrcFh, srcDb, srcDb+":"+qName, tName, tStart, tEnd, strand, 1, 1)
+
+def createSrcFile(srcDb, srcPsl, outSrcFile):
+    with open(outSrcFile, "w") as outSrcFh:
+        for pslRow in TabFileReader(srcPsl):
+            writeSrcRow(srcDb, pslRow, outSrcFh)
+
+def loadSrcFile(db, srcTable, outSrcFile, srcSql):
+    subprocess.check_call(["hgLoadSqlTab", db, srcTable, srcSql, outSrcFile])
+
+def main():
+    args = parseArgs()
+    tmpSrcFile = fileOps.tmpFileGet("loadtransMapSrc")
+    createSrcFile(args.srcDb, args.srcPsl, tmpSrcFile)
+    loadSrcFile(args.sharedDb, args.srcTable, tmpSrcFile, args.srcSql)
+    os.unlink(tmpSrcFile)
+
+main()

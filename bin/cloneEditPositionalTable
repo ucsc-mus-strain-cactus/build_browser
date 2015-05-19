@@ -1,22 +1,24 @@
 #!/bin/bash
-usage='cloneEditGenePredTable srcDb destDb table
+usage='cloneEditGenePredTable chromCol srcDb destDb table
 
-Clone a genePred table with bin column, editing the chrome name
-to the Ensembl conventions'
+Clone a positiona table editing the chrome name to the Ensembl conventions.
+chromCol is one-based for awk.
+'
 
 set -beEu -o pipefail  # make bash safer
 
-if [ $# != 3 ] ; then
+if [ $# != 4 ] ; then
     echo "wrong # args: $usage" >&2
     exit 1
 fi
-srcDb="$1"
-destDb="$2"
-table="$3"
+chromCol="$1"
+srcDb="$2"
+destDb="$3"
+table="$4"
 
 hgsql -e "drop table if exists $table" $destDb
 hgsql -e "create table $table like $srcDb.$table" $destDb
 hgsql -Ne "select * from $table" $srcDb \
-    | bin/ucscToEnsemblChrom -v chromCol=3 \
+    | bin/ucscToEnsemblChrom -v chromCol=$chromCol \
     | hgsql -e "load data local infile '/dev/stdin' into table $table" $destDb
 

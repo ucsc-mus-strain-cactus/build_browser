@@ -1,0 +1,90 @@
+track transMap
+superTrack on show
+shortLabel TransMap
+longLabel TransMap Alignments
+group genes
+
+    track transMapAlnGencodeBasicVM4a
+    superTrack transMap pack
+    shortLabel TransMap GENCODE Basic VM4
+    longLabel TransMap GENCODE Basic VM4 Mappings using Simple Chain
+    group genes
+    type psl
+    priority 37.001
+    color 0,100,0
+    visibility pack
+    transMapInfo transMapInfoGencodeBasicVM4a
+    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4a
+    transMapGene musStrainShared.transMapGeneGencodeBasicVM4a
+    transMapTypeDesc GENCODE
+    baseColorDefault diffCodons
+    baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM4a
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeBasicVM4a musStrainShared.transMapExtFileGencodeBasicVM4a
+    indelDoubleInsert on
+    indelQueryInsert on
+    showDiffBasesAllScales .
+    showDiffBasesMaxZoom 10000.0
+    showCdsAllScales .
+    showCdsMaxZoom 10000.0
+
+searchTable transMapAlnGencodeBasicVM4a
+searchType psl
+searchMethod prefix
+searchPriority 2.31
+
+    track transMapAlnGencodeCompVM4a
+    superTrack transMap hide
+    shortLabel TransMap GENCODE Comprehensive VM4
+    longLabel TransMap GENCODE Comprehensive VM4 Mappings using Simple Chain
+    group genes
+    type psl
+    priority 37.002
+    color 0,100,0
+    visibility hide
+    transMapInfo transMapInfoGencodeCompVM4a
+    transMapSrc musStrainShared.transMapSrcGencodeCompVM4a
+    transMapGene musStrainShared.transMapGeneGencodeCompVM4a
+    transMapTypeDesc GENCODE
+    baseColorDefault diffCodons
+    baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM4a
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeCompVM4a musStrainShared.transMapExtFileGencodeCompVM4a
+    indelDoubleInsert on
+    indelQueryInsert on
+    showDiffBasesAllScales .
+    showDiffBasesMaxZoom 10000.0
+    showCdsAllScales .
+    showCdsMaxZoom 10000.0
+
+searchTable transMapAlnGencodeCompVM4a
+searchType psl
+searchMethod prefix
+searchPriority 2.32
+
+    track transMapAlnGencodePseudoGeneVM4a
+    superTrack transMap dense
+    shortLabel TransMap GENCODE Pseudo Gene VM4
+    longLabel TransMap GENCODE Pseudo Gene VM4 Mappings using Simple Chain
+    group genes
+    type psl
+    priority 37.003
+    color 0,100,0
+    visibility dense
+    transMapInfo transMapInfoGencodePseudoGeneVM4a
+    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4a
+    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4a
+    transMapTypeDesc GENCODE
+    baseColorDefault diffCodons
+    baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM4a
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodePseudoGeneVM4a musStrainShared.transMapExtFileGencodePseudoGeneVM4a
+    indelDoubleInsert on
+    indelQueryInsert on
+    showDiffBasesAllScales .
+    showDiffBasesMaxZoom 10000.0
+    showCdsAllScales .
+    showCdsMaxZoom 10000.0
+
+searchTable transMapAlnGencodePseudoGeneVM4a
+searchType psl
+searchMethod prefix
+searchPriority 2.33
+

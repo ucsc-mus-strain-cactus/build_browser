@@ -16,28 +16,13 @@ gapTrack = ${BED_DIR}/gapTrack/${DB}.bed
 gcPercentTrack = ${BED_DIR}/gcPercent/${DB}.bed
 repeatMaskerOut = ${BASE_DATA_DIR}/genomes/${DB}/${DB}/fa.out
 
-# GENCODE transMap input files (FIXME: duplication of pipeline/rules/transMap.mk)
-GENCODE_VERSION = VM4
-TRANS_MAP_VERSION = 2015-05-10
-TRANS_MAP_DIR = ${MSCA_DATA_DIR}/comparative/${MSCA_VERSION}/transMap/${TRANS_MAP_VERSION}
-srcGencodeBasic = wgEncodeGencodeBasic${GENCODE_VERSION}
-srcGencodeComp = wgEncodeGencodeComp${GENCODE_VERSION}
-srcGencodePseudo = wgEncodeGencodePseudoGene${GENCODE_VERSION}
-srcGencodeAttrs = wgEncodeGencodeAttrs${GENCODE_VERSION}
-srcGencodeSubsets = ${srcGencodeBasic} ${srcGencodeComp} ${srcGencodePseudo}
-
-transMapDataDir = ${TRANS_MAP_DIR}/transMap/${GENOME}
-transMapGencodeBasic = transMapGencodeBasic${GENCODE_VERSION}
-transMapGencodeComp = transMapGencodeComp${GENCODE_VERSION}
-transMapGencodePseudo = transMapGencodePseudoGene${GENCODE_VERSION}
-transMapGencodeAttrs = transMapGencodeAttrs${GENCODE_VERSION}
-transMapGencodeSubsets = ${transMapGencodeBasic} ${transMapGencodeComp} ${transMapGencodePseudo}
 
 
 # placeholder DONE files - used to checkpoint sql loading commands
 checkpointDir = ./checkpoints/database/${DB}
 databaseCheckpoint = ${checkpointDir}/init
-transMapGencodeLoadCheckpoints = ${transMapGencodeSubsets:%=${checkpointDir}/%}
+transMapGencodeLoadCheckpoints = ${transMapGencodeSubsets:%=${checkpointDir}/%.aln} \
+	${transMapGencodeSubsets:%=${checkpointDir}/%.info}
 loadTracksCheckpoint = ${checkpointDir}/loadTracks
 
 # the variables below dig through comparativeAnnotator output
@@ -120,12 +105,20 @@ else
 loadTransMap: ${transMapGencodeLoadCheckpoints}
 endif
 
-${checkpointDir}/transMap%: ${transMapDataDir}/transMap%.psl ${databaseCheckpoint}
+${checkpointDir}/transMap%.aln: ${transMapDataDir}/transMap%.psl ${databaseCheckpoint}
 	@mkdir -p $(dir $@)
-	hgLoadPsl -table=transMap$* ${DB} $<
+	./bin/loadTransMapAln ${refGenomeDb} ${DB} transMapAln$*${TRANS_MAP_TABLE_VERSION} $<
+	touch $@
+
+${checkpointDir}/transMap%.info: ${transMapDataDir}/transMap%.psl ${databaseCheckpoint}
+	@mkdir -p $(dir $@)
+	./bin/loadTransMapInfo ${refGenomeDb} ${DB} $< transMapInfo$*${TRANS_MAP_TABLE_VERSION} ${HOME}/kent/src/hg/lib/transMapInfo.sql
 	touch $@
 
 
+##
+# standard browser tracks
+##
 basicBrowserTracks: ${assemblyTrack} ${gapTrack} ${gcPercentTrack}
 
 ${assemblyTrack}: ${agp}
@@ -157,7 +150,7 @@ ${checkpointDir}/%: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed ${datab
 
 loadTracks: ${loadTracksCheckpoint}
 
-${loadTracksCheckpoint}: ./trackDb/trackDb.ra  ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${DB}/trackDb.ra $(wildcard ./trackDb/${GENOME}/${DB}/*.trackDb.ra)
+${loadTracksCheckpoint}:  $(wildcard ./trackDb/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/${DB}/*trackDb.ra)
 	cd ./trackDb && ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib trackDb hgFindSpec ${DB}
 	rm trackDb/trackDb.tab trackDb/hgFindSpec.tab
 	touch $@

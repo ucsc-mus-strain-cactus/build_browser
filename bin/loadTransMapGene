@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+"""Load a transmap gene table for the source genome into the shared database.
+"""
+import sys, os, re
+sys.path.append("/hive/groups/recon/local/pycbio/lib")
+import argparse
+import subprocess
+from pycbio.sys import fileOps
+from pycbio.tsv.tabFile import TabFileReader
+from pycbio.tsv.tsvTable import TSVTable
+
+def parseArgs():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("srcDb", help="""name of srcDb""")
+    parser.add_argument("sharedDb", help="""load into this database""")
+    parser.add_argument("attrsFile", help="""source gencode attrs file""")
+    parser.add_argument("cdsFile", help="""source gencode attrs file""")
+    parser.add_argument("srcPsl", help="""source psl file""")
+    parser.add_argument("geneTable", help="""name of table to load""")
+    parser.add_argument("geneSql", help="""info table SQL file""")
+    return parser.parse_args()
+
+def writeGeneRow(srcDb, pslRow, attrsTable, cdsTable, outGeneFh):
+    #  id cds db geneName
+    qName = pslRow[9]
+    geneName = attrsTable.idx.transcriptId[qName].geneName
+    cdsRow = cdsTable.idx.transcriptId.get(qName, None)
+    cds = cdsRow.cds if cdsRow != None else ""
+    fileOps.prRowv(outGeneFh, srcDb+":"+qName, cds, srcDb, geneName)
+
+def createGeneFile(srcDb, srcPsl, attrsTable, cdsTable, outGeneFile):
+    with open(outGeneFile, "w") as outGeneFh:
+        for pslRow in TabFileReader(srcPsl):
+            writeGeneRow(srcDb, pslRow, attrsTable, cdsTable, outGeneFh)
+
+def loadGeneFile(db, geneTable, outGeneFile, geneSql):
+    subprocess.check_call(["hgLoadSqlTab", db, geneTable, geneSql, outGeneFile])
+
+def main():
+    args = parseArgs()
+    attrsTable = TSVTable(args.attrsFile, uniqKeyCols=("transcriptId",))
+    cdsTable = TSVTable(args.cdsFile, uniqKeyCols=("transcriptId",), columns=("transcriptId", "cds"))
+    tmpGeneFile = fileOps.tmpFileGet("loadtransMapGene")
+    createGeneFile(args.srcDb, args.srcPsl, attrsTable, cdsTable, tmpGeneFile)
+    loadGeneFile(args.sharedDb, args.geneTable, tmpGeneFile, args.geneSql)
+    os.unlink(tmpGeneFile)
+
+main()

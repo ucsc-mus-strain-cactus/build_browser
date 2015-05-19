@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+"""Load a transmap info table for a genome.  Some of the columns are faked,
+as they make no sense without chains."""
+import sys, os, re
+sys.path.append("/hive/groups/recon/local/pycbio/lib")
+import argparse
+import subprocess
+from pycbio.sys import fileOps
+from pycbio.tsv.tabFile import TabFileReader
+
+def parseArgs():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("srcDb", help="""name of srcDb""")
+    parser.add_argument("db", help="""load into this database""")
+    parser.add_argument("transMapPsl", help="""psl file""")
+    parser.add_argument("infoTable", help="""name of table to load""")
+    parser.add_argument("infoSql", help="""info table SQL file""")
+    return parser.parse_args()
+
+# FIXME: put in library
+stripRe = re.compile("^(.+)-")
+def uniqStrip(id):
+    match = stripRe.search(id)
+    if match == None:
+        raise Exception("can't find unique alignment id suffix in: " + id)
+    return match.group(1)
+
+def writeInfoRow(srcDb, pslRow, outInfoFh):
+    # mappedId srcDb srcId mappingId chainSubset
+    qName = pslRow[9]
+    fileOps.prRowv(outInfoFh, srcDb+":"+qName, srcDb, srcDb+":"+uniqStrip(qName), 0, "syn")
+
+def createInfoFile(srcDb, transMapPsl, outInfoFile):
+    "create PSL file with srcDB: for query"
+    with open(outInfoFile, "w") as outInfoFh:
+        for pslRow in TabFileReader(transMapPsl):
+            writeInfoRow(srcDb, pslRow, outInfoFh)
+
+def loadInfoFile(db, infoTable, outInfoFile, infoSql):
+    subprocess.check_call(["hgLoadSqlTab", db, infoTable, infoSql, outInfoFile])
+
+def main():
+    args = parseArgs()
+    tmpInfoFile = fileOps.tmpFileGet("loadtransMapInfo")
+    createInfoFile(args.srcDb, args.transMapPsl, tmpInfoFile)
+    loadInfoFile(args.db, args.infoTable, tmpInfoFile, args.infoSql)
+    os.unlink(tmpInfoFile)
+
+main()

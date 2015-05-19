@@ -1,30 +1,3 @@
-
-# transMapGencodeCompVM4
-# transMapGencodePseudoGeneVM4
-
-track transMapGencodeBasicVM4
-shortLabel transMap Gencode VM4
-longLabel transMap Gencode VM4
-group genes
-type psl
-priority 1
-color 0,100,0
-visibility pack
-baseColorDefault diffCodons
-baseColorUseCds table musStrainShared.gencodeVM4simpleChainCds
-baseColorUseSequence extFile musStrainShared.gencodeVM4simpleChainSeq musStrainShared.gencodeVM4simpleChainExtFile
-indelDoubleInsert on
-indelQueryInsert on
-showDiffBasesAllScales .
-showDiffBasesMaxZoom 10000.0
-showCdsAllScales .
-showCdsMaxZoom 10000.0
-
-searchTable transMapGencodeBasicVM4
-searchType psl
-searchMethod prefix
-searchPriority 1
-
 track allProblems
 shortLabel All Annotation Problems Problems
 longLabel $Organism All Annotation Problems
@@ -132,3 +105,5 @@ visibility hide
 color 150,100,30
 altColor 230,170,40
 type bed 3 +
+
+include transMap.trackDb.ra
