@@ -3,8 +3,8 @@
 # this file contains variables shared across all of the individual makefiles
 #########################################################################################
 
-# this should be the config file from comparativeAnnotator
-include ../comparativeAnnotator/config_1411.mk
+# this should be the config file from the pipeline
+include ../pipeline/config.mk
 
 .SECONDARY:
 
