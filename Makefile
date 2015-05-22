@@ -12,14 +12,14 @@ transMapGencodeSrcLoadCheckpoints = \
 all: shared genomes
 
 shared: ${halPath} loadSharedSql
-genomes: ${genomes} refGencodeTracks
+genomes: ${genomes:%=%.loadGenome} refGencodeTracks
 
 ${halPath}:
 	@mkdir -p $(dir $@)
 	ln -sf ${HAL} $@
 
-${genomes}: 
-	${MAKE} -f loadGenome.mk GENOME=$@ all
+%.loadGenome:
+	${MAKE} -f loadGenome.mk GENOME=$* all
 
 loadSharedSql: ${sharedDatabaseCreateCheckpoint} transmapGencodeShared
 
@@ -39,7 +39,7 @@ ${sharedCheckpointDir}/transMap%.seq: ${GBDB_SHARED_DIR}/transMap%.fa
 	touch $@
 ${GBDB_SHARED_DIR}/transMap%.fa: ${TRANS_MAP_DIR}/data/wgEncode%.fa
 	@mkdir -p $(dir $@)
-	cp -f $< $@.${tmpExt}
+	bin/editTransMapSrcFasta  ${refGenomeDb} $<  $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
 ${sharedCheckpointDir}/transMap%.src: ${TRANS_MAP_DIR}/data/wgEncode%.psl

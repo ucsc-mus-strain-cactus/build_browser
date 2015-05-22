@@ -1,0 +1,26 @@
+#!/usr/bin/env python
+"""edit FASTA file so it has src genome prefix"""
+import sys, os, re
+sys.path.append("/hive/groups/recon/local/pycbio/lib")
+import argparse
+from pycbio.sys import fileOps
+
+def parseArgs():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("srcDb", help="""insert this srcDb in FASTA name""")
+    parser.add_argument("srcFasta", help="""input fasta""")
+    parser.add_argument("transMapFasta", help="""output """)
+    return parser.parse_args()
+
+def editTransMapSrcFasta(srcDb, srcFaFh, transMapFaFh):
+    for line in srcFaFh:
+        if line.startswith(">"):
+            line = ">" + srcDb  + ":" + line[1:].lstrip()
+        transMapFaFh.write(line)
+
+def main():
+    args = parseArgs()
+    with open(args.srcFasta) as srcFaFh, open(args.transMapFasta, "w") as transMapFaFh:
+        editTransMapSrcFasta(args.srcDb, srcFaFh, transMapFaFh)
+
+main()
