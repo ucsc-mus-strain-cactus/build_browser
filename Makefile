@@ -1,22 +1,24 @@
 include defs.mk
 # this makefile assumes that you have the kent source directory in your path
 # see defs.mk for the necessary inclusion of a config.mk from comparativeAnnotator
-sharedCheckpointDir = ./checkpoints/sharedDatabase
-sharedDatabaseCreateCheckpoint = ${sharedCheckpointDir}/sharedDatabaseCreate
+
+sharedCheckpointDir = ${CHECKPOINT_DIR}/${sharedDb}
+sharedDatabaseCreateCheckpoint = ${sharedCheckpointDir}/sharedDatabaseCreate.done
 
 transMapGencodeSrcLoadCheckpoints = \
-	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.seq} \
-	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.src} \
-	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.gene}
+	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.seq.done} \
+	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.src.done} \
+	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.gene.done}
 
 all: shared genomes
 
-shared: ${halPath} loadSharedSql
+shared: ${halBrowserHtDocsFile} loadSharedSql
 genomes: ${genomes:%=%.loadGenome} refGencodeTracks
 
-${halPath}:
+${halBrowserHtDocsFile}: ${halBrowserFile}
 	@mkdir -p $(dir $@)
-	ln -sf ${HAL} $@
+	cp -f $< $@.${tmpExt}
+	mv -f $@.${tmpExt} $@
 
 %.loadGenome:
 	${MAKE} -f loadGenome.mk GENOME=$* all
@@ -32,26 +34,26 @@ ${sharedDatabaseCreateCheckpoint}:
 ## transmap shared source tabkes tables.
 transmapGencodeShared: ${transMapGencodeSrcLoadCheckpoints}
 
-${sharedCheckpointDir}/transMap%.seq: ${GBDB_SHARED_DIR}/transMap%.fa
+${sharedCheckpointDir}/transMap%.seq.done: ${GBDB_SHARED_DIR}/transMap%.fa
 	@mkdir -p $(dir $@)
 	hgLoadSeq -drop -seqTbl=transMapSeq$*${TRANS_MAP_TABLE_VERSION} -extFileTbl=transMapExtFile$*${TRANS_MAP_TABLE_VERSION} ${sharedDb} $<
 	rm -f transMapSeq$*${TRANS_MAP_TABLE_VERSION}.tab
 	touch $@
 ${GBDB_SHARED_DIR}/transMap%.fa: ${TRANS_MAP_DIR}/data/wgEncode%.fa
 	@mkdir -p $(dir $@)
-	bin/editTransMapSrcFasta  ${refGenomeDb} $<  $@.${tmpExt}
+	bin/editTransMapSrcFasta  ${srcOrgDb} $< $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
-${sharedCheckpointDir}/transMap%.src: ${TRANS_MAP_DIR}/data/wgEncode%.psl
+${sharedCheckpointDir}/transMap%.src.done: ${TRANS_MAP_DIR}/data/wgEncode%.psl
 	@mkdir -p $(dir $@)
-	bin/loadTransMapSrc ${refGenomeDb} ${sharedDb} $< transMapSrc$*${TRANS_MAP_TABLE_VERSION}  ${HOME}/kent/src/hg/lib/transMapSrc.sql
+	bin/loadTransMapSrc ${srcOrgDb} ${sharedDb} $< transMapSrc$*${TRANS_MAP_TABLE_VERSION}  ${KENT_HG_LIB_DIR}/transMapSrc.sql
 	rm -f transMapSrc$*.tab
 	touch $@
-${sharedCheckpointDir}/transMap%.gene: ${TRANS_MAP_DIR}/data/wgEncode%.cds \
+${sharedCheckpointDir}/transMap%.gene.done: ${TRANS_MAP_DIR}/data/wgEncode%.cds \
 					${TRANS_MAP_DIR}/data/wgEncode%.psl \
 					${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv
 	@mkdir -p $(dir $@)
-	bin/loadTransMapGene ${refGenomeDb} ${sharedDb} ${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv  ${TRANS_MAP_DIR}/data/wgEncode$*.cds  ${TRANS_MAP_DIR}/data/wgEncode$*.psl transMapGene$*${TRANS_MAP_TABLE_VERSION}  ${HOME}/kent/src/hg/lib/transMapGene.sql
+	bin/loadTransMapGene ${srcOrgDb} ${sharedDb} ${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv  ${TRANS_MAP_DIR}/data/wgEncode$*.cds  ${TRANS_MAP_DIR}/data/wgEncode$*.psl transMapGene$*${TRANS_MAP_TABLE_VERSION}  ${KENT_HG_LIB_DIR}/transMapGene.sql
 	touch $@
 
 ###
@@ -60,7 +62,7 @@ ${sharedCheckpointDir}/transMap%.gene: ${TRANS_MAP_DIR}/data/wgEncode%.cds \
 # wgEncodeGencodeExonSupport, as it's not currently used by the browser and is
 # huge.
 
-refGenomeCheckpointDir = checkpoints/database/${refGenome}
+srcOrgCheckpointDir = ${CHECKPOINT_DIR}/${srcOrgDb}
 gencodeGenepredTables = wgEncodeGencodeBasic${GENCODE_VERSION} \
 	wgEncodeGencodeComp${GENCODE_VERSION} \
 	wgEncodeGencodePseudoGene${GENCODE_VERSION} \
@@ -79,26 +81,26 @@ gencodeTabTables = wgEncodeGencodeAnnotationRemark${GENCODE_VERSION} \
 	wgEncodeGencodeTranscriptionSupportLevel${GENCODE_VERSION} \
 	wgEncodeGencodeUniProt${GENCODE_VERSION}
 
-refGenomeCheckpoints = \
-	${gencodeGenepredTables:%=${refGenomeCheckpointDir}/%.gp} \
-	${gencodeExonSupportTable:%=${refGenomeCheckpointDir}/%.exonsup} \
-	${gencodeTabTables:%=${refGenomeCheckpointDir}/%.tab}
+srcOrgCheckpoints = \
+	${gencodeGenepredTables:%=${srcOrgCheckpointDir}/%.gp.done} \
+	${gencodeExonSupportTable:%=${srcOrgCheckpointDir}/%.exonsup.done} \
+	${gencodeTabTables:%=${srcOrgCheckpointDir}/%.tab.done}
 
-refGencodeTracks: ${refGenomeCheckpoints}
+refGencodeTracks: ${srcOrgCheckpoints}
 
-${refGenomeCheckpointDir}/%.gp:
+${srcOrgCheckpointDir}/%.gp.done:
 	@mkdir -p $(dir $@)
-	bin/cloneEditPositionalTable 3 ${refGenomeSrcDb} ${refGenomeDb} $*
+	bin/cloneEditPositionalTable 3 ${srcOrgHgDb} ${srcOrgDb} $*
 	touch $@
 
-${refGenomeCheckpointDir}/%.exonsup:
+${srcOrgCheckpointDir}/%.exonsup.done:
 	@mkdir -p $(dir $@)
-	bin/cloneEditPositionalTable 5 ${refGenomeSrcDb} ${refGenomeDb} $*
+	bin/cloneEditPositionalTable 5 ${srcOrgHgDb} ${srcOrgDb} $*
 	touch $@
 
-${refGenomeCheckpointDir}/%.tab:
+${srcOrgCheckpointDir}/%.tab.done:
 	@mkdir -p $(dir $@)
-	hgsql -e 'drop table if exists $*' ${refGenomeDb}
-	hgsql -e 'create table $* LIKE ${refGenomeSrcDb}.$*' ${refGenomeDb}
-	hgsql -e 'insert $* select * from ${refGenomeSrcDb}.$*' ${refGenomeDb}
+	hgsql -e 'drop table if exists $*' ${srcOrgDb}
+	hgsql -e 'create table $* LIKE ${srcOrgHgDb}.$*' ${srcOrgDb}
+	hgsql -e 'insert $* select * from ${srcOrgHgDb}.$*' ${srcOrgDb}
 	touch $@

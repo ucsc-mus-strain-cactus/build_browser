@@ -18,17 +18,17 @@ repeatMaskerOut = ${BASE_DATA_DIR}/genomes/${DB}/${DB}/fa.out
 
 
 
-# placeholder DONE files - used to checkpoint sql loading commands
-checkpointDir = ./checkpoints/database/${DB}
-databaseCheckpoint = ${checkpointDir}/init
-transMapGencodeLoadCheckpoints = ${transMapGencodeSubsets:%=${checkpointDir}/%.aln} \
-	${transMapGencodeSubsets:%=${checkpointDir}/%.info}
-loadTracksCheckpoint = ${checkpointDir}/loadTracks
+# placeholder done files - used to checkpoint sql loading commands
+dbCheckpointDir = ${CHECKPOINT_DIR}/${DB}
+databaseCheckpoint = ${dbCheckpointDir}/init
+transMapGencodeLoadCheckpoints = ${transMapGencodeSubsets:%=${dbCheckpointDir}/%.aln.done} \
+	${transMapGencodeSubsets:%=${dbCheckpointDir}/%.info.done}
+loadTracksCheckpoint = ${dbCheckpointDir}/loadTracks.done
 
 # the variables below dig through comparativeAnnotator output
 comparisons = $(shell /bin/ls ${ANNOTATION_DIR}/bedfiles/)
 comparisonBeds = ${comparisons:%=${BED_DIR}/%/${GENOME}.bed}
-comparisonCheckpoints = ${comparisons:%=${checkpointDir}/%}
+comparisonCheckpoints = ${comparisons:%=${dbCheckpointDir}/%.done}
 
 
 all: createTrackDb genomeFiles prepareTracks loadTransMap basicBrowserTracks loadBeds loadTracks
@@ -79,7 +79,7 @@ ${CHROM_INFO_DIR}/chromInfo.sql: ${CHROM_INFO_DIR}/chromInfo.tab
 	@mkdir -p $(dir $@)
 	cut -f1 ${CHROM_INFO_DIR}/chromInfo.tab | awk '{print length($0)}'  | sort -nr > ${CHROM_INFO_DIR}/t.chrSize
 	chrSize=`head -1 ${CHROM_INFO_DIR}/t.chrSize`; \
-	sed -e "s/chrom(16)/chrom($$chrSize)/" ${HOME}/kent/src/hg/lib/chromInfo.sql > $@.${tmpExt}
+	sed -e "s/chrom(16)/chrom($$chrSize)/" ${KENT_HG_LIB_DIR}/chromInfo.sql > $@.${tmpExt}
 	rm ${CHROM_INFO_DIR}/t.chrSize
 	mv -f $@.${tmpExt} $@
 
@@ -105,14 +105,14 @@ else
 loadTransMap: ${transMapGencodeLoadCheckpoints}
 endif
 
-${checkpointDir}/transMap%.aln: ${transMapDataDir}/transMap%.psl ${databaseCheckpoint}
+${dbCheckpointDir}/transMap%.aln.done: ${transMapDataDir}/transMap%.psl ${databaseCheckpoint}
 	@mkdir -p $(dir $@)
 	./bin/loadTransMapAln ${refGenomeDb} ${DB} transMapAln$*${TRANS_MAP_TABLE_VERSION} $<
 	touch $@
 
-${checkpointDir}/transMap%.info: ${transMapDataDir}/transMap%.psl ${databaseCheckpoint}
+${dbCheckpointDir}/transMap%.info.done: ${transMapDataDir}/transMap%.psl ${databaseCheckpoint}
 	@mkdir -p $(dir $@)
-	./bin/loadTransMapInfo ${refGenomeDb} ${DB} $< transMapInfo$*${TRANS_MAP_TABLE_VERSION} ${HOME}/kent/src/hg/lib/transMapInfo.sql
+	./bin/loadTransMapInfo ${refGenomeDb} ${DB} $< transMapInfo$*${TRANS_MAP_TABLE_VERSION} ${KENT_HG_LIB_DIR}/transMapInfo.sql
 	touch $@
 
 
@@ -141,7 +141,7 @@ ${gcPercentTrack}: ${twoBit}
 
 loadBeds: ${comparisonCheckpoints}
 
-${checkpointDir}/%: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed ${databaseCheckpoint}
+${dbCheckpointDir}/%: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed ${databaseCheckpoint}
 	@mkdir -p $(dir $@)
 	@mkdir -p $${TMPDIR}/${DB}
 	hgLoadBed -tmpDir=$${TMPDIR}/${DB} -allowStartEqualEnd -tab -type=bed12 ${DB} $* $<

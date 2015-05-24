@@ -3,40 +3,26 @@
 # this file contains variables shared across all of the individual makefiles
 #########################################################################################
 
-# this should be the config file from comparativeAnnotator
-include ../comparativeAnnotator/config_1411.mk
+include ../pipeline/defs.mk
 
-.SECONDARY:
-
-refGenomeSrcDb = ${refGenomeSQLName}
-refGenomeDb = Mus${refGenome}_${MSCA_VERSION}
-
-# what type of chaining was performed? TODO: should be in comparativeAnnotator's config files
-CHAINING = simpleChain
+srcOrgDb = Mus${srcOrg}_${MSCA_VERSION}
 
 # directories
 BASE_DATA_DIR = ${MSCA_PROJ_DIR}/browser
 GBDB_SHARED_DIR = ${BASE_DATA_DIR}/gbdb/${sharedDb}
 
-# shared variables
+CHECKPOINT_DIR = ${BASE_DATA_DIR}/checkpoints/${MSCA_VERSION}
+
+# misc
 sciName = "Mus musculus"
 sharedDb = musStrainShared
 
-# insist on group-writable umask
-ifneq ($(shell umask),0002)
-     $(error umask must be 0002)
-endif
-
-ifeq (${TMPDIR},)
-     $(error TMPDIR environment variable not set)
-endif
-
-KENT_DIR = ${HOME}/kent
-
-# where should we symlink the HAL?
-halPath = ${HOME}/public_html/MSCA_HAL_files/$(notdir ${HAL})
-halUrl = http://hgwdev.soe.ucsc.edu/~${USER}/MSCA_HAL_files/$(notdir ${HAL})
-halFile = /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal 
+##
+# HAL file.  Copy to local disk
+##
+musStrainUrl = http://hgwdev-mus-strain.sdsc.edu/
+musStrainHtDocsDir = /data/apache/htdocs-mus-strain/
+halBrowserHtDocsFile = ${musStrainHtDocsDir}/msca_hal/$(notdir ${halBrowserFile})
 
 
 # GENCODE transMap input files (FIXME: duplication of pipeline/rules/transMap.mk)
