@@ -31,7 +31,7 @@ ${sharedDatabaseCreateCheckpoint}:
 	touch $@
 
 ##
-## transmap shared source tabkes tables.
+## transmap shared source tables.
 transmapGencodeShared: ${transMapGencodeSrcLoadCheckpoints}
 
 ${sharedCheckpointDir}/transMap%.seq.done: ${GBDB_SHARED_DIR}/transMap%.fa

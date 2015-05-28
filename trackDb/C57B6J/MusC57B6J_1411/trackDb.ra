@@ -162,3 +162,5 @@ bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/
 type halSnake
 
 include gencodeVM4.trackDb.ra
+
+include bamTracks.trackDb.ra

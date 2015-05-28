@@ -24,6 +24,7 @@ databaseCheckpoint = ${dbCheckpointDir}/init
 transMapGencodeLoadCheckpoints = ${transMapGencodeSubsets:%=${dbCheckpointDir}/%.aln.done} \
 	${transMapGencodeSubsets:%=${dbCheckpointDir}/%.info.done}
 loadTracksCheckpoint = ${dbCheckpointDir}/loadTracks.done
+bamCheckpoint = ${dbCheckpointDir}/bamTracks.done
 
 # the variables below dig through comparativeAnnotator output
 comparisons = $(shell /bin/ls ${ANNOTATION_DIR}/bedfiles/)
@@ -31,7 +32,8 @@ comparisonBeds = ${comparisons:%=${BED_DIR}/%/${GENOME}.bed}
 comparisonCheckpoints = ${comparisons:%=${dbCheckpointDir}/%.done}
 
 
-all: createTrackDb genomeFiles prepareTracks loadTransMap basicBrowserTracks loadBeds loadTracks
+
+all: createTrackDb genomeFiles prepareTracks loadTransMap basicBrowserTracks loadBeds addBamTracks loadTracks
 
 
 createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${DB}/trackDb.ra
@@ -145,6 +147,13 @@ ${dbCheckpointDir}/%: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed ${dat
 	@mkdir -p $(dir $@)
 	@mkdir -p $${TMPDIR}/${DB}
 	hgLoadBed -tmpDir=$${TMPDIR}/${DB} -allowStartEqualEnd -tab -type=bed12 ${DB} $* $<
+	touch $@
+
+
+addBamTracks: ${bamCheckpoint}
+
+${bamCheckpoint}: ${comparisonCheckpoints}
+	python bin/bam_tracks_from_1505_release.py --assembly_version ${MSCA_VERSION}
 	touch $@
 
 
