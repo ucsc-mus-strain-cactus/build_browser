@@ -77,12 +77,10 @@ ${CHROM_INFO_DIR}/chromInfo.tab: ${chromSizes}
 	awk '{print $$1 "\t" $$2 "\t'${GBDB_DIR}'/'${DB}'.2bit";}' ${chromSizes} > $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
+# remove silly optimzation from MySQL 3.0 days
 ${CHROM_INFO_DIR}/chromInfo.sql: ${CHROM_INFO_DIR}/chromInfo.tab
 	@mkdir -p $(dir $@)
-	cut -f1 ${CHROM_INFO_DIR}/chromInfo.tab | awk '{print length($0)}'  | sort -nr > ${CHROM_INFO_DIR}/t.chrSize
-	chrSize=`head -1 ${CHROM_INFO_DIR}/t.chrSize`; \
-	sed -e "s/chrom(16)/chrom($$chrSize)/" ${KENT_HG_LIB_DIR}/chromInfo.sql > $@.${tmpExt}
-	rm ${CHROM_INFO_DIR}/t.chrSize
+	sed -e "s/chrom(16)/chrom(128)/" ${KENT_HG_LIB_DIR}/chromInfo.sql > $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
 ${BED_DIR}/%/${DB}.bed: ${ANNOTATION_DIR}/bedfiles/%/${GENOME}/${GENOME}.bed

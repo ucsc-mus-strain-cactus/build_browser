@@ -56,6 +56,17 @@ ${sharedCheckpointDir}/transMap%.gene.done: ${TRANS_MAP_DIR}/data/wgEncode%.cds 
 	bin/loadTransMapGene ${srcOrgDb} ${sharedDb} ${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv  ${TRANS_MAP_DIR}/data/wgEncode$*.cds  ${TRANS_MAP_DIR}/data/wgEncode$*.psl transMapGene$*${TRANS_MAP_TABLE_VERSION}  ${KENT_HG_LIB_DIR}/transMapGene.sql
 	touch $@
 
+# error about pipeline not being run
+define pipelineMissingErr
+echo "Error $@ does not exist, this should be created by the pipeline module" >&2
+exit 1
+endef
+
+${TRANS_MAP_DIR}/data/wgEncode%.psl ${TRANS_MAP_DIR}/data/wgEncode%.fa ${TRANS_MAP_DIR}/data/wgEncode%.cds:
+	@$(pipelineMissingErr)
+${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv:
+	@$(pipelineMissingErr)
+
 ###
 # copy gencode tracks that contain chromosome names to our copy of the
 # reference genome (C57B6J) and edit. Don't bother with
