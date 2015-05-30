@@ -24,8 +24,8 @@ genome_map = {'129S1_SvImJ': '129S1', 'AKR_J': 'AKRJ', 'C3H_HeJ': 'C3HHeJ', 'CAS
 r = re.compile('^[a-zA-Z]+[0-9]+')
 
 base_bam_trackline = """        track {genome}_{institute}_{tissue}_{experiment}
-        longLabel {genome} {tissue} BAM ({institute})
-        shortLabel {genome} {tissue} BAM ({institute})
+        longLabel {genome} {tissue} BAM ({institute}, {experiment})
+        shortLabel {genome} {tissue} BAM ({institute}, {experiment})
         bigDataUrl {bam_path}
         parent {genome}_{tissue}
         type bam
@@ -93,11 +93,8 @@ def make_reference_tracks(source_dir, target_file, assembly_version):
                         experiment = match[0]
                         outf.write(base_bam_trackline.format(genome=genome, tissue=tissue, institute=institute, 
                                                              bam_path=bam_path, experiment=experiment))
-    # don't add it multiple times
-    tmp = "".join(open("trackDb/C57B6J/MusC57B6J_{}/trackDb.ra".format(assembly_version)).readlines())
-    if "include bamTracks.trackDb.ra" not in tmp:
-        with open("trackDb/C57B6J/MusC57B6J_{}/trackDb.ra".format(assembly_version), "a") as outf:
-            outf.write("\ninclude bamTracks.trackDb.ra\n")
+    with open("trackDb/C57B6J/MusC57B6J_{}/trackDb.ra".format(assembly_version), "a") as outf:
+        outf.write("\ninclude bamTracks.trackDb.ra\n")
 
 def make_individual_tracks(source_dir, assembly_version):
     final_map = walk_source_dir(source_dir)
@@ -118,11 +115,8 @@ def make_individual_tracks(source_dir, assembly_version):
                         outf.write(base_bam_trackline.format(genome=genome, tissue=tissue, institute=institute, 
                                                              bam_path=bam_path, experiment=experiment))
     for genome in final_map:
-        # don't add it multiple times
-        tmp = "".join(open("trackDb/C57B6J/MusC57B6J_{}/trackDb.ra".format(assembly_version)).readlines())
-        if "include bamTracks.trackDb.ra" not in tmp:
-            with open("trackDb/{0}/Mus{0}_{1}/trackDb.ra".format(genome, assembly_version), "a") as outf:
-                outf.write("\ninclude bamTracks.trackDb.ra\n") 
+        with open("trackDb/{0}/Mus{0}_{1}/trackDb.ra".format(genome, assembly_version), "a") as outf:
+            outf.write("\ninclude bamTracks.trackDb.ra\n") 
 
 
 def main():
@@ -131,9 +125,8 @@ def main():
                           "/REL-1505-RNA-Seq/GRCm38", 
                           "trackDb/C57B6J/MusC57B6J_{}/bamTracks.trackDb.ra".format(args.assembly_version),
                           args.assembly_version)
-    if args.assembly_version == "1504":
-        make_individual_tracks("/hive/groups/recon/projs/mus_strain_cactus/data/assembly_rel_1505/bam/ftp-mouse.sanger."
-                               "ac.uk/REL-1505-RNA-Seq/REL-1504-chromosomes", args.assembly_version)       
+    #make_individual_tracks("/hive/groups/recon/projs/mus_strain_cactus/data/assembly_rel_1505/bam/ftp-mouse.sanger."
+    #                      "ac.uk/REL-1505-RNA-Seq/REL-1504-chromosomes", args.assembly_version)       
 
 
 if __name__ == "__main__":
