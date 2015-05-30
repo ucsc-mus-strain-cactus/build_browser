@@ -86,11 +86,10 @@ def make_reference_tracks(source_dir, target_file, assembly_version):
                 for institute, bams in final_map[genome][tissue].iteritems():
                     for bam_path in bams:
                         match = re.findall(r, os.path.basename(bam_path))
-                        try:
-                            assert len(match) == 1
-                        except AssertionError:
-                            match = [os.path.basename(bam_path).split(".")]
-                        experiment = match[0]
+                        if len(match) != 1:
+                            experiment = os.path.basename(bam_path).split(".")
+                        else:
+                            experiment = match[0]
                         outf.write(base_bam_trackline.format(genome=genome, tissue=tissue, institute=institute, 
                                                              bam_path=bam_path, experiment=experiment))
     with open("trackDb/C57B6J/MusC57B6J_{}/trackDb.ra".format(assembly_version), "a") as outf:
@@ -107,11 +106,10 @@ def make_individual_tracks(source_dir, assembly_version):
                 for institute, bams in final_map[genome][tissue].iteritems():
                     for bam_path in bams:
                         match = re.findall(r, os.path.basename(bam_path))
-                        try:
-                            assert len(match) == 1
-                        except AssertionError:
-                            match = os.path.basename(bam_path).split(".")
-                        experiment = match[0]
+                        if len(match) != 1:
+                            experiment = os.path.basename(bam_path).split(".")
+                        else:
+                            experiment = match[0]
                         outf.write(base_bam_trackline.format(genome=genome, tissue=tissue, institute=institute, 
                                                              bam_path=bam_path, experiment=experiment))
     for genome in final_map:
