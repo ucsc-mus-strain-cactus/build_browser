@@ -89,7 +89,7 @@ def make_reference_tracks(source_dir, target_file, assembly_version):
                         try:
                             assert len(match) == 1
                         except AssertionError:
-                            match = os.path.basename(bam_path).split(".")
+                            match = [os.path.basename(bam_path).split(".")]
                         experiment = match[0]
                         outf.write(base_bam_trackline.format(genome=genome, tissue=tissue, institute=institute, 
                                                              bam_path=bam_path, experiment=experiment))
