@@ -123,8 +123,9 @@ def main():
                           "/REL-1505-RNA-Seq/GRCm38", 
                           "trackDb/C57B6J/MusC57B6J_{}/bamTracks.trackDb.ra".format(args.assembly_version),
                           args.assembly_version)
-    #make_individual_tracks("/hive/groups/recon/projs/mus_strain_cactus/data/assembly_rel_1505/bam/ftp-mouse.sanger."
-    #                      "ac.uk/REL-1505-RNA-Seq/REL-1504-chromosomes", args.assembly_version)       
+    if args.assembly_version == "1504":
+        make_individual_tracks("/hive/groups/recon/projs/mus_strain_cactus/data/assembly_rel_1505/bam/ftp-mouse.sanger."
+                               "ac.uk/REL-1505-RNA-Seq/REL-1504-chromosomes", args.assembly_version)       
 
 
 if __name__ == "__main__":
