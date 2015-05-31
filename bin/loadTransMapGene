@@ -11,13 +11,13 @@ from pycbio.tsv.tsvTable import TSVTable
 
 def parseArgs():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("srcDb", help="""name of srcDb""")
     parser.add_argument("sharedDb", help="""load into this database""")
     parser.add_argument("attrsFile", help="""source gencode attrs file""")
     parser.add_argument("cdsFile", help="""source gencode attrs file""")
     parser.add_argument("srcPsl", help="""source psl file""")
     parser.add_argument("geneTable", help="""name of table to load""")
     parser.add_argument("geneSql", help="""info table SQL file""")
+    parser.add_argument("srcDbs", help="""uses these srcDbs""", nargs="+")
     return parser.parse_args()
 
 def writeGeneRow(srcDb, pslRow, attrsTable, cdsTable, outGeneFh):
@@ -28,10 +28,14 @@ def writeGeneRow(srcDb, pslRow, attrsTable, cdsTable, outGeneFh):
     cds = cdsRow.cds if cdsRow != None else ""
     fileOps.prRowv(outGeneFh, srcDb+":"+qName, cds, srcDb, geneName)
 
-def createGeneFile(srcDb, srcPsl, attrsTable, cdsTable, outGeneFile):
+def createGeneFileSrcDb(srcDb, srcPsl, attrsTable, cdsTable, outGeneFh):
+    for pslRow in TabFileReader(srcPsl):
+        writeGeneRow(srcDb, pslRow, attrsTable, cdsTable, outGeneFh)
+
+def createGeneFile(srcDbs, srcPsl, attrsTable, cdsTable, outGeneFile):
     with open(outGeneFile, "w") as outGeneFh:
-        for pslRow in TabFileReader(srcPsl):
-            writeGeneRow(srcDb, pslRow, attrsTable, cdsTable, outGeneFh)
+        for srcDb in srcDbs:
+            createGeneFileSrcDb(srcDb, srcPsl, attrsTable, cdsTable, outGeneFh)
 
 def loadGeneFile(db, geneTable, outGeneFile, geneSql):
     subprocess.check_call(["hgLoadSqlTab", db, geneTable, geneSql, outGeneFile])
@@ -41,7 +45,7 @@ def main():
     attrsTable = TSVTable(args.attrsFile, uniqKeyCols=("transcriptId",))
     cdsTable = TSVTable(args.cdsFile, uniqKeyCols=("transcriptId",), columns=("transcriptId", "cds"))
     tmpGeneFile = fileOps.tmpFileGet("loadtransMapGene")
-    createGeneFile(args.srcDb, args.srcPsl, attrsTable, cdsTable, tmpGeneFile)
+    createGeneFile(args.srcDbs, args.srcPsl, attrsTable, cdsTable, tmpGeneFile)
     loadGeneFile(args.sharedDb, args.geneTable, tmpGeneFile, args.geneSql)
     os.unlink(tmpGeneFile)
 

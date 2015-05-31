@@ -7,6 +7,9 @@ include ../pipeline/defs.mk
 
 srcOrgDb = Mus${srcOrg}_${MSCA_VERSION}
 
+# all that are live in the browser
+liveSrcOrgDbs =  ${MSCA_LIVE_VERSIONS:%=Mus${srcOrg}_%}
+
 # directories
 BASE_DATA_DIR = ${MSCA_PROJ_DIR}/browser
 GBDB_SHARED_DIR = ${BASE_DATA_DIR}/gbdb/${sharedDb}

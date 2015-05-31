@@ -161,6 +161,4 @@ priority 31
 bigDataUrl /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1411/cactus/1411_browser.hal
 type halSnake
 
-include gencodeVM4.trackDb.ra
-
 include bamTracks.trackDb.ra

@@ -5,10 +5,15 @@ sharedCheckpointDir = ${CHECKPOINT_DIR}/${sharedDb}
 sharedDatabaseCreateCheckpoint = ${sharedCheckpointDir}/sharedDatabaseCreate.done
 hgCentralCreateCheckpoint = ${sharedCheckpointDir}/hgCentralCreateCheckpoint.done
 
+# for the shared database, build tables with all source versions.   Per-assembly
+# tables would mean duplicating trackDb entries (with a program).  While duplicating
+# is easy by code, this one table is the way transmap was design to work.  Hence
+# we include all live versions 
+transMapLiveVers = $(shell echo ${MSCA_LIVE_VERSIONS} | tr " " "_")
 transMapGencodeSrcLoadCheckpoints = \
-	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.seq.done} \
-	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.src.done} \
-	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.gene.done}
+	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.${transMapLiveVers}.seq.done} \
+	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.${transMapLiveVers}.src.done} \
+	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.${transMapLiveVers}.gene.done}
 
 all: sharedDb genomeDbs
 
@@ -42,25 +47,25 @@ ${hgCentralCreateCheckpoint}: ${sharedDatabaseCreateCheckpoint} genomeDbs
 ##
 transmapGencodeShared: ${transMapGencodeSrcLoadCheckpoints} 
 
-${sharedCheckpointDir}/transMap%.seq.done: ${GBDB_SHARED_DIR}/transMap%.fa ${sharedDatabaseCreateCheckpoint}
+${sharedCheckpointDir}/transMap%.${transMapLiveVers}.seq.done: ${GBDB_SHARED_DIR}/transMap%.${transMapLiveVers}.fa ${sharedDatabaseCreateCheckpoint}
 	@mkdir -p $(dir $@)
 	hgLoadSeq -drop -seqTbl=transMapSeq$*${TRANS_MAP_TABLE_VERSION} -extFileTbl=transMapExtFile$*${TRANS_MAP_TABLE_VERSION} ${sharedDb} $<
 	rm -f transMapSeq$*${TRANS_MAP_TABLE_VERSION}.tab
 	touch $@
-${GBDB_SHARED_DIR}/transMap%.fa: ${TRANS_MAP_DIR}/data/wgEncode%.fa
+${GBDB_SHARED_DIR}/transMap%.${transMapLiveVers}.fa: ${TRANS_MAP_DIR}/data/wgEncode%.fa
 	@mkdir -p $(dir $@)
-	bin/editTransMapSrcFasta  ${srcOrgDb} $< $@.${tmpExt}
+	bin/editTransMapSrcFasta $< $@.${tmpExt} ${liveSrcOrgDbs}
 	mv -f $@.${tmpExt} $@
-${sharedCheckpointDir}/transMap%.src.done: ${TRANS_MAP_DIR}/data/wgEncode%.psl ${sharedDatabaseCreateCheckpoint}
+${sharedCheckpointDir}/transMap%.${transMapLiveVers}.src.done: ${TRANS_MAP_DIR}/data/wgEncode%.psl ${sharedDatabaseCreateCheckpoint}
 	@mkdir -p $(dir $@)
-	bin/loadTransMapSrc ${srcOrgDb} ${sharedDb} $< transMapSrc$*${TRANS_MAP_TABLE_VERSION}  ${KENT_HG_LIB_DIR}/transMapSrc.sql
+	bin/loadTransMapSrc ${sharedDb} $< transMapSrc$*${TRANS_MAP_TABLE_VERSION}  ${KENT_HG_LIB_DIR}/transMapSrc.sql ${liveSrcOrgDbs}
 	touch $@
-${sharedCheckpointDir}/transMap%.gene.done: ${TRANS_MAP_DIR}/data/wgEncode%.cds \
+${sharedCheckpointDir}/transMap%.${transMapLiveVers}.gene.done: ${TRANS_MAP_DIR}/data/wgEncode%.cds \
 					${TRANS_MAP_DIR}/data/wgEncode%.psl \
 					${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv \
 					${sharedDatabaseCreateCheckpoint}
 	@mkdir -p $(dir $@)
-	bin/loadTransMapGene ${srcOrgDb} ${sharedDb} ${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv  ${TRANS_MAP_DIR}/data/wgEncode$*.cds  ${TRANS_MAP_DIR}/data/wgEncode$*.psl transMapGene$*${TRANS_MAP_TABLE_VERSION}  ${KENT_HG_LIB_DIR}/transMapGene.sql
+	bin/loadTransMapGene ${sharedDb} ${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv  ${TRANS_MAP_DIR}/data/wgEncode$*.cds  ${TRANS_MAP_DIR}/data/wgEncode$*.psl transMapGene$*${TRANS_MAP_TABLE_VERSION}  ${KENT_HG_LIB_DIR}/transMapGene.sql ${liveSrcOrgDbs}
 	touch $@
 
 # error about pipeline not being run

@@ -55,7 +55,7 @@ createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}
 # also depend on included files
 ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra: bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*.trackDb.ra) ${rnaSeqTrackDbCheckpoint}
 	@mkdir -p $(dir $@)
-	${python} bin/buildTrackDb.py --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --hal ${halFile} $@.${tmpExt}
+	${python} bin/buildTrackDb.py --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --hal ${halBrowserFile} $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
 # generate RNASeq trackDb entries; only run on 1505 if variable is set able
