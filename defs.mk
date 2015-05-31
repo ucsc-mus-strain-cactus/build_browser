@@ -25,9 +25,6 @@ musStrainHtDocsDir = /data/apache/htdocs-mus-strain/
 halBrowserHtDocsFile = ${musStrainHtDocsDir}/msca_hal/$(notdir ${halBrowserFile})
 
 
-# GENCODE transMap input files (FIXME: duplication of pipeline/rules/transMap.mk)
-GENCODE_VERSION = VM4
-TRANS_MAP_VERSION = 2015-05-15
 # version letter so we can have multiple tables
 TRANS_MAP_TABLE_VERSION = a
 TRANS_MAP_DIR = ${MSCA_DATA_DIR}/comparative/${MSCA_VERSION}/transMap/${TRANS_MAP_VERSION}

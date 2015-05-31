@@ -17,6 +17,8 @@ sys.path.append("/hive/groups/recon/local/pycbio/lib")
 from pycbio.sys import dbOps
 from pycbio.hgdata import hgDb
 
+dbOps.mySqlSetErrorOnWarn()
+ 
 # constants for database and file system
 gbdb = "/hive/groups/recon/projs/mus_strain_cactus/pipeline_data/browser/gbdb"
 clade = "musStrains"
@@ -33,7 +35,7 @@ genomeDefs = (
     GDef("C57B6J",       "Mus musculus C57BL/6J",    10090),
     GDef("C57B6NJ",      "Mus musculus C57BL/6NJ",   10090),
     GDef("CAROLIEiJ",    "Mus caroli/EiJ",           10089),
-    GDef("CASTEiJ",      "Mus castaneus/EiJ",    10090),
+    GDef("CASTEiJ",      "Mus castaneus/EiJ",        10090),
     GDef("CBAJ",         "Mus musculus CBA/J",       10090),
     GDef("DBA2J",        "Mus musculus DBA/2J",      10090),
     GDef("FVBNJ",        "Mus musculus FVB/NJ",      10090),
@@ -48,9 +50,9 @@ genomeDefs = (
 
 def parseArgs():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--assembly", metavar="assembly", dest="assemblies",
-                        required=True, action="append",
-                        help="Assembly numbers to add.  Previous Assemblies not specified will no longer be included. Maybe repeated, the last one becomes the default")
+    parser.add_argument("--assemblies", metavar="assemblies", dest="assemblies",  nargs="+",
+                        required=True,
+                        help="List of assembly numbers to add.  Previous assemblies not specified will no longer be included unless specified. The last one becomes the default")
     parser.add_argument("hgCentralDb", help="hgcentral database that is the source of the genome")
     parser.add_argument("musSharedDb", help="database for receive updated copy of tables")
     args = parser.parse_args()
@@ -59,16 +61,34 @@ def parseArgs():
         parser.error("databases not allowed as a target due to health paranoid: " + args.hgCentralDb)
     return args
 
+def dbExecute(conn, sql, args=None):
+    "execute SQL query on a connection that returns no result"
+    cur = conn.cursor()
+    try:
+        cur.execute(sql, args)
+    finally:
+        cur.close()
+
+def dbQuery(conn, sql, args=None):
+    "generator to run an SQL query on a connection"
+    cur = conn.cursor()
+    try:
+        cur.execute(sql, args)
+        for row in cur:
+            yield row
+    finally:
+        cur.close()
+
 def genomeDbName(genome, assembly):
     return "Mus" + genome + "_" + str(assembly)
 
 def haveDbChromInfo(conn, genomeDb):
     "do we have database and chromInfo"
-    return next(dbOps.query(conn, 'show databases like "%s"'%genomeDb), False) and next(dbOps.query(conn, 'show tables from %s like "chromInfo"'%genomeDb), False)
+    return next(dbQuery(conn, 'show databases like "%s"'%genomeDb), False) and next(dbQuery(conn, 'show tables from %s like "chromInfo"'%genomeDb), False)
 
 def getDefaultPosition(conn, genomeDb):
     "default is 10KB of largest sequence"
-    row = list(dbOps.query(conn, "select * from %s.chromInfo order by size desc limit 1"%genomeDb))[0]
+    row = list(dbQuery(conn, "select * from %s.chromInfo order by size desc limit 1"%genomeDb))[0]
     size = row["size"]
     posSize = 10000
     if size < posSize:
@@ -76,9 +96,9 @@ def getDefaultPosition(conn, genomeDb):
     return row["chrom"]+":0-"+str(posSize)
 
 def cloneTable(conn, srcDb, destDb, table):
-    dbOps.execute(conn, "DROP TABLE IF EXISTS %s.%s;" % (destDb, table))
-    dbOps.execute(conn, "CREATE TABLE %s.%s LIKE %s.%s;" % (destDb, table, srcDb, table))
-    dbOps.execute(conn, "INSERT %s.%s SELECT * from %s.%s;" % (destDb, table, srcDb, table))
+    dbExecute(conn, "DROP TABLE IF EXISTS %s.%s;" % (destDb, table))
+    dbExecute(conn, "CREATE TABLE %s.%s LIKE %s.%s;" % (destDb, table, srcDb, table))
+    dbExecute(conn, "INSERT %s.%s SELECT * from %s.%s;" % (destDb, table, srcDb, table))
 
 def cloneCentralTables(conn, hgCentralDb, musSharedDb):
     for tbl in ("dbDb", "defaultDb", "genomeClade", "clade"):
@@ -87,22 +107,22 @@ def cloneCentralTables(conn, hgCentralDb, musSharedDb):
 def dbDbTableAdd(conn, gdef, assembly, orderKey):
     "create a gbdb row from a GDef"
     genomeDb = genomeDbName(gdef.genome, assembly)
-    dbOps.execute(conn, "INSERT INTO dbDb (name, description, nibPath, organism, defaultPos, active, orderKey, genome, scientificName, htmlPath, hgNearOk, hgPbOk, sourceName, taxId) "
-                  + "VALUES (%(name)s, %(description)s, %(nibPath)s, %(organism)s, %(defaultPos)s, %(active)s, %(orderKey)s, %(genome)s, %(scientificName)s, %(htmlPath)s, %(hgNearOk)s, %(hgPbOk)s, %(sourceName)s, %(taxId)s)",
-                  {"name": genomeDb,
-                   "description": gdef.scientificName + ", %s assembly" % (assembly,),
-                   "nibPath": os.path.join(gbdb, genomeDb, genomeDb+".2bit"),
-                   "organism": gdef.scientificName,
-                   "defaultPos": getDefaultPosition(conn, genomeDb),
-                   "active": 1,
-                   "orderKey": orderKey,
-                   "genome": gdef.scientificName,
-                   "scientificName": gdef.scientificName,
-                   "htmlPath": os.path.join(gbdb, genomeDb, "html/description.html"),
-                   "hgNearOk": 0, 
-                   "hgPbOk": 0,
-                   "sourceName": "Sanger",
-                   "taxId": gdef.taxid})
+    dbExecute(conn, "INSERT INTO dbDb (name, description, nibPath, organism, defaultPos, active, orderKey, genome, scientificName, htmlPath, hgNearOk, hgPbOk, sourceName, taxId) "
+              + "VALUES (%(name)s, %(description)s, %(nibPath)s, %(organism)s, %(defaultPos)s, %(active)s, %(orderKey)s, %(genome)s, %(scientificName)s, %(htmlPath)s, %(hgNearOk)s, %(hgPbOk)s, %(sourceName)s, %(taxId)s)",
+              {"name": genomeDb,
+               "description": gdef.scientificName + ", %s assembly" % (assembly,),
+               "nibPath": os.path.join(gbdb, genomeDb, genomeDb+".2bit"),
+               "organism": gdef.scientificName,
+               "defaultPos": getDefaultPosition(conn, genomeDb),
+               "active": 1,
+               "orderKey": orderKey,
+               "genome": gdef.scientificName,
+               "scientificName": gdef.scientificName,
+               "htmlPath": os.path.join(gbdb, genomeDb, "html/description.html"),
+               "hgNearOk": 0, 
+               "hgPbOk": 0,
+               "sourceName": "Sanger",
+               "taxId": gdef.taxid})
 
 def dbDbTableBuildAssembly(conn, assembly):
     orderKey = 1
@@ -116,12 +136,12 @@ def dbDbTableBuild(conn, assemblies):
         dbDbTableBuildAssembly(conn, assembly)
 
 def cladeTableBuild(conn):
-    dbOps.execute(conn, "INSERT INTO clade (name, label, priority) " +
-                  "VALUES (%s, %s, %s)", (clade, cladeLabel, 0.1)) 
+    dbExecute(conn, "INSERT INTO clade (name, label, priority) " +
+              "VALUES (%s, %s, %s)", (clade, cladeLabel, 0.1)) 
 
 def genomeCladeTableAdd(conn, gdef, priority):
-    dbOps.execute(conn, "INSERT INTO genomeClade (genome, clade, priority) " +
-                  "VALUES (%s, %s, %s)", (gdef.scientificName, clade, priority)) 
+    dbExecute(conn, "INSERT INTO genomeClade (genome, clade, priority) " +
+              "VALUES (%s, %s, %s)", (gdef.scientificName, clade, priority)) 
 
 def genomeCladeTableBuild(conn):
     priority = 1
@@ -130,8 +150,8 @@ def genomeCladeTableBuild(conn):
         priority += 1
 
 def defaultDbTableAdd(conn, gdef, defaultAssembly):
-    dbOps.execute(conn, "INSERT INTO defaultDb (genome, name) " +
-                  "VALUES (%s, %s)", (gdef.scientificName, genomeDbName(gdef.genome, defaultAssembly))) 
+    dbExecute(conn, "INSERT INTO defaultDb (genome, name) " +
+              "VALUES (%s, %s)", (gdef.scientificName, genomeDbName(gdef.genome, defaultAssembly))) 
 
 def defaultDbTableBuild(conn, defaultAssembly):
     for gdef in genomeDefs:

@@ -1,86 +1,98 @@
-track allProblems
-shortLabel All Annotation Problems
-longLabel $Organism All Annotation Problems
+track compAnnGencodeBasicVM4_super
+superTrack on hide
+shortLabel Basic Annotations
+longLabel GENCODE basic comparative annotations
 group musStrain
-type bed 12 .
-visibility hide
-itemRgb On
-priority 10
 
-searchTable allProblems
-searchType bed
-searchMethod prefix
-searchPriority 1
+    track compAnnGencodeBasicVM4_allProblems
+    superTrack compAnnGencodeBasicVM4_super pack
+    shortLabel All Annotation Problems
+    longLabel $Organism GENCODE Basic All Annotation Problems
+    group musStrain
+    type bed 12 .
+    visibility hide
+    itemRgb On
+    priority 10
 
-track assemblyErrors
-shortLabel Assembly Errors
-longLabel $Organism Assembly Errors
-group musStrain
-type bed 12 .
-visibility hide
-itemRgb On
-priority 3
+    searchTable compAnnGencodeBasicVM4_allProblems
+    searchType bed
+    searchMethod prefix
+    searchPriority 1
 
-searchTable assemblyErrors
-searchType bed
-searchMethod prefix
-searchPriority 1
+    track compAnnGencodeBasicVM4_assemblyErrors
+    superTrack compAnnGencodeBasicVM4_super pack
+    shortLabel Assembly Errors
+    longLabel $Organism GENCODE Basic Assembly Errors
+    group musStrain
+    type bed 12 .
+    visibility hide
+    itemRgb On
+    priority 3
 
-track alignmentErrors
-shortLabel Alignment Errors
-longLabel $Organism Alignment Errors
-group musStrain
-type bed 12 .
-visibility hide
-itemRgb On
-priority 4
+    searchTable compAnnGencodeBasicVM4_assemblyErrors
+    searchType bed
+    searchMethod prefix
+    searchPriority 1
 
-searchTable alignmentErrors
-searchType bed
-searchMethod prefix
-searchPriority 1
+    track compAnnGencodeBasicVM4_alignmentErrors
+    superTrack compAnnGencodeBasicVM4_super pack
+    shortLabel Alignment Errors
+    longLabel $Organism GENCODE Basic Alignment Errors
+    group musStrain
+    type bed 12 .
+    visibility hide
+    itemRgb On
+    priority 4
 
-track interestingBiology
-shortLabel Interesting Biology
-longLabel $Organism Potentially Interesting Biology
-group musStrain
-type bed 12 .
-visibility hide
-itemRgb On
-priority 5
+    searchTable compAnnGencodeBasicVM4_alignmentErrors
+    searchType bed
+    searchMethod prefix
+    searchPriority 1
 
-searchTable interestingBiology
-searchType bed
-searchMethod prefix
-searchPriority 1
+    track compAnnGencodeBasicVM4_interestingBiology
+    superTrack compAnnGencodeBasicVM4_super pack
+    shortLabel Interesting Biology
+    longLabel $Organism GENCODE Basic Potentially Interesting Biology
+    group musStrain
+    type bed 12 .
+    visibility hide
+    itemRgb On
+    priority 5
 
-track comparativeAnnotation
-shortLabel Comparative Annotation
-longLabel $Organism Comparative Annotation
-group musStrain
-type bed 12 .
-visibility hide
-itemRgb On
-priority 2
+    searchTable compAnnGencodeBasicVM4_interestingBiology
+    searchType bed
+    searchMethod prefix
+    searchPriority 1
 
-searchTable comparativeAnnotation
-searchType bed
-searchMethod prefix
-searchPriority 1
+    track compAnnGencodeBasicVM4_compAnnotation
+    superTrack compAnnGencodeBasicVM4_super pack
+    shortLabel Comparative Annotation
+    longLabel $Organism GENCODE Basic Comparative Annotation
+    group musStrain
+    type bed 12 .
+    visibility hide
+    itemRgb On
+    priority 2
 
-track inFrameStop
-shortLabel In Frame Stop
-longLabel $Organism In Frame Stops
-group musStrain
-type bed 12 .
-visibility hide
-itemRgb On
-priority 6
+    searchTable compAnnGencodeBasicVM4_compAnnotation
+    searchType bed
+    searchMethod prefix
+    searchPriority 1
 
-searchTable inFrameStop
-searchType bed
-searchMethod prefix
-searchPriority 1
+    track compAnnGencodeBasicVM4_inFrameStop
+    superTrack compAnnGencodeBasicVM4_super pack
+    shortLabel In Frame Stop
+    longLabel $Organism GENCODE Basic In Frame Stops
+    group musStrain
+    type bed 12 .
+    visibility hide
+    itemRgb On
+    priority 6
+
+    searchTable compAnnGencodeBasicVM4_inFrameStop
+    searchType bed
+    searchMethod prefix
+    searchPriority 1
 
 track gcPercent
 shortLabel GC Percent
@@ -105,5 +117,15 @@ visibility hide
 color 150,100,30
 altColor 230,170,40
 type bed 3 +
+
+track rmsk
+shortLabel RepeatMasker
+longLabel Repeating Elements by RepeatMasker
+group varRep
+visibility dense
+spectrum on
+type rmsk
+maxWindowToDraw 10000000
+canPack off
 
 include transMap.trackDb.ra

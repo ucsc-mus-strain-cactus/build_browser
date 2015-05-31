@@ -1,19 +1,20 @@
 include defs.mk
-# this makefile assumes that you have the kent source directory in your path
-# see defs.mk for the necessary inclusion of a config.mk from comparativeAnnotator
+# this makefile assumes that you have the kent source programs in your path
 
 sharedCheckpointDir = ${CHECKPOINT_DIR}/${sharedDb}
 sharedDatabaseCreateCheckpoint = ${sharedCheckpointDir}/sharedDatabaseCreate.done
+hgCentralCreateCheckpoint = ${sharedCheckpointDir}/hgCentralCreateCheckpoint.done
 
 transMapGencodeSrcLoadCheckpoints = \
 	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.seq.done} \
 	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.src.done} \
 	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.gene.done}
 
-all: shared genomes
+all: sharedDb genomeDbs
 
-shared: ${halBrowserHtDocsFile} loadSharedSql
-genomes: ${genomes:%=%.loadGenome} refGencodeTracks
+sharedDb: ${halBrowserHtDocsFile} loadSharedSql
+genomeDbs: ${allOrgs:%=%.loadGenome} refGencodeTracks
+refGenome: ${srcOrg}.loadGenome
 
 ${halBrowserHtDocsFile}: ${halBrowserFile}
 	@mkdir -p $(dir $@)
@@ -23,18 +24,25 @@ ${halBrowserHtDocsFile}: ${halBrowserFile}
 %.loadGenome:
 	${MAKE} -f loadGenome.mk GENOME=$* all
 
-loadSharedSql: ${sharedDatabaseCreateCheckpoint} transmapGencodeShared
+loadSharedSql: ${sharedDatabaseCreateCheckpoint} ${hgCentralCreateCheckpoint} transmapGencodeShared
 
 ${sharedDatabaseCreateCheckpoint}:
 	@mkdir -p $(dir $@)
 	hgsql -e "create database IF NOT EXISTS ${sharedDb};"
 	touch $@
 
+# need to wait for chromInfo tables to be loaded in each database
+${hgCentralCreateCheckpoint}: ${sharedDatabaseCreateCheckpoint} genomeDbs
+	@mkdir -p $(dir $@)
+	${python} bin/hgCentralSetup --assemblies ${MSCA_LIVE_VERSIONS} -- hgcentraltest ${sharedDb}
+	touch $@
+
 ##
 ## transmap shared source tables.
-transmapGencodeShared: ${transMapGencodeSrcLoadCheckpoints}
+##
+transmapGencodeShared: ${transMapGencodeSrcLoadCheckpoints} 
 
-${sharedCheckpointDir}/transMap%.seq.done: ${GBDB_SHARED_DIR}/transMap%.fa
+${sharedCheckpointDir}/transMap%.seq.done: ${GBDB_SHARED_DIR}/transMap%.fa ${sharedDatabaseCreateCheckpoint}
 	@mkdir -p $(dir $@)
 	hgLoadSeq -drop -seqTbl=transMapSeq$*${TRANS_MAP_TABLE_VERSION} -extFileTbl=transMapExtFile$*${TRANS_MAP_TABLE_VERSION} ${sharedDb} $<
 	rm -f transMapSeq$*${TRANS_MAP_TABLE_VERSION}.tab
@@ -43,15 +51,14 @@ ${GBDB_SHARED_DIR}/transMap%.fa: ${TRANS_MAP_DIR}/data/wgEncode%.fa
 	@mkdir -p $(dir $@)
 	bin/editTransMapSrcFasta  ${srcOrgDb} $< $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
-
-${sharedCheckpointDir}/transMap%.src.done: ${TRANS_MAP_DIR}/data/wgEncode%.psl
+${sharedCheckpointDir}/transMap%.src.done: ${TRANS_MAP_DIR}/data/wgEncode%.psl ${sharedDatabaseCreateCheckpoint}
 	@mkdir -p $(dir $@)
 	bin/loadTransMapSrc ${srcOrgDb} ${sharedDb} $< transMapSrc$*${TRANS_MAP_TABLE_VERSION}  ${KENT_HG_LIB_DIR}/transMapSrc.sql
-	rm -f transMapSrc$*.tab
 	touch $@
 ${sharedCheckpointDir}/transMap%.gene.done: ${TRANS_MAP_DIR}/data/wgEncode%.cds \
 					${TRANS_MAP_DIR}/data/wgEncode%.psl \
-					${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv
+					${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv \
+					${sharedDatabaseCreateCheckpoint}
 	@mkdir -p $(dir $@)
 	bin/loadTransMapGene ${srcOrgDb} ${sharedDb} ${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv  ${TRANS_MAP_DIR}/data/wgEncode$*.cds  ${TRANS_MAP_DIR}/data/wgEncode$*.psl transMapGene$*${TRANS_MAP_TABLE_VERSION}  ${KENT_HG_LIB_DIR}/transMapGene.sql
 	touch $@
@@ -99,19 +106,24 @@ srcOrgCheckpoints = \
 
 refGencodeTracks: ${srcOrgCheckpoints}
 
-${srcOrgCheckpointDir}/%.gp.done:
+${srcOrgCheckpointDir}/%.gp.done: refGenome
 	@mkdir -p $(dir $@)
 	bin/cloneEditPositionalTable 3 ${srcOrgHgDb} ${srcOrgDb} $*
 	touch $@
 
-${srcOrgCheckpointDir}/%.exonsup.done:
+${srcOrgCheckpointDir}/%.exonsup.done: refGenome
 	@mkdir -p $(dir $@)
 	bin/cloneEditPositionalTable 5 ${srcOrgHgDb} ${srcOrgDb} $*
 	touch $@
 
-${srcOrgCheckpointDir}/%.tab.done:
+${srcOrgCheckpointDir}/%.tab.done: refGenome
 	@mkdir -p $(dir $@)
 	hgsql -e 'drop table if exists $*' ${srcOrgDb}
 	hgsql -e 'create table $* LIKE ${srcOrgHgDb}.$*' ${srcOrgDb}
 	hgsql -e 'insert $* select * from ${srcOrgHgDb}.$*' ${srcOrgDb}
 	touch $@
+
+
+clean: ${allOrgs:%=%.cleanGenome}
+%.cleanGenome:
+	${MAKE} -f loadGenome.mk GENOME=$* clean
