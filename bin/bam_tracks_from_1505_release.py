@@ -18,16 +18,16 @@ def parse_args():
 genome_map = {'129S1_SvImJ': '129S1', 'AKR_J': 'AKRJ', 'C3H_HeJ': 'C3HHeJ', 'CAST_EiJ': 'CASTEiJ', 'DBA_2J': 'DBA2J',
               'NOD_ShiLtJ': 'NODShiLtJ', 'PWK_PhJ': 'PWKPhJ', 'WSB_EiJ': 'WSBEiJ', 'A_J': 'AJ', 'BALB_cJ': 'BALBcJ',
               'C57BL_6NJ': 'C57B6NJ', 'CBA_J': 'CBAJ', 'LP_J': 'LPJ', 'NZO_HlLtJ': 'NZOHlLtJ', 'SPRET_EiJ': 'SPRETEiJ',
-              'CAROLI_EiJ': 'CAROLIEiJ'}
+              'CAROLI_EiJ': 'CAROLIEiJ', "Pahari_EiJ": "PAHARIEiJ"}
 
 # used to isolate experiment names from path
 r = re.compile('^[a-zA-Z]+[0-9]+')
 
-base_bam_trackline = """        track {genome}_{institute}_{tissue}_{experiment}
-        longLabel {genome} {tissue} BAM ({institute}, {experiment})
-        shortLabel {genome} {tissue} BAM ({institute}, {experiment})
+base_bam_trackline = """        track rnaseq_{genome}_{institute}_{tissue}_{experiment}
+        longLabel {genome} {tissue} RNASeq ({institute}, {experiment})
+        shortLabel {genome} {tissue} RNASeq ({institute}, {experiment})
         bigDataUrl {bam_path}
-        parent {genome}_{tissue}
+        parent rnaseq_{genome}_{tissue}
         type bam
         indelDoubleInsert on
         indelQueryInsert on
@@ -36,22 +36,22 @@ base_bam_trackline = """        track {genome}_{institute}_{tissue}_{experiment}
 
 """
 
-per_tissue_composite_trackline = """    track {genome}_{tissue}
+per_tissue_composite_trackline = """    track rnaseq_{genome}_{tissue}
     compositeTrack on
-    shortLabel {genome} {tissue} BAMs
-    longLabel {genome} {tissue} BAMs
-    parent {genome}_BAMs
+    shortLabel {genome} {tissue} RNASeq
+    longLabel {genome} {tissue} RNASeq
+    parent rnaseq_{genome}
     type bam
     allButtonPair on
     dragAndDrop subTracks
 
 """
 
-per_genome_super_trackline = """track {genome}_BAMs
+per_genome_super_trackline = """track rnaseq_{genome}
 superTrack on
-group BAMs
-shortLabel {genome} RNAseq raw BAM alignments
-longLabel {genome} RNAseq raw BAM alignments
+group regulation
+shortLabel {genome} RNAseq raw alignments
+longLabel {genome} RNAseq raw alignments
 
 """
 
@@ -87,18 +87,16 @@ def make_reference_tracks(source_dir, target_file, assembly_version):
                     for bam_path in bams:
                         match = re.findall(r, os.path.basename(bam_path))
                         if len(match) != 1:
-                            experiment = os.path.basename(bam_path).split(".")
+                            experiment = os.path.basename(bam_path).split(".")[0]
                         else:
                             experiment = match[0]
-                        outf.write(base_bam_trackline.format(genome=genome, tissue=tissue, institute=institute, 
+                        outf.write(base_bam_trackline.format(genome=genome, tissue=tissue, institute=institute,
                                                              bam_path=bam_path, experiment=experiment))
-    with open("trackDb/C57B6J/MusC57B6J_{}/trackDb.ra".format(assembly_version), "a") as outf:
-        outf.write("\ninclude bamTracks.trackDb.ra\n")
 
 def make_individual_tracks(source_dir, assembly_version):
     final_map = walk_source_dir(source_dir)
     for genome in final_map:
-        target_file = "trackDb/{0}/Mus{0}_{1}/bamTracks.trackDb.ra".format(genome)
+        target_file = "trackDb/{0}/Mus{0}_{1}/bamTracks.trackDb.ra".format(genome, assembly_version)
         with open(target_file, 'w') as outf:
             outf.write(per_genome_super_trackline.format(genome=genome))
             for tissue in final_map[genome]:
@@ -107,15 +105,11 @@ def make_individual_tracks(source_dir, assembly_version):
                     for bam_path in bams:
                         match = re.findall(r, os.path.basename(bam_path))
                         if len(match) != 1:
-                            experiment = os.path.basename(bam_path).split(".")
+                            experiment = os.path.basename(bam_path).split(".")[0]
                         else:
                             experiment = match[0]
-                        outf.write(base_bam_trackline.format(genome=genome, tissue=tissue, institute=institute, 
+                        outf.write(base_bam_trackline.format(genome=genome, tissue=tissue, institute=institute,
                                                              bam_path=bam_path, experiment=experiment))
-    for genome in final_map:
-        with open("trackDb/{0}/Mus{0}_{1}/trackDb.ra".format(genome, assembly_version), "a") as outf:
-            outf.write("\ninclude bamTracks.trackDb.ra\n") 
-
 
 def main():
     args = parse_args()

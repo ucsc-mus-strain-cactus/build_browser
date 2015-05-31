@@ -45,22 +45,23 @@ ${databaseCheckpoint}:
 ##
 # Build trackDb files.
 ##
-createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra
+createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra ${rnaSeqTrackDbCheckpoint}
 
-./trackDb/${GENOME}/trackDb.ra: bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/*.trackDb.ra)
+./trackDb/${GENOME}/trackDb.ra:  ${rnaSeqTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
 	${python} bin/buildTrackDb.py $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
 # also depend on included files
-./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra: bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*.trackDb.ra)  ${rnaSeqTrackDbCheckpoint}
+./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra: bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*.trackDb.ra) ${rnaSeqTrackDbCheckpoint}
 	@mkdir -p $(dir $@)
 	${python} bin/buildTrackDb.py --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --hal ${halFile} $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
 # generate RNASeq trackDb entries; only run on 1505 if variable is set able
-${rnaSeqTrackDbCheckpoint}:
-	python bin/bam_tracks_from_1505_release.py --assembly_version ${MSCA_VERSION}
+${rnaSeqTrackDbCheckpoint}: bin/bam_tracks_from_1505_release.py
+	@mkdir -p $(dir $@)
+	${python} bin/bam_tracks_from_1505_release.py --assembly_version ${MSCA_VERSION}
 	touch $@
 
 ###
@@ -188,6 +189,7 @@ ${repeatMaskerCheckpoint}: ${repeatMaskerOut} ${databaseCheckpoint} ${chromInfoC
 
 clean:
 	rm -rf ${GBDB_DIR} ${BED_DIR} ${dbCheckpointDir}
+	rm -f trackDb/*/trackDb.ra trackDb/*/*/trackDb.ra
 	hgsql -e "DROP DATABASE IF EXISTS ${targetOrgDb};"
 
 
