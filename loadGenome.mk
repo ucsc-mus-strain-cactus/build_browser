@@ -70,7 +70,8 @@ ${rnaSeqTrackDbCheckpoint}: bin/bam_tracks_from_1505_release.py
 loadTrackDb: ${loadTrackDbCheckpoint}
 
 ${loadTrackDbCheckpoint}: createTrackDb  ${databaseCheckpoint} $(wildcard ./trackDb/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*trackDb.ra)
-	cd ./trackDb && ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib trackDb hgFindSpec ${targetOrgDb}
+	@mkdir -p $(dir $@) locks
+	cd ./trackDb && flock ../locks/loadTracks.lock ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib trackDb hgFindSpec ${targetOrgDb}
 	rm -f trackDb/trackDb.tab trackDb/hgFindSpec.tab
 	touch $@
 

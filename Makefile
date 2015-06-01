@@ -37,7 +37,7 @@ ${sharedDatabaseCreateCheckpoint}:
 	touch $@
 
 # need to wait for chromInfo tables to be loaded in each database
-${hgCentralCreateCheckpoint}: ${sharedDatabaseCreateCheckpoint} genomeDbs
+${hgCentralCreateCheckpoint}: ${sharedDatabaseCreateCheckpoint} genomeDbs bin/hgCentralSetup
 	@mkdir -p $(dir $@)
 	${python} bin/hgCentralSetup --assemblies ${MSCA_LIVE_VERSIONS} -- hgcentraltest ${sharedDb}
 	touch $@

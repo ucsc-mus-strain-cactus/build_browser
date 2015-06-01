@@ -87,13 +87,15 @@ def haveDbChromInfo(conn, genomeDb):
     return next(dbQuery(conn, 'show databases like "%s"'%genomeDb), False) and next(dbQuery(conn, 'show tables from %s like "chromInfo"'%genomeDb), False)
 
 def getDefaultPosition(conn, genomeDb):
-    "default is 10KB of largest sequence"
+    "default is 10KB in the middle of largest sequence"
     row = list(dbQuery(conn, "select * from %s.chromInfo order by size desc limit 1"%genomeDb))[0]
     size = row["size"]
+    pos = size/2
     posSize = 10000
-    if size < posSize:
+    if pos+posSize > size:
+        pos = 0
         posSize = size
-    return row["chrom"]+":0-"+str(posSize)
+    return row["chrom"]+":"+str(pos)+"-"+str(pos+posSize)
 
 def cloneTable(conn, srcDb, destDb, table):
     dbExecute(conn, "DROP TABLE IF EXISTS %s.%s;" % (destDb, table))

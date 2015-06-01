@@ -447,3 +447,8 @@ yalePseudoUrl *
 yLinOnOff wigMaf
 yLineMark *
 yLineOnOff *
+label.acc *
+label.db *
+label.gene *
+label.orgAbbrv *
+label.orgCommon *

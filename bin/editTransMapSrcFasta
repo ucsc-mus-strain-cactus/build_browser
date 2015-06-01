@@ -20,8 +20,8 @@ def editTransMapSrcFastaSrcDb(srcDb, srcFaFh, transMapFaFh):
         transMapFaFh.write(line)
 
 def editTransMapSrcFasta(srcDbs, srcFasta, transMapFaFh):
-    with open(srcFasta) as srcFaFh:
-        for srcDb in srcDbs:
+    for srcDb in srcDbs:
+        with open(srcFasta) as srcFaFh:
             editTransMapSrcFastaSrcDb(srcDb, srcFaFh, transMapFaFh)
         
 def main():

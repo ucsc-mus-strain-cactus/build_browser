@@ -3,6 +3,11 @@ superTrack on show
 shortLabel TransMap
 longLabel TransMap Alignments
 group genes
+label.acc 1
+label.db 0
+label.gene 1
+label.orgAbbrv 0
+label.orgCommon 0
 
     track transMapAlnGencodeBasicVM4a
     superTrack transMap pack
@@ -26,6 +31,11 @@ group genes
     showDiffBasesMaxZoom 10000.0
     showCdsAllScales .
     showCdsMaxZoom 10000.0
+    label.acc 1
+    label.db 0
+    label.gene 1
+    label.orgAbbrv 0
+    label.orgCommon 0
 
 searchTable transMapAlnGencodeBasicVM4a
 searchType psl
@@ -54,6 +64,11 @@ searchPriority 2.31
     showDiffBasesMaxZoom 10000.0
     showCdsAllScales .
     showCdsMaxZoom 10000.0
+    label.acc 1
+    label.db 0
+    label.gene 1
+    label.orgAbbrv 0
+    label.orgCommon 0
 
 searchTable transMapAlnGencodeCompVM4a
 searchType psl
@@ -67,7 +82,7 @@ searchPriority 2.32
     group genes
     type psl
     priority 37.003
-    color 0,100,0
+    color 255,51,255
     visibility dense
     transMapInfo transMapInfoGencodePseudoGeneVM4a
     transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4a
@@ -82,6 +97,11 @@ searchPriority 2.32
     showDiffBasesMaxZoom 10000.0
     showCdsAllScales .
     showCdsMaxZoom 10000.0
+    label.acc 1
+    label.db 0
+    label.gene 1
+    label.orgAbbrv 0
+    label.orgCommon 0
 
 searchTable transMapAlnGencodePseudoGeneVM4a
 searchType psl
