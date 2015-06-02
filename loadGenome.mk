@@ -25,6 +25,8 @@ loadTrackDbCheckpoint = ${dbCheckpointDir}/loadTrackDb.done
 chromInfoCheckpoint = ${dbCheckpointDir}/chromInfo.done
 goldGapCheckpoint =  ${dbCheckpointDir}/goldGap.done
 gcPercentCheckpoint = ${dbCheckpointDir}/gcPercent.done
+svCheckpoints = $(subst ${yalcinSvDir},${dbCheckpointDir},$(subst .bed,.sv.done,$(wildcard ${yalcinSvDir}/*)))
+svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
 repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
 
 ifeq (${haveRnaSeq},yes)
@@ -32,7 +34,7 @@ rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
 endif
 
 all: createTrackDb loadTrackDb loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
-	loadCompAnn loadRepeatMasker
+	loadCompAnn loadRepeatMasker loadSv
 
 ###
 # setup databases
@@ -45,7 +47,7 @@ ${databaseCheckpoint}:
 ##
 # Build trackDb files.
 ##
-createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra ${rnaSeqTrackDbCheckpoint}
+createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint}
 
 ./trackDb/${GENOME}/trackDb.ra:  ${rnaSeqTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
@@ -64,6 +66,12 @@ ${rnaSeqTrackDbCheckpoint}: bin/bam_tracks_from_1505_release.py
 	${python} bin/bam_tracks_from_1505_release.py --assembly_version ${MSCA_VERSION}
 	touch $@
 
+# structural variant trackDb entries
+${svTrackDbCheckpoint}: bin/splice_junctions_yalcin_2012.py
+	@mkdir -p $(dir $@)
+	${python} bin/splice_junctions_yalcin_2012.py
+	touch $@
+
 ###
 # load trackDb files into tables
 ##
@@ -75,10 +83,12 @@ ${loadTrackDbCheckpoint}: createTrackDb  ${databaseCheckpoint} $(wildcard ./trac
 	rm -f trackDb/trackDb.tab trackDb/hgFindSpec.tab
 	touch $@
 
+
 ##
 # Genome sequences: chromInfo and twobit
 ##
 loadGenomeSeqs: ${twoBit} ${chromInfoCheckpoint}
+
 ${twoBit}: ${ASM_GENOMES_DIR}/${GENOME}.2bit
 	@mkdir -p $(dir $@)
 	ln -f $< $@.${tmpExt}
@@ -89,7 +99,6 @@ ${CHROM_INFO_DIR}/chromInfo.tab: ${chromSizes}
 	awk '{print $$1 "\t" $$2 "\t'${GBDB_DIR}'/'${targetOrgDb}'.2bit";}' ${chromSizes} > $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
-# remove silly optimzation from MySQL 3.0 days
 ${CHROM_INFO_DIR}/chromInfo.sql: ${CHROM_INFO_DIR}/chromInfo.tab
 	@mkdir -p $(dir $@)
 	sed -e "s/chrom(16)/chrom(128)/" ${KENT_HG_LIB_DIR}/chromInfo.sql > $@.${tmpExt}
@@ -105,6 +114,7 @@ ${chromInfoCheckpoint}: ${CHROM_INFO_DIR}/chromInfo.sql ${CHROM_INFO_DIR}/chromI
 ##
 # use lock, as hgGoldGapGl uses static file name
 loadGoldGap: ${goldGapCheckpoint}
+
 goldTmpDir = ${TMPDIR}/${GENOME}-gold.${tmpExt}
 ${goldGapCheckpoint}: ${agp} ${databaseCheckpoint}
 	@mkdir -p $(dir $@) ${goldTmpDir}
@@ -139,18 +149,35 @@ ${dbCheckpointDir}/transMap%.info.done: ${transMapDataDir}/transMap%.psl ${chrom
 
 
 ##
-# gcPercent  need tmpdir due to static file name
+# gcPercent need tmpdir due to static file name
+# TODO: make this 5bp windows and make a wiggle plot
 ##
-loadGcPercent: ${gcPercentTrack}
+loadGcPercent: ${gcPercentCheckpoint}
+
 gcPercentTmpDir = ${TMPDIR}/${GENOME}-gcpercent.${tmpExt}
 ${gcPercentCheckpoint}: ${twoBit} ${databaseCheckpoint}
 	@mkdir -p $(dir $@) ${gcPercentTmpDir}
-	cd ${gcPercentTmpDir} && hgGcPercent -win=10000 -verbose=0 -doGaps -noDots ${targetOrgDb} ${twoBit}
+	cd ${gcPercentTmpDir} && hgGcPercent -win=1000 -verbose=0 -doGaps -noDots ${targetOrgDb} ${twoBit}
 	rm -rf ${gcPercentTmpDir}
 	touch $@
 
+
 ##
-# compartive annotation tracks.  This calls a recurisve target with
+# Yalcin et al 2012 gold standard SV tracks lifted over from mm9
+##
+ifeq (${GENOME},${srcOrg})
+loadSv: ${svCheckpoints}
+else
+loadSv:
+endif
+
+${dbCheckpointDir}/%.sv.done: ${yalcinSvDir}/%.bed ${twoBit} ${databaseCheckpoint}
+	@mkdir -p $(dir $@)
+	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed4 -ignoreEmpty ${targetOrgDb} $*_yalcin_svs $<
+
+
+##
+# comparative annotation tracks.  This calls a recurisve target with
 # compAnnGencodeSubset=
 ##
 ifeq (${GENOME},${srcOrg})
@@ -192,5 +219,3 @@ clean:
 	rm -rf ${GBDB_DIR} ${BED_DIR} ${dbCheckpointDir}
 	rm -f trackDb/*/trackDb.ra trackDb/*/*/trackDb.ra
 	hgsql -e "DROP DATABASE IF EXISTS ${targetOrgDb};"
-
-
