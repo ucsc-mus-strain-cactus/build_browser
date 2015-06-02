@@ -31,7 +31,7 @@ longLabel Snake Track of progressiveCactus Alignments
 group compGeno
 type bed 3
 priority 2
-visibility dense
+visibility full
 dragAndDrop subTracks
 
 """

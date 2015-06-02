@@ -19,6 +19,7 @@ all: sharedDb genomeDbs
 
 sharedDb: ${halBrowserHtDocsFile} loadSharedSql
 genomeDbs: ${allOrgs:%=%.trackDbs} ${allOrgs:%=%.loadGenome} refGencodeTracks
+refGenome: ${srcOrg}.loadGenome
 
 ${halBrowserHtDocsFile}: ${halBrowserFile}
 	@mkdir -p $(dir $@)
@@ -115,7 +116,10 @@ srcOrgCheckpoints = \
 	${gencodeExonSupportTable:%=${srcOrgCheckpointDir}/%.exonsup.done} \
 	${gencodeTabTables:%=${srcOrgCheckpointDir}/%.tab.done}
 
+
 refGencodeTracks: ${srcOrgCheckpoints}
+	@echo ${srcOrgCheckpoints}
+	@echo ${}
 
 ${srcOrgCheckpointDir}/%.gp.done: refGenome
 	@mkdir -p $(dir $@)

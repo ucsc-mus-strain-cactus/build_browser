@@ -22,9 +22,9 @@ composite_track = """track yalcin_structural_variants
 compositeTrack on
 shortLabel Structural Variants
 longLabel Gold Standard Structural Variants (Yalcin et al 2012)
-type bam
 allButtonPair on
 dragAndDrop subTracks
+visibility hide
 
 """
 
@@ -32,7 +32,7 @@ per_bed_track = """    track {genome}_yalcin_svs
     shortLabel {genome}
     longLabel {genome} Structural Variants
     type bed 4
-    visibility hide
+    parent yalcin_structural_variants
 
 """
 
