@@ -6,6 +6,7 @@ These BEDs are lifted over from mm9 to mm10 by Joel
 
 import sys
 import os
+import argparse
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -42,7 +43,7 @@ def main():
         outf.write(composite_track)
         for bed in os.listdir(bed_dir):
             assert bed.endswith(".bed")
-            genome = bed.split("_")[0]
+            genome = bed.split("_")[0].split(".")[0]
             outf.write(per_bed_track.format(genome=genome))
     tmp = "".join(open(os.path.join(trackDb_path, "trackDb.ra")).readlines())
     if "include spliceJunctions.trackDb.ra" not in tmp:

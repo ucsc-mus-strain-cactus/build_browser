@@ -33,8 +33,9 @@ ifeq (${haveRnaSeq},yes)
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
 endif
 
-all: createTrackDb loadTrackDb loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
+all: createAdditionalTrackDb loadTrackDb loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
 	loadCompAnn loadRepeatMasker loadSv
+
 
 ###
 # setup databases
@@ -44,40 +45,50 @@ ${databaseCheckpoint}:
 	hgsql -e "CREATE DATABASE IF NOT EXISTS ${targetOrgDb};"
 	touch $@
 
-##
-# Build trackDb files.
-##
-createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint}
 
-./trackDb/${GENOME}/trackDb.ra:  ${rnaSeqTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/*.trackDb.ra)
+##
+# Build base trackDb files.
+# this is not included in all, and should be called first. this is a hack so that all trackDb are created
+# before scripts try to work on them
+##
+createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra
+
+./trackDb/${GENOME}/trackDb.ra: bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
 	${python} bin/buildTrackDb.py $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
 # also depend on included files
-./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra: bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*.trackDb.ra) ${rnaSeqTrackDbCheckpoint}
+./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra: bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
 	${python} bin/buildTrackDb.py --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --hal ${halBrowserFile} $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
+
+##
+# Build additional trackDb files.
+##
+createAdditionalTrackDb: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint}
+
 # generate RNASeq trackDb entries; only run on 1505 if variable is set able
-${rnaSeqTrackDbCheckpoint}: bin/bam_tracks_from_1505_release.py
+${rnaSeqTrackDbCheckpoint}: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra bin/bam_tracks_from_1505_release.py
 	@mkdir -p $(dir $@)
 	${python} bin/bam_tracks_from_1505_release.py --assembly_version ${MSCA_VERSION}
 	touch $@
 
 # structural variant trackDb entries
-${svTrackDbCheckpoint}: bin/splice_junctions_yalcin_2012.py
+${svTrackDbCheckpoint}: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra bin/splice_junctions_yalcin_2012.py
 	@mkdir -p $(dir $@)
-	${python} bin/splice_junctions_yalcin_2012.py
+	${python} bin/splice_junctions_yalcin_2012.py --assembly_version ${MSCA_VERSION} --ref_strain ${srcOrg}
 	touch $@
+
 
 ###
 # load trackDb files into tables
 ##
 loadTrackDb: ${loadTrackDbCheckpoint}
 
-${loadTrackDbCheckpoint}: createTrackDb  ${databaseCheckpoint} $(wildcard ./trackDb/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*trackDb.ra)
+${loadTrackDbCheckpoint}: createAdditionalTrackDb ${databaseCheckpoint} $(wildcard ./trackDb/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*trackDb.ra)
 	@mkdir -p $(dir $@) locks
 	cd ./trackDb && flock ../locks/loadTracks.lock ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib trackDb hgFindSpec ${targetOrgDb}
 	rm -f trackDb/trackDb.tab trackDb/hgFindSpec.tab
@@ -109,6 +120,7 @@ ${chromInfoCheckpoint}: ${CHROM_INFO_DIR}/chromInfo.sql ${CHROM_INFO_DIR}/chromI
 	hgLoadSqlTab ${targetOrgDb} chromInfo ${CHROM_INFO_DIR}/chromInfo.sql ${CHROM_INFO_DIR}/chromInfo.tab
 	touch $@
 
+
 ##
 # assembly and gap tracks. need tmpdir due to static file name
 ##
@@ -126,6 +138,7 @@ ${agp}: ${ASM_GENOMES_DIR}/${GENOME}.fa
 	@mkdir -p $(dir $@)
 	hgFakeAgp $< $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
+
 
 ##
 # gencode mapped tracks, except on reference
@@ -155,7 +168,7 @@ ${dbCheckpointDir}/transMap%.info.done: ${transMapDataDir}/transMap%.psl ${chrom
 loadGcPercent: ${gcPercentCheckpoint}
 
 gcPercentTmpDir = ${TMPDIR}/${GENOME}-gcpercent.${tmpExt}
-${gcPercentCheckpoint}: ${twoBit} ${databaseCheckpoint}
+${gcPercentCheckpoint}: ${twoBit} ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@) ${gcPercentTmpDir}
 	cd ${gcPercentTmpDir} && hgGcPercent -win=1000 -verbose=0 -doGaps -noDots ${targetOrgDb} ${twoBit}
 	rm -rf ${gcPercentTmpDir}
@@ -198,6 +211,7 @@ ${dbCheckpointDir}/compAnn${compAnnGencodeSubset}_%.done: ${ANNOTATION_DIR}/${co
 	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed12 -ignoreEmpty ${targetOrgDb} compAnn${compAnnGencodeSubset}_$* $<
 	touch $@
 endif
+
 
 ###
 # repeat masker data, if available (not on Rat or all assemblies)

@@ -18,7 +18,7 @@ transMapGencodeSrcLoadCheckpoints = \
 all: sharedDb genomeDbs
 
 sharedDb: ${halBrowserHtDocsFile} loadSharedSql
-genomeDbs: ${allOrgs:%=%.loadGenome} refGencodeTracks
+genomeDbs: ${allOrgs:%=%.trackDbs} ${allOrgs:%=%.loadGenome} refGencodeTracks
 refGenome: ${srcOrg}.loadGenome
 
 ${halBrowserHtDocsFile}: ${halBrowserFile}
@@ -26,7 +26,10 @@ ${halBrowserHtDocsFile}: ${halBrowserFile}
 	cp -f $< $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
-%.loadGenome:
+%.trackDbs:
+	${MAKE} -f loadGenome.mk GENOME=$* createTrackDb
+
+%.loadGenome: %.trackDbs
 	${MAKE} -f loadGenome.mk GENOME=$* all
 
 loadSharedSql: ${sharedDatabaseCreateCheckpoint} ${hgCentralCreateCheckpoint} transmapGencodeShared
