@@ -18,7 +18,7 @@ transMapGencodeSrcLoadCheckpoints = \
 all: sharedDb genomeDbs
 
 sharedDb: ${halBrowserHtDocsFile} loadSharedSql
-genomeDbs: ${allOrgs:%=%.trackDbs} ${allOrgs:%=%.loadGenome} refGencodeTracks
+genomeDbs: ${allOrgs:%=%.loadGenome} refGencodeTracks
 refGenome: ${srcOrg}.loadGenome
 
 ${halBrowserHtDocsFile}: ${halBrowserFile}
@@ -26,10 +26,7 @@ ${halBrowserHtDocsFile}: ${halBrowserFile}
 	cp -f $< $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
-%.trackDbs:
-	${MAKE} -f loadGenome.mk GENOME=$* createTrackDb
-
-%.loadGenome: %.trackDbs
+%.loadGenome:
 	${MAKE} -f loadGenome.mk GENOME=$* all
 
 loadSharedSql: ${sharedDatabaseCreateCheckpoint} ${hgCentralCreateCheckpoint} transmapGencodeShared
@@ -45,7 +42,6 @@ ${hgCentralCreateCheckpoint}: ${sharedDatabaseCreateCheckpoint} genomeDbs bin/hg
 	${python} bin/hgCentralSetup --assemblies ${MSCA_LIVE_VERSIONS} -- hgcentraltest ${sharedDb}
 	touch $@
 
-
 ##
 ## transmap shared source tables.
 ##
@@ -56,17 +52,14 @@ ${sharedCheckpointDir}/transMap%.${transMapLiveVers}.seq.done: ${GBDB_SHARED_DIR
 	hgLoadSeq -drop -seqTbl=transMapSeq$*${TRANS_MAP_TABLE_VERSION} -extFileTbl=transMapExtFile$*${TRANS_MAP_TABLE_VERSION} ${sharedDb} $<
 	rm -f transMapSeq$*${TRANS_MAP_TABLE_VERSION}.tab
 	touch $@
-
 ${GBDB_SHARED_DIR}/transMap%.${transMapLiveVers}.fa: ${TRANS_MAP_DIR}/data/wgEncode%.fa
 	@mkdir -p $(dir $@)
 	bin/editTransMapSrcFasta $< $@.${tmpExt} ${liveSrcOrgDbs}
 	mv -f $@.${tmpExt} $@
-
 ${sharedCheckpointDir}/transMap%.${transMapLiveVers}.src.done: ${TRANS_MAP_DIR}/data/wgEncode%.psl ${sharedDatabaseCreateCheckpoint}
 	@mkdir -p $(dir $@)
 	bin/loadTransMapSrc ${sharedDb} $< transMapSrc$*${TRANS_MAP_TABLE_VERSION}  ${KENT_HG_LIB_DIR}/transMapSrc.sql ${liveSrcOrgDbs}
 	touch $@
-
 ${sharedCheckpointDir}/transMap%.${transMapLiveVers}.gene.done: ${TRANS_MAP_DIR}/data/wgEncode%.cds \
 					${TRANS_MAP_DIR}/data/wgEncode%.psl \
 					${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv \
@@ -116,10 +109,7 @@ srcOrgCheckpoints = \
 	${gencodeExonSupportTable:%=${srcOrgCheckpointDir}/%.exonsup.done} \
 	${gencodeTabTables:%=${srcOrgCheckpointDir}/%.tab.done}
 
-
 refGencodeTracks: ${srcOrgCheckpoints}
-	@echo ${srcOrgCheckpoints}
-	@echo ${}
 
 ${srcOrgCheckpointDir}/%.gp.done: refGenome
 	@mkdir -p $(dir $@)
@@ -140,5 +130,6 @@ ${srcOrgCheckpointDir}/%.tab.done: refGenome
 
 
 clean: ${allOrgs:%=%.cleanGenome}
+
 %.cleanGenome:
 	${MAKE} -f loadGenome.mk GENOME=$* clean
