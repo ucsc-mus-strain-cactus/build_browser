@@ -1,6 +1,6 @@
 track gcPercent
 shortLabel GC Percent
-longLabel Percentage GC in 10kb Windows
+longLabel Percentage GC in 1kb Windows
 group map
 visibility dense
 spectrum on

@@ -27,12 +27,17 @@ goldGapCheckpoint =  ${dbCheckpointDir}/goldGap.done
 gcPercentCheckpoint = ${dbCheckpointDir}/gcPercent.done
 repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
 
+ifeq (${GENOME},${srcOrg})
+svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
+endif
+
 ifeq (${haveRnaSeq},yes)
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
 endif
 
 all: createTrackDb loadTrackDb loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
 	loadCompAnn loadRepeatMasker
+
 
 ###
 # setup databases
@@ -42,43 +47,53 @@ ${databaseCheckpoint}:
 	hgsql -e "CREATE DATABASE IF NOT EXISTS ${targetOrgDb};"
 	touch $@
 
+
 ##
 # Build trackDb files.
 ##
-createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra ${rnaSeqTrackDbCheckpoint}
+createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint}
 
-./trackDb/${GENOME}/trackDb.ra:  ${rnaSeqTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/*.trackDb.ra)
+./trackDb/${GENOME}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
 	${python} bin/buildTrackDb.py $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
 # also depend on included files
-./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra: bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*.trackDb.ra) ${rnaSeqTrackDbCheckpoint}
+./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*.trackDb.ra) 
 	@mkdir -p $(dir $@)
 	${python} bin/buildTrackDb.py --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --hal ${halBrowserHtDocsFile} $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
-# generate RNASeq trackDb entries; only run on 1505 if variable is set able
+# generate RNASeq trackDb entries; script will add all against reference if ${GENOME} == ${srcOrg}
 ${rnaSeqTrackDbCheckpoint}: bin/bam_tracks_from_1505_release.py
 	@mkdir -p $(dir $@)
-	${python} bin/bam_tracks_from_1505_release.py --assembly_version ${MSCA_VERSION}
+	${python} bin/bam_tracks_from_1505_release.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
 	touch $@
+
+# structural variant trackDb entries; only on reference genome
+${svTrackDbCheckpoint}: bin/splice_junctions_yalcin_2012.py
+	@mkdir -p $(dir $@)
+	${python} bin/splice_junctions_yalcin_2012.py --assembly_version ${MSCA_VERSION} --ref_genome ${srcOrg}
+	touch $@
+
 
 ###
 # load trackDb files into tables
 ##
 loadTrackDb: ${loadTrackDbCheckpoint}
 
-${loadTrackDbCheckpoint}: createTrackDb  ${databaseCheckpoint} $(wildcard ./trackDb/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*trackDb.ra)
+${loadTrackDbCheckpoint}: createTrackDb ${databaseCheckpoint} $(wildcard ./trackDb/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*trackDb.ra)
 	@mkdir -p $(dir $@) locks
 	cd ./trackDb && flock ../locks/loadTracks.lock ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib trackDb hgFindSpec ${targetOrgDb}
 	rm -f trackDb/trackDb.tab trackDb/hgFindSpec.tab
 	touch $@
 
+
 ##
 # Genome sequences: chromInfo and twobit
 ##
 loadGenomeSeqs: ${twoBit} ${chromInfoCheckpoint}
+
 ${twoBit}: ${ASM_GENOMES_DIR}/${GENOME}.2bit
 	@mkdir -p $(dir $@)
 	ln -f $< $@.${tmpExt}
@@ -89,7 +104,6 @@ ${CHROM_INFO_DIR}/chromInfo.tab: ${chromSizes}
 	awk '{print $$1 "\t" $$2 "\t'${GBDB_DIR}'/'${targetOrgDb}'.2bit";}' ${chromSizes} > $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
-# remove silly optimzation from MySQL 3.0 days
 ${CHROM_INFO_DIR}/chromInfo.sql: ${CHROM_INFO_DIR}/chromInfo.tab
 	@mkdir -p $(dir $@)
 	sed -e "s/chrom(16)/chrom(128)/" ${KENT_HG_LIB_DIR}/chromInfo.sql > $@.${tmpExt}
@@ -100,12 +114,14 @@ ${chromInfoCheckpoint}: ${CHROM_INFO_DIR}/chromInfo.sql ${CHROM_INFO_DIR}/chromI
 	hgLoadSqlTab ${targetOrgDb} chromInfo ${CHROM_INFO_DIR}/chromInfo.sql ${CHROM_INFO_DIR}/chromInfo.tab
 	touch $@
 
+
 ##
 # assembly and gap tracks. need tmpdir due to static file name
 ##
 # use lock, as hgGoldGapGl uses static file name
 loadGoldGap: ${goldGapCheckpoint}
 goldTmpDir = ${TMPDIR}/${GENOME}-gold.${tmpExt}
+
 ${goldGapCheckpoint}: ${agp} ${databaseCheckpoint}
 	@mkdir -p $(dir $@) ${goldTmpDir}
 	cd ${goldTmpDir} && hgGoldGapGl -noGl ${targetOrgDb} ${agp}
@@ -116,6 +132,7 @@ ${agp}: ${ASM_GENOMES_DIR}/${GENOME}.fa
 	@mkdir -p $(dir $@)
 	hgFakeAgp $< $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
+
 
 ##
 # gencode mapped tracks, except on reference
@@ -143,6 +160,7 @@ ${dbCheckpointDir}/transMap%.info.done: ${transMapDataDir}/transMap%.psl ${chrom
 ##
 loadGcPercent: ${gcPercentTrack}
 gcPercentTmpDir = ${TMPDIR}/${GENOME}-gcpercent.${tmpExt}
+
 ${gcPercentCheckpoint}: ${twoBit} ${databaseCheckpoint}
 	@mkdir -p $(dir $@) ${gcPercentTmpDir}
 	cd ${gcPercentTmpDir} && hgGcPercent -win=10000 -verbose=0 -doGaps -noDots ${targetOrgDb} ${twoBit}
@@ -192,5 +210,3 @@ clean:
 	rm -rf ${GBDB_DIR} ${BED_DIR} ${dbCheckpointDir}
 	rm -f trackDb/*/trackDb.ra trackDb/*/*/trackDb.ra
 	hgsql -e "DROP DATABASE IF EXISTS ${targetOrgDb};"
-
-

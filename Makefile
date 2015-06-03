@@ -130,5 +130,6 @@ ${srcOrgCheckpointDir}/%.tab.done: refGenome
 
 
 clean: ${allOrgs:%=%.cleanGenome}
+
 %.cleanGenome:
 	${MAKE} -f loadGenome.mk GENOME=$* clean

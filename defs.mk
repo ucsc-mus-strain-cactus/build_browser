@@ -24,7 +24,7 @@ sharedDb = musStrainShared
 # HAL file.  Copy to local disk
 ##
 musStrainUrl = http://hgwdev-mus-strain.sdsc.edu/
-musStrainHtDocsDir = /data/apache/htdocs-mus-strain/
+musStrainHtDocsDir = /data/apache/htdocs-mus-strain
 halBrowserHtDocsFile = ${musStrainHtDocsDir}/msca_hal/$(notdir ${halBrowserFile})
 
 
@@ -43,3 +43,6 @@ transMapGencodeComp = transMapGencodeComp${GENCODE_VERSION}
 transMapGencodePseudo = transMapGencodePseudoGene${GENCODE_VERSION}
 transMapGencodeAttrs = transMapGencodeAttrs${GENCODE_VERSION}
 transMapGencodeSubsets = ${transMapGencodeBasic} ${transMapGencodeComp} ${transMapGencodePseudo}
+
+# structural variants from yalcin et al 2012
+yalcinSvDir = ${MSCA_PROJ_DIR}/data/yalcin_structural_variants
