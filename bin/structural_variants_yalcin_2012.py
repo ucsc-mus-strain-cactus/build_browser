@@ -26,6 +26,7 @@ allButtonPair on
 dragAndDrop subTracks
 type bed 4
 visibility hide
+group compGeno
 
 """
 
@@ -40,7 +41,7 @@ per_bed_track = """    track {genome}_yalcin_svs
 
 def main():
     args = parse_args()
-    target_file = "trackDb/{0}/Mus{0}_{1}/spliceJunctions.trackDb.ra".format(args.ref_genome, args.assembly_version)
+    target_file = "trackDb/{0}/Mus{0}_{1}/structuralVariants.trackDb.ra".format(args.ref_genome, args.assembly_version)
     with open(target_file, "w") as outf:
         outf.write(composite_track)
         for bed in os.listdir(bed_dir):

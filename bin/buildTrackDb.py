@@ -47,15 +47,18 @@ type halSnake
 
 """
 
+
 def getIncludeFiles(trackDbDir):
     "get include files, excluding directory"
     return [os.path.basename(t) for t in glob.glob(trackDbDir+"/*.trackDb.ra")]
+
 
 def addSnakeTracks(trackDbFh, genomes, hal, trackDbDir):
     basePri = 15
     trackDbFh.write(cactusComp)
     for pri, genome in enumerate(genomes):
         trackDbFh.write(snakeTemplate.format(genome, basePri+pri, hal))
+
 
 def createTrackDb(trackDbFh, genomes, hal, trackDbDir):
     if genomes != None:
@@ -69,5 +72,7 @@ def main():
     trackDbDir = os.path.dirname(args.trackDbFile)
     with file(args.trackDbFile, "w") as trackDbFh:
         createTrackDb(trackDbFh, args.genomes, args.hal, trackDbDir)
+
+
 if __name__ == "__main__":
     main()
