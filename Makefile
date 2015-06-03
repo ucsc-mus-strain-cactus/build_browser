@@ -52,14 +52,17 @@ ${sharedCheckpointDir}/transMap%.${transMapLiveVers}.seq.done: ${GBDB_SHARED_DIR
 	hgLoadSeq -drop -seqTbl=transMapSeq$*${TRANS_MAP_TABLE_VERSION} -extFileTbl=transMapExtFile$*${TRANS_MAP_TABLE_VERSION} ${sharedDb} $<
 	rm -f transMapSeq$*${TRANS_MAP_TABLE_VERSION}.tab
 	touch $@
+
 ${GBDB_SHARED_DIR}/transMap%.${transMapLiveVers}.fa: ${TRANS_MAP_DIR}/data/wgEncode%.fa
 	@mkdir -p $(dir $@)
 	bin/editTransMapSrcFasta $< $@.${tmpExt} ${liveSrcOrgDbs}
 	mv -f $@.${tmpExt} $@
+
 ${sharedCheckpointDir}/transMap%.${transMapLiveVers}.src.done: ${TRANS_MAP_DIR}/data/wgEncode%.psl ${sharedDatabaseCreateCheckpoint}
 	@mkdir -p $(dir $@)
 	bin/loadTransMapSrc ${sharedDb} $< transMapSrc$*${TRANS_MAP_TABLE_VERSION}  ${KENT_HG_LIB_DIR}/transMapSrc.sql ${liveSrcOrgDbs}
 	touch $@
+
 ${sharedCheckpointDir}/transMap%.${transMapLiveVers}.gene.done: ${TRANS_MAP_DIR}/data/wgEncode%.cds \
 					${TRANS_MAP_DIR}/data/wgEncode%.psl \
 					${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv \

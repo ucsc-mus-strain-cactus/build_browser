@@ -71,9 +71,9 @@ ${rnaSeqTrackDbCheckpoint}: bin/bam_tracks_from_1505_release.py
 	touch $@
 
 # structural variant trackDb entries; only on reference genome
-${svTrackDbCheckpoint}: bin/splice_junctions_yalcin_2012.py
+${svTrackDbCheckpoint}: bin/structural_variants_yalcin_2012.py
 	@mkdir -p $(dir $@)
-	${python} bin/splice_junctions_yalcin_2012.py --assembly_version ${MSCA_VERSION} --ref_genome ${srcOrg}
+	${python} bin/structural_variants_yalcin_2012.py --assembly_version ${MSCA_VERSION} --ref_genome ${srcOrg}
 	touch $@
 
 
