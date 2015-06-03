@@ -10,6 +10,7 @@ CHROM_INFO_DIR = ${BED_DIR}/chromInfo
 twoBit = ${GBDB_DIR}/${targetOrgDb}.2bit
 agp = ${BED_DIR}/${targetOrgDb}.agp
 chromSizes = ${ASM_GENOMES_DIR}/${GENOME}.chrom.sizes
+svDir = /hive/groups/recon/projs/mus_strain_cactus/data/yalcin_structural_variants
 
 # some basic tracks we will need to build
 repeatMaskerOut = $(wildcard ${ASM_GENOMES_DIR}/${GENOME}.*.out)
@@ -29,6 +30,8 @@ repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
 
 ifeq (${GENOME},${srcOrg})
 svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
+svGenomes = $(patsubst )
+svCheckpoints = 
 endif
 
 ifeq (${haveRnaSeq},yes)
@@ -36,7 +39,7 @@ rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
 endif
 
 all: createTrackDb loadTrackDb loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
-	loadCompAnn loadRepeatMasker
+	loadCompAnn loadSv loadRepeatMasker
 
 
 ###
@@ -167,6 +170,7 @@ ${gcPercentCheckpoint}: ${twoBit} ${databaseCheckpoint}
 	rm -rf ${gcPercentTmpDir}
 	touch $@
 
+
 ##
 # compartive annotation tracks.  This calls a recurisve target with
 # compAnnGencodeSubset=
@@ -189,6 +193,18 @@ ${dbCheckpointDir}/compAnn${compAnnGencodeSubset}_%.done: ${ANNOTATION_DIR}/${co
 	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed12 -ignoreEmpty ${targetOrgDb} compAnn${compAnnGencodeSubset}_$* $<
 	touch $@
 endif
+
+
+##
+# structural variation tracks
+##
+loadSv: ${svCheckpoints}
+
+${dbCheckpointDir}/%_sv.done: ${svDir}/%.bed
+	@mkdir -p $(dir $@)
+	hgLoadBed --tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed4 -ignoreEmpty ${targetOrgDb} $*_yalcin_svs $<
+	touch $@
+
 
 ###
 # repeat masker data, if available (not on Rat or all assemblies)
