@@ -30,8 +30,7 @@ repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
 
 ifeq (${GENOME},${srcOrg})
 svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
-svGenomes = $(patsubst )
-svCheckpoints = 
+svCheckpoints = ${yalcinSvGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.done}
 endif
 
 ifeq (${haveRnaSeq},yes)
@@ -200,9 +199,9 @@ endif
 ##
 loadSv: ${svCheckpoints}
 
-${dbCheckpointDir}/%_sv.done: ${svDir}/%.bed
+${dbCheckpointDir}/structural_variants/%.sv.done: ${yalcinSvDir}/%.bed
 	@mkdir -p $(dir $@)
-	hgLoadBed --tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed4 -ignoreEmpty ${targetOrgDb} $*_yalcin_svs $<
+	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed4 -ignoreEmpty ${targetOrgDb} $*_yalcin_svs $<
 	touch $@
 
 
