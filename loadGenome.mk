@@ -32,9 +32,13 @@ ifeq (${GENOME},${srcOrg})
 svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
 svCheckpoints = ${yalcinSvGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.done}
 rnaSeqStarTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqStarTrackDb.done
-else (${haveRnaSeq},yes)
+# checkpoints for loading STAR splice junction BED files
+starDir = /cluster/home/ifiddes/mus_strain_data/pipeline_data/rnaseq/STAR_output
+experiments = $(foreach p,$(wildcard ${starDir}/*/*/*/*),$(shell echo $p | rev | cut -d/ -f1 | rev))
+rnaSeqSpliceJunctionCheckpoints = $(experiments:%=${dbCheckpointDir}/rnaSeqStar/%.sj.done)
+
+else ifeq (${haveRnaSeq},yes)
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
-rnaSeqStarTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqStar.done
 endif
 
 
@@ -73,13 +77,13 @@ ${rnaSeqTrackDbCheckpoint}: bin/bam_tracks_from_1505_release.py
 	${python} bin/bam_tracks_from_1505_release.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
 	touch $@
 
-# generate STAR trackDb entries
+# generate STAR trackDb entries (reference genome only)
 ${rnaSeqStarTrackDbCheckpoint}: bin/rnaseq_star_tracks_against_reference.py
 	@mkdir -p $(dir $@)
-	${python} bin/rnaseq_star_tracks_against_reference.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
+	${python} bin/rnaseq_star_tracks_against_reference.py --assembly_version ${MSCA_VERSION} --ref_genome ${srcOrg}
 	touch $@
 
-# structural variant trackDb entries; only on reference genome
+# structural variant trackDb entries (reference genome only)
 ${svTrackDbCheckpoint}: bin/structural_variants_yalcin_2012.py
 	@mkdir -p $(dir $@)
 	${python} bin/structural_variants_yalcin_2012.py --assembly_version ${MSCA_VERSION} --ref_genome ${srcOrg}
@@ -214,13 +218,12 @@ ${dbCheckpointDir}/structural_variants/%.sv.done: ${yalcinSvDir}/%.bed
 
 ##
 # RNAseq tracks from STAR against reference
-# this loading is done via python because there are just way too many things
 ##
-loadRnaSeq: ${rnaSeqStarTrackDbCheckpoint}
+loadRnaSeq: ${rnaSeqSpliceJunctionCheckpoints}
 
-${rnaSeqStarTrackDbCheckpoint}:
+${dbCheckpointDir}/rnaSeqStar/%.sj.done: ${starDir}/*/*/*/%/sj.bed
 	@mkdir -p $(dir $@)
-	${python} bin/rnaseq_star_tracks_against_reference.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg} --load_tracks
+	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed12 -ignoreEmpty ${targetOrgDb} $*_splice_junctions_star $<
 	touch $@
 
 

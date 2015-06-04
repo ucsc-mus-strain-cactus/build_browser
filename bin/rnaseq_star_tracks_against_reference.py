@@ -1,5 +1,5 @@
 """
-Produces trackDb files for the STAR alignments Ian generated against the reference found at
+Produces trackDb files for the STAR alignments star generated against the reference found at
 /cluster/home/ifiddes/mus_strain_data/pipeline_data/rnaseq/STAR_output
 """
 
@@ -7,13 +7,11 @@ import sys
 import os
 import argparse
 import itertools
-import subprocess
 
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--assembly_version', help='genome assembly version (1504, etc)', required=True)
     parser.add_argument('--ref_genome', help='reference genome', required=True)
-    parser.add_argument('--load_tracks', help='load tracks?', default=False, action="store_true")
     return parser.parse_args()
 
 target_folder = "/cluster/home/ifiddes/mus_strain_data/pipeline_data/rnaseq/STAR_output"
@@ -25,18 +23,18 @@ group expression
 shortLabel RNAseq 
 longLabel RNAseq analysis and raw data
 subGroup1 view Views PlusRawSig=Plus_Raw_Signal MinusRawSig=Minus_Raw_Signal PlusRawSigMulti=Plus_Raw_Signal_Multi_Mapping_Included MinusRawSigMulti=Minus_Raw_Signal_Multi_Mapping_Included Junctions=Splice_Junctions Alignments=Alignments
-subGroup2 genome Genome
-subGroup3 tissueType Tissue {tissues}
+subGroup2 genome Genome {genome_string}
+subGroup3 tissueType Tissue {tissue_string}
 subGroup4 rep Rep {rep_string}
-dimensions dimensionX=genome dimensionY=tissueType dimensionZ=rep
-sorOrder view=- genome+ rep=+ tissueType=+
+dimensions dimensionX=genome dimensionY=tissueType dimensionA=rep
+sortOrder view=- genome+ rep=+ tissueType=+
 dragAndDrop subTracks
 type bed 3
 noInherit on
 
 """
 
-raw_sig = """    track {genome}_{multi}_{strand}_raw_signal
+raw_sig = """    track {genome}_{multi}_{strand}_raw_signal_star
     shortLabel {multi}_{strand}_Raw_Signal
     view {view}
     visibility full
@@ -48,17 +46,18 @@ raw_sig = """    track {genome}_{multi}_{strand}_raw_signal
 
 """
 
-base_wig_trackline = """        track wig_ian_{genome}_{institute}_{tissue}_{experiment}_{multi}_{strand}
+base_wig_trackline = """        track wig_star_{genome}_{institute}_{tissue}_{experiment}_{multi}_{strand}
         longLabel {genome} {tissue} {multi} {strand}-strand Expression ({institute}, {experiment})
         shortLabel {genome}_{tissue}_{strand}-strand_Expression
-        parent {genome}_{multi}_{strand}_raw_signal
-        subGroups view={view} genome={genome} tissueType={tissue} rep={rep}
-        type wig
+        parent {genome}_{multi}_{strand}_raw_signal_star
+        subGroups view={view} genome=g{genome} tissueType=t{tissue} rep={rep}
+        type bigWig
+        bigDataUrl {data_path}
         color 153,38,0
 
 """
 
-junctions = """    track {genome}_splice_junctions
+junctions = """    track {genome}_splice_junctions_star
     shortLabel Splice Junctions 
     view Junctions
     visibility hide
@@ -66,20 +65,16 @@ junctions = """    track {genome}_splice_junctions
 
 """
 
-base_sj_trackline = """        track sj_ian_{genome}_{institute}_{tissue}_{experiment}
+base_sj_trackline = """        track sj_star_{experiment}
         longLabel {genome} {tissue} Splice Junctions ({institute}, {experiment})
         shortLabel {genome}_{tissue}_Splice_Junnctions
-        parent {genome}_splice_junctions
-        subGroups view=Junctions genome={genome} tissueType={tissue} rep={rep}
+        parent {genome}_splice_junctions_star
+        subGroups view=Junctions genome=g{genome} tissueType=t{tissue} rep={rep}
         type bed 12
-        indelDoubleInsert on
-        indelQueryInsert on
-        showNames off
-        pairEndsByName on
 
 """
 
-alignments = """    track {genome}_rnaseq_alignments
+alignments = """    track {genome}_rnaseq_alignments_star
     shortLabel Raw Alignments
     view Alignments
     visibility hide
@@ -87,12 +82,12 @@ alignments = """    track {genome}_rnaseq_alignments
 
 """
 
-base_bam_trackline = """        track bam_ian_{genome}_{institute}_{tissue}_{experiment}
+base_bam_trackline = """        track bam_star_{genome}_{institute}_{tissue}_{experiment}
         longLabel {genome} {tissue} RNASeq ({institute}, {experiment})
         shortLabel {genome}_{tissue}_RNASeq_({institute},_{experiment})
-        bigDataUrl {bam_path}
-        parent {genome}_rnaseq_alignments
-        subGroups view=Alignments genome={genome} tissueType={tissue} rep={rep}
+        bigDataUrl {data_path}
+        parent {genome}_rnaseq_alignments_star
+        subGroups view=Alignments genome=g{genome} tissueType=t{tissue} rep={rep}
         type bam
         indelDoubleInsert on
         indelQueryInsert on
@@ -115,8 +110,10 @@ def walk_source_dir(source_dir):
     file_map = {}
     for base_path, dirs, files in os.walk(source_dir):
         if files:
-            path = os.path.realpath(os.path.join(base_path, "Aligned.sortedByCoord.out.bam"))
-            assert os.path.exists(path)
+            bam_path = os.path.realpath(os.path.join(base_path, "Aligned.sortedByCoord.out.bam"))
+            assert os.path.exists(bam_path)
+            signal_paths = {x: os.path.realpath(os.path.join(base_path, y)) for x, y in signal_map.iteritems()}
+            assert all([os.path.exists(x) for x in signal_paths.itervalues()])
             try:
                 genome, institute, tissue, experiment = base_path.replace(source_dir, "").split("/")[1:]
             except ValueError:
@@ -127,7 +124,7 @@ def walk_source_dir(source_dir):
                 file_map[genome][tissue] = {}
             if institute not in file_map[genome][tissue]:
                 file_map[genome][tissue][institute] = {}
-            file_map[genome][tissue][institute][experiment] = path
+            file_map[genome][tissue][institute][experiment] = [bam_path, signal_paths]
     return file_map
 
 
@@ -142,22 +139,27 @@ def num_replicates(file_map):
     return largest
 
 
-def find_tissues(file_map):
-    return " ".join(list({y for x in file_map.itervalues() for y in x.keys()}))
-
-
 def make_rep_string(file_map):
-    return " ".join(["rep{0}={0}".format(i + 1) for i in xrange(num_replicates(file_map))])
+    return " ".join(["rep{0}=rep{0}".format(i + 1) for i in xrange(num_replicates(file_map))])
+
+
+def find_tissues(file_map):
+    return " ".join(["t{0}={0}".format(x) for x in {y for x in file_map.itervalues() for y in x.keys()}])
+
+def find_genomes(file_map):
+    return " ".join(["g{0}={0}".format(x) for x in file_map.keys()])
 
 
 def write_individual_track(file_map, target_handle, str_to_format, genome, bigDataUrl=False, **kwargs):
     for tissue in file_map[genome]:
         for institute in file_map[genome][tissue]:
             for i, experiment in enumerate(file_map[genome][tissue][institute]):
-                if bigDataUrl:
-                    kwargs["bam_path"] = file_map[genome][tissue][institute][experiment]
+                if bigDataUrl and "multi" not in kwargs:
+                    kwargs["data_path"] = file_map[genome][tissue][institute][experiment][0]
+                elif bigDataUrl:
+                    kwargs["data_path"] = file_map[genome][tissue][institute][experiment][1][(view, multi)]
                 target_handle.write(str_to_format.format(genome=genome, tissue=tissue, experiment=experiment, 
-                                                         institute=institute, rep="rep{}".format(i), **kwargs))
+                                                         institute=institute, rep="rep{}".format(i + 1), **kwargs))
 
 
 def make_signal_tracks(file_map, target_handle):
@@ -165,7 +167,7 @@ def make_signal_tracks(file_map, target_handle):
         for multi, view, strand in signal_tracks:
             target_handle.write(raw_sig.format(genome=genome, multi=multi, strand=strand, view=view))
             write_individual_track(file_map, target_handle, base_wig_trackline, genome, multi=multi, strand=strand, 
-                                   view=view)
+                                   view=view, bigDataUrl=True)
 
 
 def make_alignment_tracks(file_map, target_handle):
@@ -181,55 +183,22 @@ def make_splice_tracks(file_map, target_handle):
 
 
 def make_tracks(file_map, target_handle):
-    tissues = find_tissues(file_map)
+    tissue_string = find_tissues(file_map)
     rep_string = make_rep_string(file_map)
-    target_handle.write(composite_trackline.format(tissues=tissues, rep_string=rep_string))
+    genome_string = find_genomes(file_map)
+    target_handle.write(composite_trackline.format(tissue_string=tissue_string, rep_string=rep_string, 
+                                                   genome_string=genome_string))
     make_signal_tracks(file_map, target_handle)
     make_alignment_tracks(file_map, target_handle)
     make_splice_tracks(file_map, target_handle)
 
 
-def load_tracks(file_map, source_dir, ref_genome, assembly_version):
-    for genome in file_map:
-        for tissue in file_map[genome]:
-            for institute in file_map[genome][tissue]:
-                for experiment in file_map[genome][tissue][institute]:
-                    for (multi, strand), path in signal_map.iteritems():
-                        track_name = "wig_ian_{genome}_{institute}_{tissue}_{experiment}_{multi}_{strand}".format(
-                                                                      genome=genome, institute=institute, tissue=tissue, 
-                                                                      experiment=experiment, multi=multi, strand=strand)
-                        wig_path = os.path.join(source_dir, genome, institute, tissue, experiment, path)
-                        wig_path = os.path.realpath(wig_path)
-                        load_wig(track_name, wig_path, ref_genome, assembly_version)
-                    sj_name = "sj_ian_{genome}_{institute}_{tissue}_{experiment}".format(genome=genome,
-                                                                                         institute=institute,
-                                                                                         tissue=tissue,
-                                                                                         experiment=experiment)
-                    bed_path = os.path.join(source_dir, genome, institute, tissue, experiment, "sj.bed")
-                    bed_path = os.path.realpath(bed_path)
-                    load_bed(sj_name, bed_path, ref_genome, assembly_version, bed_type="bed12")
-
-
-def load_wig(track_name, wig_path, ref_genome, assembly_version):
-    database = "Mus{}_{}".format(ref_genome, assembly_version)
-    subprocess.call("hgLoadWiggle -tmpDir=${{TMPDIR}} {} {} {}".format(database, track_name, wig_path), shell=True)
-
-
-def load_bed(track_name, bed_path, ref_genome, assembly_version, bed_type="bed3"):
-    database = "Mus{}_{}".format(ref_genome, assembly_version)
-    subprocess.call("hgLoadBed -type={} -tmpDir=${{TMPDIR}} {} {} {}".format(bed_type, database, track_name, bed_path),
-                    shell=True)
-
-
 def main():
     args = parse_args()
     file_map = walk_source_dir(target_folder)
-    if args.load_tracks is False:
-        target_file = "trackDb/{0}/Mus{0}_{1}/starTracks.trackDb.ra".format(args.ref_genome, args.assembly_version)
-        if args.assembly_version == "1504":
-            make_tracks(file_map, open(target_file, "w"))
-    else:
-        load_tracks(file_map, target_folder, args.ref_genome, args.assembly_version)
+    target_file = "trackDb/{0}/Mus{0}_{1}/starTracks.trackDb.ra".format(args.ref_genome, args.assembly_version)
+    if args.assembly_version == "1504":
+        make_tracks(file_map, open(target_file, "w"))
 
 
 if __name__ == "__main__":
