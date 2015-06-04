@@ -30,11 +30,11 @@ genome_map = {'129S1_SvImJ': '129S1', 'AKR_J': 'AKRJ', 'C3H_HeJ': 'C3HHeJ', 'CAS
 # used to isolate experiment names from path
 r = re.compile('^[a-zA-Z]+[0-9]+')
 
-base_bam_trackline = """        track rnaseq_{genome}_{institute}_{tissue}_{experiment}
+base_bam_trackline = """        track rnaseq_sanger_{genome}_{institute}_{tissue}_{experiment}
         longLabel {genome} {tissue} RNASeq ({institute}, {experiment})
-        shortLabel {genome} {tissue} RNASeq ({institute}, {experiment})
+        shortLabel {genome} {tissue} RNASeq
         bigDataUrl {bam_path}
-        parent rnaseq_{genome}_{tissue}
+        parent rnaseq_sanger_{genome}_{tissue}
         type bam
         indelDoubleInsert on
         indelQueryInsert on
@@ -43,22 +43,22 @@ base_bam_trackline = """        track rnaseq_{genome}_{institute}_{tissue}_{expe
 
 """
 
-per_tissue_composite_trackline = """    track rnaseq_{genome}_{tissue}
+per_tissue_composite_trackline = """    track rnaseq_sanger_{genome}_{tissue}
     compositeTrack on
     shortLabel {genome} {tissue} RNASeq
     longLabel {genome} {tissue} RNASeq
-    parent rnaseq_{genome}
+    parent rnaseq_sanger_{genome}
     type bam
     allButtonPair on
     dragAndDrop subTracks
 
 """
 
-per_genome_super_trackline = """track rnaseq_{genome}
+per_genome_super_trackline = """track rnaseq_sanger_{genome}
 superTrack on
 group regulation
 shortLabel {genome} RNAseq raw alignments
-longLabel {genome} RNAseq raw alignments
+longLabel {genome} RNAseq raw alignments (sanger)
 
 """
 
@@ -104,16 +104,12 @@ def make_tracks(file_map, target_handle):
 def main():
     args = parse_args()
     target_file = "trackDb/{0}/Mus{0}_{1}/bamTracks.trackDb.ra".format(args.genome, args.assembly_version)
-    if args.genome != args.ref_genome and args.assembly_version != "1504":
-        sys.exit(1)
+    assert args.assembly_version == "1504"
+    assert args.genome != args.ref_genome
     with open(target_file, "w") as target_handle:
-        if args.genome == args.ref_genome:
-            reference_file_map = walk_source_dir(reference_bam_path)
-            make_tracks(reference_file_map, target_handle)
-        elif args.assembly_version == "1504":
-            # filter for only the target genome
-            file_map = {x: y for x, y in walk_source_dir(assembly_bam_path).iteritems() if x == args.genome}
-            make_tracks(file_map, target_handle) 
+        # filter for only the target genome
+        file_map = {x: y for x, y in walk_source_dir(assembly_bam_path).iteritems() if x == args.genome}
+        make_tracks(file_map, target_handle) 
 
 
 if __name__ == "__main__":

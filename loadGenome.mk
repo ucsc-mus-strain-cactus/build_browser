@@ -31,14 +31,19 @@ repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
 ifeq (${GENOME},${srcOrg})
 svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
 svCheckpoints = ${yalcinSvGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.done}
-endif
+rnaSeqStarTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqStarTrackDb.done
+# checkpoints for loading STAR splice junction BED files
+starDir = /cluster/home/ifiddes/mus_strain_data/pipeline_data/rnaseq/STAR_output
+experiments = $(foreach p,$(wildcard ${starDir}/*/*/*/*),$(shell echo $p | rev | cut -d/ -f1 | rev))
+rnaSeqSpliceJunctionCheckpoints = $(experiments:%=${dbCheckpointDir}/rnaSeqStar/%.sj.done)
 
-ifeq (${haveRnaSeq},yes)
+else ifeq (${haveRnaSeq},yes)
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
 endif
 
+
 all: createTrackDb loadTrackDb loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
-	loadCompAnn loadSv loadRepeatMasker
+	loadCompAnn loadSv loadRnaSeq loadRepeatMasker
 
 
 ###
@@ -61,18 +66,24 @@ createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}
 	mv -f $@.${tmpExt} $@
 
 # also depend on included files
-./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*.trackDb.ra) 
+./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${rnaSeqStarTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*.trackDb.ra) 
 	@mkdir -p $(dir $@)
 	${python} bin/buildTrackDb.py --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --hal ${halBrowserHtDocsFile} $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
-# generate RNASeq trackDb entries; script will add all against reference if ${GENOME} == ${srcOrg}
+# generate RNASeq trackDb entries (non-reference genomes only)
 ${rnaSeqTrackDbCheckpoint}: bin/bam_tracks_from_1505_release.py
 	@mkdir -p $(dir $@)
 	${python} bin/bam_tracks_from_1505_release.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
 	touch $@
 
-# structural variant trackDb entries; only on reference genome
+# generate STAR trackDb entries (reference genome only)
+${rnaSeqStarTrackDbCheckpoint}: bin/rnaseq_star_tracks_against_reference.py
+	@mkdir -p $(dir $@)
+	${python} bin/rnaseq_star_tracks_against_reference.py --assembly_version ${MSCA_VERSION} --ref_genome ${srcOrg}
+	touch $@
+
+# structural variant trackDb entries (reference genome only)
 ${svTrackDbCheckpoint}: bin/structural_variants_yalcin_2012.py
 	@mkdir -p $(dir $@)
 	${python} bin/structural_variants_yalcin_2012.py --assembly_version ${MSCA_VERSION} --ref_genome ${srcOrg}
@@ -171,7 +182,7 @@ ${gcPercentCheckpoint}: ${twoBit} ${databaseCheckpoint}
 
 
 ##
-# compartive annotation tracks.  This calls a recurisve target with
+# comparative annotation tracks.  This calls a recurisve target with
 # compAnnGencodeSubset=
 ##
 ifeq (${GENOME},${srcOrg})
@@ -202,6 +213,17 @@ loadSv: ${svCheckpoints}
 ${dbCheckpointDir}/structural_variants/%.sv.done: ${yalcinSvDir}/%.bed
 	@mkdir -p $(dir $@)
 	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed4 -ignoreEmpty ${targetOrgDb} $*_yalcin_svs $<
+	touch $@
+
+
+##
+# RNAseq tracks from STAR against reference
+##
+loadRnaSeq: ${rnaSeqSpliceJunctionCheckpoints}
+
+${dbCheckpointDir}/rnaSeqStar/%.sj.done: ${starDir}/*/*/*/%/sj.bed
+	@mkdir -p $(dir $@)
+	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed12 -ignoreEmpty ${targetOrgDb} $*_splice_junctions_star $<
 	touch $@
 
 
