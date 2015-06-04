@@ -92,7 +92,7 @@ ${svTrackDbCheckpoint}: bin/structural_variants_yalcin_2012.py
 
 ###
 # load trackDb files into tables
-##
+###
 loadTrackDb: ${loadTrackDbCheckpoint}
 
 ${loadTrackDbCheckpoint}: createTrackDb ${databaseCheckpoint} $(wildcard ./trackDb/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*trackDb.ra)
@@ -102,9 +102,9 @@ ${loadTrackDbCheckpoint}: createTrackDb ${databaseCheckpoint} $(wildcard ./track
 	touch $@
 
 
-##
+###
 # Genome sequences: chromInfo and twobit
-##
+###
 loadGenomeSeqs: ${twoBit} ${chromInfoCheckpoint}
 
 ${twoBit}: ${ASM_GENOMES_DIR}/${GENOME}.2bit
