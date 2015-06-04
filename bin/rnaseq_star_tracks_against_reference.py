@@ -26,7 +26,7 @@ subGroup1 view Views Expression=Expression Junctions=Splice_Junctions Alignments
 subGroup2 genome Genome {genome_string}
 subGroup3 tissueType Tissue {tissue_string}
 dimensions dimensionX=genome dimensionY=tissueType
-sortOrder view=- genome+ tissueType=+
+sortOrder view=- genome=+ tissueType=+
 dragAndDrop subTracks
 type bed 3
 noInherit on
