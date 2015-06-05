@@ -1,6 +1,7 @@
 """
-Produces trackDb files for the STAR alignments star generated against the reference found at
-/cluster/home/ifiddes/mus_strain_data/pipeline_data/rnaseq/STAR_output
+Produces trackDb files for the STAR alignments star generated both against the reference (by Ian)
+and against the individual assemblies (1505 release from Sanger).
+The individual assembly does not have wiggle tracks.
 """
 
 import sys
@@ -12,20 +13,40 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--assembly_version', help='genome assembly version (1504, etc)', required=True)
     parser.add_argument('--ref_genome', help='reference genome', required=True)
+    parser.add_argument('--genome', help='genome', required=True)
     return parser.parse_args()
 
-target_ref_folder = "/cluster/home/ifiddes/mus_strain_data/pipeline_data/rnaseq/STAR_output"
+# alignments done against reference by Ian
+folder_ian_star = "/cluster/home/ifiddes/mus_strain_data/pipeline_data/rnaseq/STAR_output"
+# individual assembly BAM path (1505 release)
+folder_1505 = "/hive/groups/recon/projs/mus_strain_cactus/data/assembly_rel_1505/bam/ftp-mouse.sanger.ac.uk/REL-1505-RNA-Seq/REL-1504-renamed"
 
 
-composite_trackline = """track rnaseq_star
+
+composite_trackline_individual = """track rnaseq_star
 compositeTrack on
 group regulation
 shortLabel RNAseq
 longLabel RNAseq analysis and raw data
 subGroup1 view Views Expression=Expression Junctions=Splice_Junctions Alignments=Alignments
+subGroup2 tissueType Tissue {tissue_string}
+dimensions dimensionX=view dimensionY=tissueType
+sortOrder view=+ tissueType=+
+dragAndDrop subTracks
+type bed 3
+noInherit on
+
+"""
+
+composite_trackline_reference = """track rnaseq_star
+compositeTrack on
+group regulation
+shortLabel RNAseq
+longLabel RNAseq analysis and raw data
+subGroup1 view Views Expression=Expression Alignments=Alignments
 subGroup2 genome Genome {genome_string}
 subGroup3 tissueType Tissue {tissue_string}
-dimensions dimensionX=genome dimensionY=tissueType
+dimensions dimensionX=genome dimensionY=tissueType dimensionZ=view
 sortOrder view=- genome=+ tissueType=+
 dragAndDrop subTracks
 type bed 3
@@ -106,28 +127,42 @@ base_bam_trackline = """        track bam_star_{genome}_{institute}_{tissue}_{ex
 
 """
 
-file_paths = OrderedDict([["(+)", "Signal.UniqueMultiple.str1.out.renamed.bw"], 
+reference_file_paths = OrderedDict([["(+)", "Signal.UniqueMultiple.str1.out.renamed.bw"], 
                          ["(-)", "Signal.UniqueMultiple.str2.out.renamed.bw"],
                          ["bam", "Aligned.sortedByCoord.out.bam"]])
 
 
-def walk_source_dir(source_dir):
+def build_map(file_map, paths, genome, institute, tissue, experiment):
+    if genome not in file_map:
+        file_map[genome] = {}
+    if tissue not in file_map[genome]:
+        file_map[genome][tissue] = {}
+    if institute not in file_map[genome][tissue]:
+        file_map[genome][tissue][institute] = {}
+    file_map[genome][tissue][institute][experiment] = paths
+    return file_map
+
+
+def walk_source_dir(source_dir, ref=False, genome=None):
     file_map = {}
     for base_path, dirs, files in os.walk(source_dir):
         if files:
-            path_map = OrderedDict([(x, os.path.realpath(os.path.join(base_path, y))) for x, y in file_paths.iteritems()])
-            assert all([os.path.exists(x) for x in path_map.values()]), path_map
-            try:
-                genome, institute, tissue, experiment = base_path.replace(source_dir, "").split("/")[1:]
-            except ValueError:
-                raise RuntimeError("Looks like the directory structure is not what was expected.")
-            if genome not in file_map:
-                file_map[genome] = {}
-            if tissue not in file_map[genome]:
-                file_map[genome][tissue] = {}
-            if institute not in file_map[genome][tissue]:
-                file_map[genome][tissue][institute] = {}
-            file_map[genome][tissue][institute][experiment] = path_map
+            if ref:
+                try:
+                    genome, institute, tissue, experiment = base_path.replace(source_dir, "").split("/")[1:]
+                except ValueError:
+                    raise RuntimeError("Looks like the directory structure is not what was expected.")
+            else:
+                try:
+                    institute, tissue, experiment = base_path.replace(source_dir, "").split("/")[1:]
+                except ValueError:
+                    raise RuntimeError("Looks like the directory structure is not what was expected.")                
+            if ref:
+                path_map = OrderedDict([(x, os.path.realpath(os.path.join(base_path, y))) for x, y in reference_file_paths.iteritems()])
+                assert all([os.path.exists(x) for x in path_map.values()]), path_map
+            else:
+                path_map = {"bam": os.path.realpath(os.path.join(base_path, reference_file_paths["bam"]))}
+            build_map(file_map, path_map, genome, institute, tissue, experiment)
     return file_map
 
 
@@ -180,21 +215,38 @@ def make_sj_tracks(file_map, target_handle):
                                                                   experiment=experiment))
 
 
-def make_tracks(file_map, file_handle):
+def make_ref_tracks(file_map, file_handle):
     genome_string = find_genomes(file_map)
     tissue_string = find_tissues(file_map)
-    file_handle.write(composite_trackline.format(genome_string=genome_string, tissue_string=tissue_string))
+    file_handle.write(composite_trackline_reference.format(genome_string=genome_string, tissue_string=tissue_string))
     make_signal_tracks(file_map, file_handle)
     make_bam_tracks(file_map, file_handle)
     make_sj_tracks(file_map, file_handle)
 
 
+def make_individual_tracks(file_map, file_handle):
+    tissue_string = find_tissues(file_map)
+    file_handle.write(composite_trackline_individual.format(tissue_string=tissue_string))
+    make_bam_tracks(file_map, file_handle)
+    make_sj_tracks(file_map, file_handle)    
+
+
 def main():
     args = parse_args()
-    file_map = walk_source_dir(target_folder)
-    target_file = "trackDb/{0}/Mus{0}_{1}/starTracks.trackDb.ra".format(args.ref_genome, args.assembly_version)
-    if args.assembly_version == "1504":
-        make_tracks(file_map, open(target_file, "w"))
+    target_file_template = "trackDb/{0}/Mus{0}_{1}/starTracks.trackDb.ra"
+    if args.genome == args.ref_genome:
+        file_map = walk_source_dir(folder_ian_star, ref=True)
+        target_file = target_file_template.format(args.ref_genome, args.assembly_version)
+        make_ref_tracks(file_map, open(target_file, "w"))
+    elif args.assembly_version == "1504":
+        genome_dir = os.path.join(folder_1505, args.genome)
+        assert os.path.exists(genome_dir)
+        file_map = walk_source_dir(genome_dir, ref=False, genome=args.genome)
+        target_file = target_file_template.format(args.genome, args.assembly_version)
+        make_individual_tracks(file_map, open(target_file, "w"))
+    else:
+        print "This script was called on a release that was not 1504 or not on the reference. Did nothing."
+        sys.exit(1)
 
 
 if __name__ == "__main__":

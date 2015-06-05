@@ -36,9 +36,12 @@ rnaSeqStarTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqStarTrackDb.done
 starDir = /cluster/home/ifiddes/mus_strain_data/pipeline_data/rnaseq/STAR_output
 experiments = $(foreach p,$(wildcard ${starDir}/*/*/*/*),$(shell echo $p | rev | cut -d/ -f1 | rev))
 rnaSeqSpliceJunctionCheckpoints = $(experiments:%=${dbCheckpointDir}/rnaSeqStar/%.sj.done)
+endif
 
-else ifeq (${haveRnaSeq},yes)
+ifneq (${GENOME},${srcOrg})
+ifeq (${haveRnaSeq},yes)
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
+endif
 endif
 
 
