@@ -23,14 +23,15 @@ folder_1505 = "/hive/groups/recon/projs/mus_strain_cactus/data/assembly_rel_1505
 
 
 
-composite_trackline_individual = """track rnaseq_star
+composite_trackline_reference = """track rnaseq_star
 compositeTrack on
 group regulation
 shortLabel RNAseq
 longLabel RNAseq analysis and raw data
 subGroup1 view Views Expression=Expression Junctions=Splice_Junctions Alignments=Alignments
-subGroup2 tissueType Tissue {tissue_string}
-dimensions dimensionX=view dimensionY=tissueType
+subGroup2 genome Genome {genome_string}
+subGroup3 tissueType Tissue {tissue_string}
+dimensions dimensionX=genome dimensionY=tissueType
 sortOrder view=+ tissueType=+
 dragAndDrop subTracks
 type bed 3
@@ -38,16 +39,15 @@ noInherit on
 
 """
 
-composite_trackline_reference = """track rnaseq_star
+composite_trackline_individual = """track rnaseq_star
 compositeTrack on
 group regulation
 shortLabel RNAseq
 longLabel RNAseq analysis and raw data
-subGroup1 view Views Expression=Expression Alignments=Alignments
-subGroup2 genome Genome {genome_string}
-subGroup3 tissueType Tissue {tissue_string}
-dimensions dimensionX=genome dimensionY=tissueType dimensionZ=view
-sortOrder view=- genome=+ tissueType=+
+subGroup1 view Views Junctions=Splice_Junctions Alignments=Alignments
+subGroup2 tissueType Tissue {tissue_string}
+dimensions dimensionX=tissueType dimensionY=view
+sortOrder view=- tissueType=+
 dragAndDrop subTracks
 type bed 3
 noInherit on
@@ -194,25 +194,31 @@ def make_signal_tracks(file_map, target_handle):
                                                                       experiment=experiment, tissue=tissue))
 
 
-def make_bam_tracks(file_map, target_handle):
+def make_bam_tracks(file_map, target_handle, ref=False):
     for genome in file_map:
         target_handle.write(alignments.format(genome=genome))
         for tissue in file_map[genome]:
             for institute in file_map[genome][tissue]:
                 for experiment in file_map[genome][tissue][institute]:
                     path = file_map[genome][tissue][institute][experiment]["bam"]
-                    target_handle.write(base_bam_trackline.format(data_path=path, genome=genome, institute=institute,
-                                                                  experiment=experiment, tissue=tissue))
+                    line = base_bam_trackline.format(data_path=path, genome=genome, institute=institute,
+                                                     experiment=experiment, tissue=tissue)
+                    if not ref:
+                        line = line.replace(" genome=g{}".format(genome), "")
+                    target_handle.write(line)
 
 
-def make_sj_tracks(file_map, target_handle):
+def make_sj_tracks(file_map, target_handle, ref=False):
     for genome in file_map:
         target_handle.write(junctions.format(genome=genome))
         for tissue in file_map[genome]:
             for institute in file_map[genome][tissue]:
                 for experiment in file_map[genome][tissue][institute]:
-                    target_handle.write(base_sj_trackline.format(genome=genome, institute=institute, tissue=tissue,
-                                                                  experiment=experiment))
+                    line = base_sj_trackline.format(genome=genome, institute=institute, tissue=tissue, 
+                                                    experiment=experiment)
+                    if not ref:
+                        line = line.replace(" genome=g{}".format(genome), "")
+                    target_handle.write(line)
 
 
 def make_ref_tracks(file_map, file_handle):
@@ -220,15 +226,15 @@ def make_ref_tracks(file_map, file_handle):
     tissue_string = find_tissues(file_map)
     file_handle.write(composite_trackline_reference.format(genome_string=genome_string, tissue_string=tissue_string))
     make_signal_tracks(file_map, file_handle)
-    make_bam_tracks(file_map, file_handle)
-    make_sj_tracks(file_map, file_handle)
+    make_bam_tracks(file_map, file_handle, ref=True)
+    make_sj_tracks(file_map, file_handle, ref=True)
 
 
 def make_individual_tracks(file_map, file_handle):
     tissue_string = find_tissues(file_map)
     file_handle.write(composite_trackline_individual.format(tissue_string=tissue_string))
-    make_bam_tracks(file_map, file_handle)
-    make_sj_tracks(file_map, file_handle)    
+    make_bam_tracks(file_map, file_handle, ref=False)
+    make_sj_tracks(file_map, file_handle, ref=False)    
 
 
 def main():
@@ -240,7 +246,7 @@ def main():
         make_ref_tracks(file_map, open(target_file, "w"))
     elif args.assembly_version == "1504":
         genome_dir = os.path.join(folder_1505, args.genome)
-        assert os.path.exists(genome_dir)
+        assert os.path.exists(genome_dir), genome_dir
         file_map = walk_source_dir(genome_dir, ref=False, genome=args.genome)
         target_file = target_file_template.format(args.genome, args.assembly_version)
         make_individual_tracks(file_map, open(target_file, "w"))

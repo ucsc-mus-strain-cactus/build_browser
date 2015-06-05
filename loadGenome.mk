@@ -28,22 +28,32 @@ goldGapCheckpoint =  ${dbCheckpointDir}/goldGap.done
 gcPercentCheckpoint = ${dbCheckpointDir}/gcPercent.done
 repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
 
+# structural variants (yalcin et al 2012) against reference genome
 ifeq (${GENOME},${srcOrg})
 svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
 svCheckpoints = ${yalcinSvGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.done}
-rnaSeqStarTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqStarTrackDb.done
+# RNAseq tracks - against reference (by Ian) 
+rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
 # checkpoints for loading STAR splice junction BED files
 starDir = /cluster/home/ifiddes/mus_strain_data/pipeline_data/rnaseq/STAR_output
 experiments = $(foreach p,$(wildcard ${starDir}/*/*/*/*),$(shell echo $p | rev | cut -d/ -f1 | rev))
 rnaSeqSpliceJunctionCheckpoints = $(experiments:%=${dbCheckpointDir}/rnaSeqStar/%.sj.done)
 endif
 
+# RNAseq tracks - against strains (by Sanger - on 1504 only)
 ifneq (${GENOME},${srcOrg})
+# only do this against strains, not outgroups (no data there)
+ifneq ($(filter ${GENOME},${rnaSeqStrains}),)
 ifeq (${haveRnaSeq},yes)
+# only 1504 has RNAseq alignments
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
+# checkpoints for loading STAR splice junction BED files
+starDir = /hive/groups/recon/projs/mus_strain_cactus/data/assembly_rel_1505/bam/ftp-mouse.sanger.ac.uk/REL-1505-RNA-Seq/REL-1504-renamed
+experiments = $(foreach p,$(wildcard ${starDir}/${GENOME}/*/*/*),$(shell echo $p | rev | cut -d/ -f1 | rev))
+rnaSeqSpliceJunctionCheckpoints = $(experiments:%=${dbCheckpointDir}/rnaSeqStar/%.sj.done)
 endif
 endif
-
+endif
 
 all: createTrackDb loadTrackDb loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
 	loadCompAnn loadSv loadRnaSeq loadRepeatMasker
@@ -74,16 +84,10 @@ createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}
 	${python} bin/buildTrackDb.py --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --hal ${halBrowserHtDocsFile} $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
-# generate RNASeq trackDb entries (non-reference genomes only)
-${rnaSeqTrackDbCheckpoint}: bin/bam_tracks_from_1505_release.py
+# generate RNASeq trackDb entries 
+${rnaSeqTrackDbCheckpoint}: bin/rnaseq_tracks.py
 	@mkdir -p $(dir $@)
-	${python} bin/bam_tracks_from_1505_release.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
-	touch $@
-
-# generate STAR trackDb entries (reference genome only)
-${rnaSeqStarTrackDbCheckpoint}: bin/rnaseq_star_tracks_against_reference.py
-	@mkdir -p $(dir $@)
-	${python} bin/rnaseq_star_tracks_against_reference.py --assembly_version ${MSCA_VERSION} --ref_genome ${srcOrg}
+	${python} bin/rnaseq_tracks.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
 	touch $@
 
 # structural variant trackDb entries (reference genome only)
@@ -220,15 +224,21 @@ ${dbCheckpointDir}/structural_variants/%.sv.done: ${yalcinSvDir}/%.bed
 
 
 ##
-# RNAseq tracks from STAR against reference
+# RNAseq tracks from STAR
 ##
 loadRnaSeq: ${rnaSeqSpliceJunctionCheckpoints}
 
+ifeq (${GENOME},${srcOrg})
 ${dbCheckpointDir}/rnaSeqStar/%.sj.done: ${starDir}/*/*/*/%/sj.bed
 	@mkdir -p $(dir $@)
 	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed12 -ignoreEmpty ${targetOrgDb} $*_splice_junctions_star $<
 	touch $@
-
+else
+${dbCheckpointDir}/rnaSeqStar/%.sj.done: ${starDir}/${GENOME}/*/*/%/sj.bed
+	@mkdir -p $(dir $@)
+	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed12 -ignoreEmpty ${targetOrgDb} $*_splice_junctions_star $<
+	touch $@
+endif
 
 ###
 # repeat masker data, if available (not on Rat or all assemblies)
