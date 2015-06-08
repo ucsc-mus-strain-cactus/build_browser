@@ -47,3 +47,5 @@ transMapGencodeSubsets = ${transMapGencodeBasic} ${transMapGencodeComp} ${transM
 # structural variants from yalcin et al 2012
 yalcinSvDir = ${MSCA_PROJ_DIR}/data/yalcin_structural_variants
 yalcinSvGenomes = LPJ DBA2J CBAJ C3HHeJ BALBcJ AKRJ AJ
+
+rnaSeqStrains = 129S1 AJ AKRJ BALBcJ C3HHeJ C57B6NJ CASTEiJ CBAJ DBA2J LPJ NODShiLtJ NZOHlLtJ PWKPhJ SPRETEiJ WSBEiJ CAROLIEiJ PAHARIEiJ

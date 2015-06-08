@@ -35,28 +35,20 @@ svCheckpoints = ${yalcinSvGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.
 # RNAseq tracks - against reference (by Ian) 
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
 # checkpoints for loading STAR splice junction BED files
-starDir = /cluster/home/ifiddes/mus_strain_data/pipeline_data/rnaseq/STAR_output
-experiments = $(foreach p,$(wildcard ${starDir}/*/*/*/*),$(shell echo $p | rev | cut -d/ -f1 | rev))
-rnaSeqSpliceJunctionCheckpoints = $(experiments:%=${dbCheckpointDir}/rnaSeqStar/%.sj.done)
 endif
 
 # RNAseq tracks - against strains (by Sanger - on 1504 only)
 ifneq (${GENOME},${srcOrg})
-# only do this against strains, not outgroups (no data there)
-ifneq ($(filter ${GENOME},${rnaSeqStrains}),)
 ifeq (${haveRnaSeq},yes)
+ifneq ($(filter ${GENOME},${rnaSeqStrains}),)
 # only 1504 has RNAseq alignments
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
-# checkpoints for loading STAR splice junction BED files
-starDir = /hive/groups/recon/projs/mus_strain_cactus/data/assembly_rel_1505/bam/ftp-mouse.sanger.ac.uk/REL-1505-RNA-Seq/REL-1504-renamed
-experiments = $(foreach p,$(wildcard ${starDir}/${GENOME}/*/*/*),$(shell echo $p | rev | cut -d/ -f1 | rev))
-rnaSeqSpliceJunctionCheckpoints = $(experiments:%=${dbCheckpointDir}/rnaSeqStar/%.sj.done)
 endif
 endif
 endif
 
 all: createTrackDb loadTrackDb loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
-	loadCompAnn loadSv loadRnaSeq loadRepeatMasker
+	loadCompAnn loadSv loadRepeatMasker
 
 
 ###
@@ -222,23 +214,6 @@ ${dbCheckpointDir}/structural_variants/%.sv.done: ${yalcinSvDir}/%.bed
 	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed4 -ignoreEmpty ${targetOrgDb} $*_yalcin_svs $<
 	touch $@
 
-
-##
-# RNAseq tracks from STAR
-##
-loadRnaSeq: ${rnaSeqSpliceJunctionCheckpoints}
-
-ifeq (${GENOME},${srcOrg})
-${dbCheckpointDir}/rnaSeqStar/%.sj.done: ${starDir}/*/*/*/%/sj.bed
-	@mkdir -p $(dir $@)
-	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed12 -ignoreEmpty ${targetOrgDb} $*_splice_junctions_star $<
-	touch $@
-else
-${dbCheckpointDir}/rnaSeqStar/%.sj.done: ${starDir}/${GENOME}/*/*/%/sj.bed
-	@mkdir -p $(dir $@)
-	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed12 -ignoreEmpty ${targetOrgDb} $*_splice_junctions_star $<
-	touch $@
-endif
 
 ###
 # repeat masker data, if available (not on Rat or all assemblies)
