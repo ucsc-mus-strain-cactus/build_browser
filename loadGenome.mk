@@ -34,7 +34,7 @@ svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
 svCheckpoints = ${yalcinSvGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.done}
 # RNAseq tracks - against reference (by Ian) 
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
-# checkpoints for loading STAR splice junction BED files
+kallistoTrackDbCheckpoint = ${dbCheckpointDir}/kallistoTrackDb.done
 endif
 
 # RNAseq tracks - against strains (by Sanger - on 1504 only)
@@ -63,7 +63,7 @@ ${databaseCheckpoint}:
 ##
 # Build trackDb files.
 ##
-createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint}
+createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${kallistoTrackDbCheckpoint}
 
 ./trackDb/${GENOME}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
@@ -80,6 +80,12 @@ createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}
 ${rnaSeqTrackDbCheckpoint}: bin/rnaseq_tracks.py
 	@mkdir -p $(dir $@)
 	${python} bin/rnaseq_tracks.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
+	touch $@
+
+# Kallisto isoform-level expression (reference genome only)
+${kallistoTrackDbCheckpoint}: bin/kallisto_trackDb.py
+	@mkdir -p $(dir $@)
+	${python} bin/kallisto_trackDb.py --assembly_version ${MSCA_VERSION} --ref_genome ${srcOrg}
 	touch $@
 
 # structural variant trackDb entries (reference genome only)

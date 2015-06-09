@@ -84,6 +84,7 @@ base_sj_trackline = """        track {genome}_{tissue}_{institute}_splice_juncti
         parent {genome}_splice_junctions_star
         bigDataUrl {file_path}
         type bigBed 12
+        colorByStrand 255,0,0 0,0,255
         subGroups view=Junctions genome=g{genome} tissueType=t{tissue}
 
 """
