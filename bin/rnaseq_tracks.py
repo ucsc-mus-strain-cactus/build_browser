@@ -198,12 +198,14 @@ def main():
     if args.genome == args.ref_genome:
         file_map = walk_source_dir(os.path.join(args.munged_data_dir, "GRCm38"))
         target_file = target_file_template.format(args.ref_genome, args.assembly_version)
-        make_ref_tracks(file_map, open(target_file, "w"))
+        with open(target_file, "w") as outf:
+            make_ref_tracks(file_map, outf)
     elif args.assembly_version == "1504":
         path = os.path.join(args.munged_data_dir, "REL-1504-chromosomes")
         file_map = walk_source_dir(path, target_genome=args.genome)
         target_file = target_file_template.format(args.genome, args.assembly_version)
-        make_individual_tracks(file_map, open(target_file, "w"))
+        with open(target_file, "w") as outf:
+            make_individual_tracks(file_map, outf)
     else:
         print "This script was called on a release that was not 1504 or not on the reference. Did nothing."
         sys.exit(1)

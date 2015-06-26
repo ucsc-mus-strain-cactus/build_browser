@@ -28,7 +28,8 @@ dragAndDrop subTracks
 subGroup1 view Views Expression=Expression
 subGroup2 genome Genome {genome_string}
 subGroup3 tissueType Tissue {tissue_string}
-sortOrder view=+ genome=+ tissueType=+
+sortOrder view=- genome=+ tissueType=+
+dimensions dimensionX=genome dimensionY=tissueType
 
 """
 

@@ -28,6 +28,10 @@ goldGapCheckpoint =  ${dbCheckpointDir}/goldGap.done
 gcPercentCheckpoint = ${dbCheckpointDir}/gcPercent.done
 repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
 
+ifneq (${GENOME},Rattus)
+augustusTrackDbCheckpoint = ${dbCheckpointDir}/augustus.done
+endif
+
 # structural variants (yalcin et al 2012) against reference genome
 ifeq (${GENOME},${srcOrg})
 svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
@@ -63,7 +67,7 @@ ${databaseCheckpoint}:
 ##
 # Build trackDb files.
 ##
-createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${kallistoTrackDbCheckpoint}
+createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${kallistoTrackDbCheckpoint} ${augustusTrackDbCheckpoint}
 
 ./trackDb/${GENOME}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
@@ -94,6 +98,10 @@ ${svTrackDbCheckpoint}: bin/structural_variants_yalcin_2012.py
 	${python} bin/structural_variants_yalcin_2012.py --assembly_version ${MSCA_VERSION} --ref_genome ${srcOrg}
 	touch $@
 
+${augustusTrackDbCheckpoint}: bin/augustus_trackDb.py
+	@mkdir -p $(dir $@)
+	${python} bin/augustus_trackDb.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
+	touch $@
 
 ###
 # load trackDb files into tables
