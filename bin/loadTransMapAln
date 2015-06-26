@@ -7,6 +7,14 @@ import subprocess
 from pycbio.sys import fileOps
 from pycbio.tsv.tabFile import TabFileReader
 
+# psl columns of interest
+qNameCol = 9
+tStartCol = 15
+tEndCol = 16
+
+# drop very long maps as they are bogus and slow down the browser
+maxTLength = 3000000
+
 def parseArgs():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("srcDb", help="""insert this srcDb in qName""")
@@ -16,14 +24,18 @@ def parseArgs():
     return parser.parse_args()
 
 def editWritePslRow(srcDb, pslRow, outPslFh):
-    pslRow[9] = srcDb + ":" + pslRow[9]
+    pslRow[9] = srcDb + ":" + pslRow[qNameCol]
     fileOps.prRow(outPslFh, pslRow)
 
+def getTLength(pslRow):
+    return int(pslRow[tEndCol])-int(pslRow[tStartCol])
+    
 def createEditedPsl(srcDb, transMapPsl, outPslFile):
     "create PSL file with srcDB: for query"
     with open(outPslFile, "w") as outPslFh:
         for pslRow in TabFileReader(transMapPsl):
-            editWritePslRow(srcDb, pslRow, outPslFh)            
+            if getTLength(pslRow) <= maxTLength:
+                editWritePslRow(srcDb, pslRow, outPslFh)            
 
 def loadPslFile(db, table, outPslFile):
     subprocess.check_call(["hgLoadPsl", "-table="+table, db, outPslFile])
