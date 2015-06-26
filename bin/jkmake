@@ -111,5 +111,6 @@ if [ ! -e ${CGI_BIN_USER} ] ; then
 fi
 export CGI_BIN CGI_BIN_USER DOCUMENTROOT
 
-exec ${MAKE} -e "$@"
+# force group protein
+sg protein "${MAKE} -e ""$@"
 
