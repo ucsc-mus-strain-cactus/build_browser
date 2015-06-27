@@ -67,28 +67,30 @@ ${databaseCheckpoint}:
 ##
 # Build trackDb files.
 ##
-createTrackDb: ./trackDb/${GENOME}/trackDb.ra ./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${kallistoTrackDbCheckpoint} ${augustusTrackDbCheckpoint}
+trackDbOrgDir=./trackDb/${GENOME}
+trackDbGenomeDir=${trackDbOrgDir}/${targetOrgDb}
+createTrackDb: ${trackDbOrgDir}/trackDb.ra ${trackDbGenomeDir}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${kallistoTrackDbCheckpoint} ${augustusTrackDbCheckpoint}
 
-./trackDb/${GENOME}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/*.trackDb.ra)
+${trackDbOrgDir}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ${trackDbOrgDir}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
 	${python} bin/buildTrackDb.py $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
 # also depend on included files
-./trackDb/${GENOME}/${targetOrgDb}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${rnaSeqStarTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*.trackDb.ra) 
+${trackDbGenomeDir}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${rnaSeqStarTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ${trackDbGenomeDir}/*.trackDb.ra) 
 	@mkdir -p $(dir $@)
 	${python} bin/buildTrackDb.py --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --hal ${halBrowserHtDocsFile} $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
 # generate RNASeq trackDb entries 
 ${rnaSeqTrackDbCheckpoint}: bin/rnaseq_tracks.py
-	@mkdir -p $(dir $@)
+	@mkdir -p $(dir $@) ${trackDbGenomeDir}
 	${python} bin/rnaseq_tracks.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
 	touch $@
 
 # Kallisto isoform-level expression (reference genome only)
 ${kallistoTrackDbCheckpoint}: bin/kallisto_trackDb.py
-	@mkdir -p $(dir $@)
+	@mkdir -p $(dir $@) ${trackDbGenomeDir}
 	${python} bin/kallisto_trackDb.py --assembly_version ${MSCA_VERSION} --ref_genome ${srcOrg}
 	touch $@
 
@@ -108,7 +110,7 @@ ${augustusTrackDbCheckpoint}: bin/augustus_trackDb.py
 ###
 loadTrackDb: ${loadTrackDbCheckpoint}
 
-${loadTrackDbCheckpoint}: createTrackDb ${databaseCheckpoint} $(wildcard ./trackDb/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/*trackDb.ra) $(wildcard ./trackDb/${GENOME}/${targetOrgDb}/*trackDb.ra)
+${loadTrackDbCheckpoint}: createTrackDb ${databaseCheckpoint} $(wildcard ./trackDb/*trackDb.ra) $(wildcard ${trackDbOrgDir}/*trackDb.ra) $(wildcard ${trackDbGenomeDir}/*trackDb.ra)
 	@mkdir -p $(dir $@) locks
 	cd ./trackDb && flock ../locks/loadTracks.lock ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib trackDb hgFindSpec ${targetOrgDb}
 	rm -f trackDb/trackDb.tab trackDb/hgFindSpec.tab

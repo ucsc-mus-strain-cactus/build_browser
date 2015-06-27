@@ -24,9 +24,10 @@ def writeGeneRow(srcDb, pslRow, attrsTable, cdsTable, outGeneFh):
     #  id cds db geneName
     qName = pslRow[9]
     geneName = attrsTable.idx.transcriptId[qName].geneName
+    geneId = attrsTable.idx.transcriptId[qName].geneId
     cdsRow = cdsTable.idx.transcriptId.get(qName, None)
     cds = cdsRow.cds if cdsRow != None else ""
-    fileOps.prRowv(outGeneFh, srcDb+":"+qName, cds, srcDb, geneName)
+    fileOps.prRowv(outGeneFh, srcDb+":"+qName, cds, srcDb, geneName, geneId)
 
 def createGeneFileSrcDb(srcDb, srcPsl, attrsTable, cdsTable, outGeneFh):
     for pslRow in TabFileReader(srcPsl):
