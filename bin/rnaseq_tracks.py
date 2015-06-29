@@ -27,6 +27,7 @@ subGroup2 genome Genome {genome_string}
 subGroup3 tissueType Tissue {tissue_string}
 dimensions dimensionX=genome dimensionY=tissueType
 sortOrder view=+ genome=+ tissueType=+
+visibility full
 dragAndDrop subTracks
 type bed 3
 noInherit on
@@ -43,6 +44,7 @@ subGroup2 tissueType Tissue {tissue_string}
 subGroup3 genome Genome g{genome}={genome}
 dimensions dimensionX=tissueType dimensionY=view
 sortOrder view=- tissueType=+
+visibility full
 dragAndDrop subTracks
 type bed 3
 noInherit on
@@ -52,7 +54,7 @@ noInherit on
 raw_sig = """    track {genome}_expression_star
     shortLabel {genome}_Expression
     view Expression
-    visibility hide
+    visibility pack
     subTrack rnaseq_star
     maxHeightPixels 100:24:16
     autoScale on
@@ -62,7 +64,7 @@ raw_sig = """    track {genome}_expression_star
 base_wig_trackline = """        track wig_star_{genome}_{institute}_{tissue}
         longLabel {genome} {tissue} Expression
         shortLabel {genome}_{tissue}_Expression
-        parent {genome}_expression_star
+        parent {genome}_expression_star off
         type bigWig
         bigDataUrl {file_path}
         color 153,38,0
@@ -73,7 +75,7 @@ base_wig_trackline = """        track wig_star_{genome}_{institute}_{tissue}
 junctions = """    track {genome}_splice_junctions_star
     shortLabel Splice Junctions
     view Junctions
-    visibility hide
+    visibility pack
     subTrack rnaseq_star
 
 """
@@ -81,7 +83,7 @@ junctions = """    track {genome}_splice_junctions_star
 base_sj_trackline = """        track {genome}_{tissue}_{institute}_splice_junctions_star
         longLabel {genome} {tissue} STAR Splice Junctions ({institute})
         shortLabel {genome}_{tissue}_Splice_Junctions
-        parent {genome}_splice_junctions_star
+        parent {genome}_splice_junctions_star off
         bigDataUrl {file_path}
         type bigBed 12
         colorByStrand 255,0,0 0,0,255
@@ -92,7 +94,7 @@ base_sj_trackline = """        track {genome}_{tissue}_{institute}_splice_juncti
 alignments = """    track {genome}_rnaseq_alignments_star
     shortLabel Raw Alignments
     view Alignments
-    visibility hide
+    visibility dense
     subTrack rnaseq_star
 
 """
@@ -101,7 +103,7 @@ base_bam_trackline = """        track bam_star_{genome}_{institute}_{tissue}_{ex
         longLabel {genome} {tissue} RNASeq Alignments ({institute}, {experiment})
         shortLabel {genome}_{tissue}_RNASeq_({institute},_{experiment})
         bigDataUrl {file_path}
-        parent {genome}_rnaseq_alignments_star
+        parent {genome}_rnaseq_alignments_star off
         subGroups view=Alignments genome=g{genome} tissueType=t{tissue}
         type bam
         indelDoubleInsert on
