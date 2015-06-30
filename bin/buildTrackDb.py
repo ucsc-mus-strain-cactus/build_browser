@@ -10,12 +10,13 @@ def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--genomes", nargs="+", default=None)
     parser.add_argument("--this_genome", default=None)
-    parser.add_argument("--hal", default=None)
+    parser.add_argument("--halOrLod", default=None,
+                        help="path to hal file or lod.txt file")
     parser.add_argument("trackDbFile")
     args = parser.parse_args()
-    if (((args.genomes is not None) or (args.this_genome is not None) or (args.hal is not None))
-        and ((args.genomes is None) or (args.this_genome is None) or (args.hal is None))):
-        parser.error("must specify all or none of --genomes, --this_genome, and --hal")
+    if (((args.genomes is not None) or (args.this_genome is not None) or (args.halOrLod is not None))
+        and ((args.genomes is None) or (args.this_genome is None) or (args.halOrLod is None))):
+        parser.error("must specify all or none of --genomes, --this_genome, and --halOrLod")
     if args.this_genome is not None:
         if args.this_genome not in args.genomes:
             parser.error(args.this_genome + " not in --genomes option")
@@ -53,16 +54,16 @@ def getIncludeFiles(trackDbDir):
     return [os.path.basename(t) for t in glob.glob(trackDbDir+"/*.trackDb.ra")]
 
 
-def addSnakeTracks(trackDbFh, genomes, hal, trackDbDir):
+def addSnakeTracks(trackDbFh, genomes, halOrLod, trackDbDir):
     basePri = 15
     trackDbFh.write(cactusComp)
     for pri, genome in enumerate(genomes):
-        trackDbFh.write(snakeTemplate.format(genome, basePri+pri, hal))
+        trackDbFh.write(snakeTemplate.format(genome, basePri+pri, halOrLod))
 
 
-def createTrackDb(trackDbFh, genomes, hal, trackDbDir):
+def createTrackDb(trackDbFh, genomes, halOrLod, trackDbDir):
     if genomes != None:
-        addSnakeTracks(trackDbFh, genomes, hal, trackDbDir)
+        addSnakeTracks(trackDbFh, genomes, halOrLod, trackDbDir)
     for inc in getIncludeFiles(trackDbDir):
         trackDbFh.write("include " + inc + "\n")
 
@@ -71,7 +72,7 @@ def main():
     args = parse_args()
     trackDbDir = os.path.dirname(args.trackDbFile)
     with file(args.trackDbFile, "w") as trackDbFh:
-        createTrackDb(trackDbFh, args.genomes, args.hal, trackDbDir)
+        createTrackDb(trackDbFh, args.genomes, args.halOrLod, trackDbDir)
 
 
 if __name__ == "__main__":

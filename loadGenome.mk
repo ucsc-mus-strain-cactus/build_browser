@@ -79,7 +79,13 @@ ${trackDbOrgDir}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} b
 # also depend on included files
 ${trackDbGenomeDir}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${rnaSeqStarTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ${trackDbGenomeDir}/*.trackDb.ra) 
 	@mkdir -p $(dir $@)
-	${python} bin/buildTrackDb.py --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --hal ${halBrowserHtDocsFile} $@.${tmpExt}
+ifdef lodBrowserHtDocsFile
+# use lod in snake tracks
+	${python} bin/buildTrackDb.py --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --halOrLod ${lodBrowserHtDocsFile} $@.${tmpExt}
+else
+# use hal in snake tracks
+	${python} bin/buildTrackDb.py --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --halOrLod ${halBrowserHtDocsFile} $@.${tmpExt}
+endif
 	mv -f $@.${tmpExt} $@
 
 # generate RNASeq trackDb entries 

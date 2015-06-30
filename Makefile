@@ -17,13 +17,26 @@ transMapGencodeSrcLoadCheckpoints = \
 
 all: sharedDb genomeDbs
 
+ifdef lodBrowserHtDocsFile
+sharedDb: ${halBrowserHtDocsFile} ${lodBrowserHtDocsFile} loadSharedSql
+else
 sharedDb: ${halBrowserHtDocsFile} loadSharedSql
+endif
 genomeDbs: ${allOrgs:%=%.loadGenome} refGencodeTracks
 refGenome: ${srcOrg}.loadGenome
 
 ${halBrowserHtDocsFile}: ${halBrowserFile}
 	@mkdir -p $(dir $@)
 	cp -f $< $@.${tmpExt}
+	mv -f $@.${tmpExt} $@
+
+# this is a bit weird: the lod directory is copied as well as the
+# lod.txt, but it isn't a target of this rule. my makefile-fu is not
+# strong enough to figure out how to do this properly. Sorry!
+${lodBrowserHtDocsFile}: ${lodTxtFile} ${lodDir}
+	@mkdir -p $(dir $@)
+	cp -f $< $@.${tmpExt}
+	cp -r ${lodDir} $(dir ${lodBrowserHtDocsDir})
 	mv -f $@.${tmpExt} $@
 
 %.loadGenome:
