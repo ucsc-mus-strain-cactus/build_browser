@@ -25,12 +25,12 @@ sharedDb = musStrainShared
 ##
 musStrainUrl = http://hgwdev-mus-strain.sdsc.edu/
 musStrainHtDocsDir = /data/apache/htdocs-mus-strain
-halBrowserHtDocsFile = ${musStrainHtDocsDir}/msca_hal/$(notdir ${halBrowserFile})
+halBrowserHtDocsFile = /scratch/msca_hal/$(notdir ${halBrowserFile})
 
 # Comment these two lines out if you have not yet created LODs, and
 # the browser will use the raw hal file instead.
-lodBrowserHtDocsFile = ${musStrainHtDocsDir}/msca_hal/$(notdir ${lodTxtFile})
-lodBrowserHtDocsDir = ${musStrainHtDocsDir}/msca_hal/$(notdir ${lodDir})
+lodBrowserHtDocsFile = /scratch/msca_hal/$(notdir ${lodTxtFile})
+lodBrowserHtDocsDir = /scratch/msca_hal/$(notdir ${lodDir})
 
 # version letter so we can have multiple tables
 TRANS_MAP_TABLE_VERSION = a
