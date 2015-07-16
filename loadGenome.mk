@@ -257,21 +257,18 @@ ${dbCheckpointDir}/augustusTM.done: ${augustusResultsDir}/tm/${GENOME}.coding.gp
 	@mkdir -p $(dir $@)
 # hgLoadGenePred uses the current directory for scratch space,
 # interfering with other running copies, and doesn't have an option to
-# use a different dir.
-	cd `mktemp -d`
-	hgLoadGenePred -genePredExt ${targetOrgDb} augustusTM $<
+# use a different dir. So we have to use a lock every time.
+	./bin/addName2ToGenePred.py $< transmap | flock locks/augustusTM hgLoadGenePred -genePredExt ${targetOrgDb} augustusTM stdin
 	touch $@
 
 ${dbCheckpointDir}/augustusTMR.done: ${augustusResultsDir}/tmr/${GENOME}.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
-	cd `mktemp -d`
-	hgLoadGenePred -genePredExt ${targetOrgDb} augustusTMR $<
+	./bin/addName2ToGenePred.py $< augustus | flock locks/augustusTMR hgLoadGenePred -genePredExt ${targetOrgDb} augustusTMR stdin
 	touch $@
 
 ${dbCheckpointDir}/augustusCGP.done: ${augustusResultsDir}/cgp/${GENOME}.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
-	cd `mktemp -d`
-	hgLoadGenePred -genePredExt ${targetOrgDb} augustusCGP $<
+	flock locks/augustusCGP hgLoadGenePred -genePredExt ${targetOrgDb} augustusCGP $<
 	touch $@
 
 ###

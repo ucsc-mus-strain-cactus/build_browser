@@ -47,6 +47,27 @@ tmr = """    track augustusTMR
 
 """
 
+searchtmr = """
+# search by ensembl id
+searchName augustusTMR_ens_id
+searchTable augustusTMR
+searchMethod prefix
+searchType genePred
+query select chrom, txStart, txEnd, name from %s where name2 like '%s%%'
+
+"""
+
+searchcgp = ""
+
+searchtm = """# search by ensembl id
+searchName augustusTM_ens_id
+searchTable augustusTM
+searchMethod prefix
+searchType genePred
+query select chrom, txStart, txEnd, name from %s where name2 like '%s%%'
+
+"""
+
 cgp = """    track augustusCGP
     superTrack augustus pack
     shortLabel comparative AUGUSTUS
@@ -59,7 +80,6 @@ cgp = """    track augustusCGP
 
 """
 
-
 def make_ref_tracks(file_handle):
     file_handle.write(supertrack)
     file_handle.write(cgp)
@@ -70,7 +90,9 @@ def make_individual_tracks(file_handle):
     dirs = ["tm", "tmr", "cgp"]
     for d in dirs:
         file_handle.write(eval(d))
-
+    # have to write search defs after everything else
+    for d in dirs:
+        file_handle.write(eval('search' + d))
 
 def main():
     args = parse_args()
