@@ -255,17 +255,17 @@ endif
 
 ${dbCheckpointDir}/augustusTM.done: ${augustusResultsDir}/tm/${GENOME}.coding.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
-	hgLoadGenePred ${targetOrgDb} augustusTM $<
+	hgLoadGenePred -genePredExt ${targetOrgDb} augustusTM $<
 	touch $@
 
 ${dbCheckpointDir}/augustusTMR.done: ${augustusResultsDir}/tmr/${GENOME}.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
-	hgLoadGenePred ${targetOrgDb} augustusTMR $<
+	hgLoadGenePred -genePredExt ${targetOrgDb} augustusTMR $<
 	touch $@
 
 ${dbCheckpointDir}/augustusCGP.done: ${augustusResultsDir}/cgp/${GENOME}.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
-	hgLoadGenePred ${targetOrgDb} augustusCGP $<
+	hgLoadGenePred -genePredExt ${targetOrgDb} augustusCGP $<
 	touch $@
 
 ###
