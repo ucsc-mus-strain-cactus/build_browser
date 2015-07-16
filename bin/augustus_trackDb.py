@@ -53,7 +53,17 @@ searchName augustusTMR_ens_id
 searchTable augustusTMR
 searchMethod prefix
 searchType genePred
+termRegex ENSMUST[0-9.]+
 query select chrom, txStart, txEnd, name from %s where name2 like '%s%%'
+
+# search by gene name
+searchName augustusTMR_geneName
+searchTable augustusTMR
+searchMethod prefix
+searchType genePred
+query select chrom, txStart, txEnd, name from %s where name2 like '%s'
+xrefTable MusC57B6J_1504.wgEncodeGencodeAttrsVM4
+xrefQuery select transcriptId,geneName from %s where geneName like '%s%%'
 
 """
 
@@ -64,7 +74,17 @@ searchName augustusTM_ens_id
 searchTable augustusTM
 searchMethod prefix
 searchType genePred
+termRegex ENSMUST[0-9.]+
 query select chrom, txStart, txEnd, name from %s where name2 like '%s%%'
+
+# search by gene name
+searchName augustusTM_geneName
+searchTable augustusTM
+searchMethod prefix
+searchType genePred
+query select chrom, txStart, txEnd, name from %s where name2 like '%s'
+xrefTable MusC57B6J_1504.wgEncodeGencodeAttrsVM4
+xrefQuery select transcriptId,geneName from %s where geneName like '%s%%'
 
 """
 
