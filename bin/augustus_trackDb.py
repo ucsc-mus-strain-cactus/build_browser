@@ -28,8 +28,7 @@ tm = """    track augustusTM
     shortLabel AUGUSTUS using TransMap
     longLabel AUGUSTUS using TransMap coding genes
     group genes
-    type bigGenePred
-    bigDataUrl {}
+    type genePred
     priority 1.0
     color 200,0,0
     visibility hide
@@ -41,8 +40,7 @@ tmr = """    track augustusTMR
     shortLabel AUGUSTUS using TransMap and RNA-Seq
     longLabel AUGUSTUS using TransMap coding genes and RNA-Seq
     group genes
-    type bigGenePred
-    bigDataUrl {}
+    type genePred
     priority 1.0
     color 255,0,0
     visibility pack
@@ -54,8 +52,7 @@ cgp = """    track augustusCGP
     shortLabel comparative AUGUSTUS
     longLabel comparative AUGUSTUS
     group genes
-    type bigGenePred
-    bigDataUrl {}
+    type genePred
     priority 1.0
     color 100,150,250
     visibility pack
@@ -63,20 +60,16 @@ cgp = """    track augustusCGP
 """
 
 
-def make_ref_tracks(ref_genome, base_data_dir, file_handle):
+def make_ref_tracks(file_handle):
     file_handle.write(supertrack)
-    data_path = os.path.join(base_data_dir, "cgp", ref_genome + ".bb")
-    assert os.path.exists(data_path)
-    file_handle.write(cgp.format(data_path))
+    file_handle.write(cgp)
 
 
-def make_individual_tracks(genome, base_data_dir, file_handle):
+def make_individual_tracks(file_handle):
     file_handle.write(supertrack)
     dirs = ["tm", "tmr", "cgp"]
-    data_paths = [os.path.join(base_data_dir, x, genome + ".bb") for x in dirs]
-    for d, data_path in zip(dirs, data_paths):
-        assert os.path.exists(data_path)
-        file_handle.write(eval(d).format(data_path))
+    for d in dirs:
+        file_handle.write(eval(d))
 
 
 def main():
@@ -86,11 +79,11 @@ def main():
     if args.genome == args.ref_genome:
         target_file = target_file_template.format(args.ref_genome, args.assembly_version)
         with open(target_file, "w") as outf:
-            make_ref_tracks(args.genome, args.base_data_dir, outf)
+            make_ref_tracks(outf)
     elif args.assembly_version == "1504":
         target_file = target_file_template.format(args.genome, args.assembly_version)
         with open(target_file, "w") as outf:
-            make_individual_tracks(args.genome, args.base_data_dir, outf)
+            make_individual_tracks(outf)
     else:
         print "This script was called on a release that was not 1504 or not on the reference. Did nothing."
         sys.exit(1)

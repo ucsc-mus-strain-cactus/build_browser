@@ -52,7 +52,7 @@ endif
 endif
 
 all: createTrackDb loadTrackDb loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
-	loadCompAnn loadSv loadRepeatMasker
+	loadCompAnn loadSv loadRepeatMasker loadAugustus
 
 
 ###
@@ -236,6 +236,37 @@ ${dbCheckpointDir}/structural_variants/%.sv.done: ${yalcinSvDir}/%.bed
 	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed4 -ignoreEmpty ${targetOrgDb} $*_yalcin_svs $<
 	touch $@
 
+##
+# load augustus tracks as genePred
+##
+ifneq (${GENOME},${srcOrg})
+# make has no or operator? oh god
+ifneq (${GENOME},Rattus)
+# rule for species with augustus tracks (all except C57B6J and Rattus)
+loadAugustus: ${dbCheckpointDir}/augustusTM.done ${dbCheckpointDir}/augustusTMR.done ${dbCheckpointDir}/augustusCGP.done
+else
+# rule for Rattus
+loadAugustus:
+endif
+else
+# rule for C57B6J
+loadAugustus: ${dbCheckpointDir}/augustusCGP.done
+endif
+
+${dbCheckpointDir}/augustusTM.done: ${augustusResultsDir}/tm/${GENOME}.coding.gp ${chromInfoCheckpoint}
+	@mkdir -p $(dir $@)
+	hgLoadGenePred ${targetOrgDb} augustusTM $<
+	touch $@
+
+${dbCheckpointDir}/augustusTMR.done: ${augustusResultsDir}/tmr/${GENOME}.gp ${chromInfoCheckpoint}
+	@mkdir -p $(dir $@)
+	hgLoadGenePred ${targetOrgDb} augustusTMR $<
+	touch $@
+
+${dbCheckpointDir}/augustusCGP.done: ${augustusResultsDir}/cgp/${GENOME}.gp ${chromInfoCheckpoint}
+	@mkdir -p $(dir $@)
+	hgLoadGenePred ${targetOrgDb} augustusCGP $<
+	touch $@
 
 ###
 # repeat masker data, if available (not on Rat or all assemblies)
