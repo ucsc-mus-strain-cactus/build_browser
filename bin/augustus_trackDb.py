@@ -65,9 +65,23 @@ query select chrom, txStart, txEnd, name from %s where name2 like '%s'
 xrefTable MusC57B6J_1504.wgEncodeGencodeAttrsVM4
 xrefQuery select transcriptId,geneName from %s where geneName like '%s%%'
 
+# search by augustus ID
+searchName augustusTMR
+searchTable augustusTMR
+searchMethod prefix
+searchType genePred
+termRegex aug-([0-9]+-|)ENSMUST[0-9.]+-[0-9]+
+
 """
 
-searchcgp = ""
+searchcgp = """# search by CGP id
+searchName augustusCGP
+searchTable augustusCGP
+searchMethod prefix
+searchType genePred
+termRegex g[0-9]+.t[0-9]+
+
+"""
 
 searchtm = """# search by ensembl id
 searchName augustusTM_ens_id
@@ -86,6 +100,13 @@ query select chrom, txStart, txEnd, name from %s where name2 like '%s'
 xrefTable MusC57B6J_1504.wgEncodeGencodeAttrsVM4
 xrefQuery select transcriptId,geneName from %s where geneName like '%s%%'
 
+# search by augustus ID
+searchName augustusTM
+searchTable augustusTM
+searchMethod prefix
+searchType genePred
+termRegex ENSMUST[0-9.]+-[0-9]+
+
 """
 
 cgp = """    track augustusCGP
@@ -103,7 +124,7 @@ cgp = """    track augustusCGP
 def make_ref_tracks(file_handle):
     file_handle.write(supertrack)
     file_handle.write(cgp)
-
+    file_handle.write(searchcgp)
 
 def make_individual_tracks(file_handle):
     file_handle.write(supertrack)
