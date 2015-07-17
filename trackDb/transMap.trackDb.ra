@@ -37,10 +37,18 @@ label.orgCommon 0
     label.orgAbbrv 0
     label.orgCommon 0
 
+searchName transMapAlnGencodeBasicVM4a
 searchTable transMapAlnGencodeBasicVM4a
 searchType psl
 searchMethod prefix
 searchPriority 2.31
+
+searchName transMapAlnGencodeBasicVM4a_transcriptId
+searchTable transMapAlnGencodeBasicVM4a
+searchType psl
+searchMethod prefix
+searchPriority 2.315
+query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
     track transMapAlnGencodeCompVM4a
     superTrack transMap hide
@@ -70,10 +78,18 @@ searchPriority 2.31
     label.orgAbbrv 0
     label.orgCommon 0
 
+searchName transMapAlnGencodeCompVM4a
 searchTable transMapAlnGencodeCompVM4a
 searchType psl
 searchMethod prefix
 searchPriority 2.32
+
+searchName transMapAlnGencodeCompVM4a_transcriptId
+searchTable transMapAlnGencodeCompVM4a
+searchType psl
+searchMethod prefix
+searchPriority 2.325
+query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
     track transMapAlnGencodePseudoGeneVM4a
     superTrack transMap dense
@@ -103,8 +119,15 @@ searchPriority 2.32
     label.orgAbbrv 0
     label.orgCommon 0
 
+searchName transMapAlnGencodePseudoGeneVM4a
 searchTable transMapAlnGencodePseudoGeneVM4a
 searchType psl
 searchMethod prefix
 searchPriority 2.33
 
+searchName transMapAlnGencodePseudoGeneVM4a_transcriptId
+searchTable transMapAlnGencodePseudoGeneVM4a
+searchType psl
+searchMethod prefix
+searchPriority 2.335
+query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
