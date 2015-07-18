@@ -51,7 +51,10 @@ endif
 endif
 endif
 
-all: createTrackDb loadTrackDb loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
+all: loadTracks loadTrackDb
+
+# this loads all tracks, but not trackDb.  This must be done first dur to -strict trackDb
+loadTracks: loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
 	loadCompAnn loadSv loadRepeatMasker loadAugustus
 
 
@@ -116,9 +119,10 @@ ${augustusTrackDbCheckpoint}: bin/augustus_trackDb.py
 ###
 loadTrackDb: ${loadTrackDbCheckpoint}
 
-${loadTrackDbCheckpoint}: createTrackDb ${databaseCheckpoint} $(wildcard ./trackDb/*trackDb.ra) $(wildcard ${trackDbOrgDir}/*trackDb.ra) $(wildcard ${trackDbGenomeDir}/*trackDb.ra)
+# tracks must be loaded first with -strict
+${loadTrackDbCheckpoint}: createTrackDb loadTracks $(wildcard ./trackDb/*trackDb.ra) $(wildcard ${trackDbOrgDir}/*trackDb.ra) $(wildcard ${trackDbGenomeDir}/*trackDb.ra)
 	@mkdir -p $(dir $@) locks
-	cd ./trackDb && flock ../locks/loadTracks.lock ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib trackDb hgFindSpec ${targetOrgDb}
+	cd ./trackDb && flock ../locks/loadTracks.lock ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -strict -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib trackDb hgFindSpec ${targetOrgDb}
 	rm -f trackDb/trackDb.tab trackDb/hgFindSpec.tab
 	touch $@
 
