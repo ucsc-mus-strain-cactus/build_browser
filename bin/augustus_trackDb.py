@@ -121,10 +121,12 @@ cgp = """    track augustusCGP
 
 """
 
+
 def make_ref_tracks(file_handle):
     file_handle.write(supertrack)
     file_handle.write(cgp)
     file_handle.write(searchcgp)
+
 
 def make_individual_tracks(file_handle):
     file_handle.write(supertrack)
@@ -135,10 +137,10 @@ def make_individual_tracks(file_handle):
     for d in dirs:
         file_handle.write(eval('search' + d))
 
+
 def main():
     args = parse_args()
     target_file_template = "trackDb/{0}/Mus{0}_{1}/augustus.trackDb.ra"
-    file_map = {}
     if args.genome == args.ref_genome:
         target_file = target_file_template.format(args.ref_genome, args.assembly_version)
         with open(target_file, "w") as outf:
