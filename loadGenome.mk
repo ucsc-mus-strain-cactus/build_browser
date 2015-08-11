@@ -27,10 +27,7 @@ chromInfoCheckpoint = ${dbCheckpointDir}/chromInfo.done
 goldGapCheckpoint =  ${dbCheckpointDir}/goldGap.done
 gcPercentCheckpoint = ${dbCheckpointDir}/gcPercent.done
 repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
-
-ifneq (${GENOME},Rattus)
 augustusTrackDbCheckpoint = ${dbCheckpointDir}/augustus.done
-endif
 
 # structural variants (yalcin et al 2012) against reference genome
 ifeq (${GENOME},${srcOrg})
@@ -246,14 +243,14 @@ ${dbCheckpointDir}/structural_variants/%.sv.done: ${yalcinSvDir}/%.bed
 ifneq (${GENOME},${srcOrg})
 # make has no or operator? oh god
 ifneq (${GENOME},Rattus)
-# rule for species with augustus tracks (all except C57B6J and Rattus)
+# rule for species with all augustus tracks (all except C57B6J and Rattus)
 loadAugustus: ${dbCheckpointDir}/augustusTM.done ${dbCheckpointDir}/augustusTMR.done ${dbCheckpointDir}/augustusCGP.done
 else
-# rule for Rattus
-loadAugustus:
+# rule for Rattus (has new full genome CGP)
+loadAugustus: ${dbCheckpointDir}/augustusCGP.done
 endif
 else
-# rule for C57B6J
+# rule for C57B6J (has chr11 and full CGP)
 loadAugustus: ${dbCheckpointDir}/augustusCGP.done
 endif
 

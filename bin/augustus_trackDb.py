@@ -11,7 +11,7 @@ def parse_args():
     parser.add_argument('--assembly_version', help='genome assembly version (1504, etc)', required=True)
     parser.add_argument('--ref_genome', help='reference genome', required=True)
     parser.add_argument('--genome', help='genome', required=True)
-    parser.add_argument('--base_data_dir', default="/hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1504/augustus/")
+    parser.add_argument('--base_data_dir', default="/hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1504/augustus/using_rnaseq/cmp/aug11/")
     return parser.parse_args()
 
 supertrack = """track augustus
@@ -111,8 +111,8 @@ termRegex ENSMUST[0-9.]+-[0-9]+
 
 cgp = """    track augustusCGP
     superTrack augustus pack
-    shortLabel comparative AUGUSTUS
-    longLabel comparative AUGUSTUS
+    shortLabel comparative AUGUSTUS (chr11 only)
+    longLabel comparative AUGUSTUS (chr11 only)
     group genes
     type genePred
     priority 1.0
@@ -121,34 +121,58 @@ cgp = """    track augustusCGP
 
 """
 
+cgp_full = """    track augustusCGPFull
+    superTrack augustus pack
+    shortLabel whole-genome comparative AUGUSTUS
+    longLabel whole-genome comparative AUGUSTUS
+    group genes
+    type bigGenePred
+    bigDataUrl {}
+    priority 1.0
+    color 100,150,250
+    visibility pack
 
-def make_ref_tracks(file_handle):
+"""
+
+
+def make_ref_tracks(file_handle, full_cgp_path):
     file_handle.write(supertrack)
     file_handle.write(cgp)
+    file_handle.write(cgp_full.format(full_cgp_path))
     file_handle.write(searchcgp)
 
 
-def make_individual_tracks(file_handle):
+def make_individual_tracks(file_handle, full_cgp_path):
     file_handle.write(supertrack)
     dirs = ["tm", "tmr", "cgp"]
     for d in dirs:
         file_handle.write(eval(d))
+    file_handle.write(cgp_full.format(full_cgp_path))
     # have to write search defs after everything else
     for d in dirs:
         file_handle.write(eval('search' + d))
 
 
+def make_rat_track(file_handle, full_cgp_path):
+    file_handle.write(supertrack)
+    file_handle.write(cgp_full.format(full_cgp_path))
+
+
 def main():
     args = parse_args()
     target_file_template = "trackDb/{0}/Mus{0}_{1}/augustus.trackDb.ra"
+    full_cgp_path = os.path.join(args.base_data_dir, "Mus{}_{}.cgp.jg.bb".format(args.genome, args.assembly_version))
     if args.genome == args.ref_genome:
         target_file = target_file_template.format(args.ref_genome, args.assembly_version)
         with open(target_file, "w") as outf:
-            make_ref_tracks(outf)
+            make_ref_tracks(outf, full_cgp_path)
     elif args.assembly_version == "1504":
         target_file = target_file_template.format(args.genome, args.assembly_version)
         with open(target_file, "w") as outf:
-            make_individual_tracks(outf)
+            if args.genome == "Rattus":
+                make_rat_track(outf, full_cgp_path)
+            else:
+                make_individual_tracks(outf, full_cgp_path)
     else:
         print "This script was called on a release that was not 1504 or not on the reference. Did nothing."
         sys.exit(1)
