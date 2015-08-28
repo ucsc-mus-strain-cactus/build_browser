@@ -1,7 +1,7 @@
-track transMap
+track transMapSimpleChain
 superTrack on show
-shortLabel TransMap
-longLabel TransMap Alignments
+shortLabel TransMap Simple Chain 
+longLabel TransMap Simple Chain Alignments
 group genes
 label.acc 1
 label.db 0
@@ -9,8 +9,8 @@ label.gene 1
 label.orgAbbrv 0
 label.orgCommon 0
 
-    track transMapAlnGencodeBasicVM4a
-    superTrack transMap pack
+    track transMapAlnGencodeBasicVM4simpleChain
+    superTrack transMapSimpleChain pack
     shortLabel TransMap GENCODE Basic VM4
     longLabel TransMap GENCODE Basic VM4 Mappings using Simple Chain
     group genes
@@ -18,13 +18,13 @@ label.orgCommon 0
     priority 37.001
     color 0,100,0
     visibility pack
-    transMapInfo transMapInfoGencodeBasicVM4a
-    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4a
-    transMapGene musStrainShared.transMapGeneGencodeBasicVM4a
+    transMapInfo transMapInfoGencodeBasicVM4simpleChain
+    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4simpleChain
+    transMapGene musStrainShared.transMapGeneGencodeBasicVM4simpleChain
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM4a
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeBasicVM4a musStrainShared.transMapExtFileGencodeBasicVM4a
+    baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM4
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeBasicVM4 musStrainShared.transMapExtFileGencodeBasicVM4
     indelDoubleInsert on
     indelQueryInsert on
     showDiffBasesAllScales .
@@ -37,21 +37,21 @@ label.orgCommon 0
     label.orgAbbrv 0
     label.orgCommon 0
 
-searchName transMapAlnGencodeBasicVM4a
-searchTable transMapAlnGencodeBasicVM4a
+searchName transMapAlnGencodeBasicVM4simpleChain
+searchTable transMapAlnGencodeBasicVM4simpleChain
 searchType psl
 searchMethod prefix
 searchPriority 2.31
 
-searchName transMapAlnGencodeBasicVM4a_transcriptId
-searchTable transMapAlnGencodeBasicVM4a
+searchName transMapAlnGencodeBasicVM4simpleChain_transcriptId
+searchTable transMapAlnGencodeBasicVM4simpleChain
 searchType psl
 searchMethod prefix
 searchPriority 2.315
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
-    track transMapAlnGencodeCompVM4a
-    superTrack transMap hide
+    track transMapAlnGencodeCompVM4simpleChain
+    superTrack transMapSimpleChain hide
     shortLabel TransMap GENCODE Comprehensive VM4
     longLabel TransMap GENCODE Comprehensive VM4 Mappings using Simple Chain
     group genes
@@ -59,13 +59,13 @@ query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%
     priority 37.002
     color 0,100,0
     visibility hide
-    transMapInfo transMapInfoGencodeCompVM4a
-    transMapSrc musStrainShared.transMapSrcGencodeCompVM4a
-    transMapGene musStrainShared.transMapGeneGencodeCompVM4a
+    transMapInfo transMapInfoGencodeCompVM4simpleChain
+    transMapSrc musStrainShared.transMapSrcGencodeCompVM4simpleChain
+    transMapGene musStrainShared.transMapGeneGencodeCompVM4simpleChain
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM4a
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeCompVM4a musStrainShared.transMapExtFileGencodeCompVM4a
+    baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM4
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeCompVM4 musStrainShared.transMapExtFileGencodeCompVM4
     indelDoubleInsert on
     indelQueryInsert on
     showDiffBasesAllScales .
@@ -78,21 +78,21 @@ query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%
     label.orgAbbrv 0
     label.orgCommon 0
 
-searchName transMapAlnGencodeCompVM4a
-searchTable transMapAlnGencodeCompVM4a
+searchName transMapAlnGencodeCompVM4simpleChain
+searchTable transMapAlnGencodeCompVM4simpleChain
 searchType psl
 searchMethod prefix
 searchPriority 2.32
 
-searchName transMapAlnGencodeCompVM4a_transcriptId
-searchTable transMapAlnGencodeCompVM4a
+searchName transMapAlnGencodeCompVM4simpleChain_transcriptId
+searchTable transMapAlnGencodeCompVM4simpleChain
 searchType psl
 searchMethod prefix
 searchPriority 2.325
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
-    track transMapAlnGencodePseudoGeneVM4a
-    superTrack transMap dense
+    track transMapAlnGencodePseudoGeneVM4simpleChain
+    superTrack transMapSimpleChain dense
     shortLabel TransMap GENCODE Pseudo Gene VM4
     longLabel TransMap GENCODE Pseudo Gene VM4 Mappings using Simple Chain
     group genes
@@ -100,13 +100,13 @@ query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%
     priority 37.003
     color 255,51,255
     visibility dense
-    transMapInfo transMapInfoGencodePseudoGeneVM4a
-    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4a
-    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4a
+    transMapInfo transMapInfoGencodePseudoGeneVM4simpleChain
+    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4simpleChain
+    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4simpleChain
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM4a
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodePseudoGeneVM4a musStrainShared.transMapExtFileGencodePseudoGeneVM4a
+    baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM4
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodePseudoGeneVM4 musStrainShared.transMapExtFileGencodePseudoGeneVM4
     indelDoubleInsert on
     indelQueryInsert on
     showDiffBasesAllScales .
@@ -119,15 +119,284 @@ query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%
     label.orgAbbrv 0
     label.orgCommon 0
 
-searchName transMapAlnGencodePseudoGeneVM4a
-searchTable transMapAlnGencodePseudoGeneVM4a
+searchName transMapAlnGencodePseudoGeneVM4simpleChain
+searchTable transMapAlnGencodePseudoGeneVM4simpleChain
 searchType psl
 searchMethod prefix
 searchPriority 2.33
 
-searchName transMapAlnGencodePseudoGeneVM4a_transcriptId
-searchTable transMapAlnGencodePseudoGeneVM4a
+searchName transMapAlnGencodePseudoGeneVM4simpleChain_transcriptId
+searchTable transMapAlnGencodePseudoGeneVM4simpleChain
 searchType psl
 searchMethod prefix
 searchPriority 2.335
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
+
+track transMapAll
+superTrack on show
+shortLabel TransMap All Genomic Chain
+longLabel TransMap All Genomic Chain Alignments
+group genes
+label.acc 1
+label.db 0
+label.gene 1
+label.orgAbbrv 0
+label.orgCommon 0
+
+    track transMapAlnGencodeBasicVM4all
+    superTrack transMapAll pack
+    shortLabel TransMap GENCODE Basic VM4
+    longLabel TransMap GENCODE Basic VM4 Mappings using All Genomic Chain
+    group genes
+    type psl
+    priority 37.001
+    color 0,100,0
+    visibility pack
+    transMapInfo transMapInfoGencodeBasicVM4all
+    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4all
+    transMapGene musStrainShared.transMapGeneGencodeBasicVM4all
+    transMapTypeDesc GENCODE
+    baseColorDefault diffCodons
+    baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM4
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeBasicVM4 musStrainShared.transMapExtFileGencodeBasicVM4
+    indelDoubleInsert on
+    indelQueryInsert on
+    showDiffBasesAllScales .
+    showDiffBasesMaxZoom 10000.0
+    showCdsAllScales .
+    showCdsMaxZoom 10000.0
+    label.acc 1
+    label.db 0
+    label.gene 1
+    label.orgAbbrv 0
+    label.orgCommon 0
+
+searchName transMapAlnGencodeBasicVM4all
+searchTable transMapAlnGencodeBasicVM4all
+searchType psl
+searchMethod prefix
+searchPriority 2.31
+
+searchName transMapAlnGencodeBasicVM4all_transcriptId
+searchTable transMapAlnGencodeBasicVM4all
+searchType psl
+searchMethod prefix
+searchPriority 2.315
+query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
+
+    track transMapAlnGencodeCompVM4all
+    superTrack transMapAll hide
+    shortLabel TransMap GENCODE Comprehensive VM4
+    longLabel TransMap GENCODE Comprehensive VM4 Mappings using All Genomic Chain
+    group genes
+    type psl
+    priority 37.002
+    color 0,100,0
+    visibility hide
+    transMapInfo transMapInfoGencodeCompVM4all
+    transMapSrc musStrainShared.transMapSrcGencodeCompVM4all
+    transMapGene musStrainShared.transMapGeneGencodeCompVM4all
+    transMapTypeDesc GENCODE
+    baseColorDefault diffCodons
+    baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM4
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeCompVM4 musStrainShared.transMapExtFileGencodeCompVM4
+    indelDoubleInsert on
+    indelQueryInsert on
+    showDiffBasesAllScales .
+    showDiffBasesMaxZoom 10000.0
+    showCdsAllScales .
+    showCdsMaxZoom 10000.0
+    label.acc 1
+    label.db 0
+    label.gene 1
+    label.orgAbbrv 0
+    label.orgCommon 0
+
+searchName transMapAlnGencodeCompVM4all
+searchTable transMapAlnGencodeCompVM4all
+searchType psl
+searchMethod prefix
+searchPriority 2.32
+
+searchName transMapAlnGencodeCompVM4all_transcriptId
+searchTable transMapAlnGencodeCompVM4all
+searchType psl
+searchMethod prefix
+searchPriority 2.325
+query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
+
+    track transMapAlnGencodePseudoGeneVM4all
+    superTrack transMapAll dense
+    shortLabel TransMap GENCODE Pseudo Gene VM4
+    longLabel TransMap GENCODE Pseudo Gene VM4 Mappings using All Genomic Chain
+    group genes
+    type psl
+    priority 37.003
+    color 255,51,255
+    visibility dense
+    transMapInfo transMapInfoGencodePseudoGeneVM4all
+    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4all
+    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4all
+    transMapTypeDesc GENCODE
+    baseColorDefault diffCodons
+    baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM4
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodePseudoGeneVM4 musStrainShared.transMapExtFileGencodePseudoGeneVM4
+    indelDoubleInsert on
+    indelQueryInsert on
+    showDiffBasesAllScales .
+    showDiffBasesMaxZoom 10000.0
+    showCdsAllScales .
+    showCdsMaxZoom 10000.0
+    label.acc 1
+    label.db 0
+    label.gene 1
+    label.orgAbbrv 0
+    label.orgCommon 0
+
+searchName transMapAlnGencodePseudoGeneVM4all
+searchTable transMapAlnGencodePseudoGeneVM4all
+searchType psl
+searchMethod prefix
+searchPriority 2.33
+
+searchName transMapAlnGencodePseudoGeneVM4all_transcriptId
+searchTable transMapAlnGencodePseudoGeneVM4all
+searchType psl
+searchMethod prefix
+searchPriority 2.335
+query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
+
+track transMapSyn
+superTrack on show
+shortLabel TransMap Syn Genomic Chain
+longLabel TransMap Syn Genomic Chain Alignments
+group genes
+label.acc 1
+label.db 0
+label.gene 1
+label.orgAbbrv 0
+label.orgCommon 0
+
+    track transMapAlnGencodeBasicVM4syn
+    superTrack transMapSyn pack
+    shortLabel TransMap GENCODE Basic VM4
+    longLabel TransMap GENCODE Basic VM4 Mappings using Syn Genomic Chain
+    group genes
+    type psl
+    priority 37.001
+    color 0,100,0
+    visibility pack
+    transMapInfo transMapInfoGencodeBasicVM4syn
+    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4syn
+    transMapGene musStrainShared.transMapGeneGencodeBasicVM4syn
+    transMapTypeDesc GENCODE
+    baseColorDefault diffCodons
+    baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM4
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeBasicVM4 musStrainShared.transMapExtFileGencodeBasicVM4
+    indelDoubleInsert on
+    indelQueryInsert on
+    showDiffBasesAllScales .
+    showDiffBasesMaxZoom 10000.0
+    showCdsAllScales .
+    showCdsMaxZoom 10000.0
+    label.acc 1
+    label.db 0
+    label.gene 1
+    label.orgAbbrv 0
+    label.orgCommon 0
+
+searchName transMapAlnGencodeBasicVM4syn
+searchTable transMapAlnGencodeBasicVM4syn
+searchType psl
+searchMethod prefix
+searchPriority 2.31
+
+searchName transMapAlnGencodeBasicVM4syn_transcriptId
+searchTable transMapAlnGencodeBasicVM4syn
+searchType psl
+searchMethod prefix
+searchPriority 2.315
+query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
+
+    track transMapAlnGencodeCompVM4syn
+    superTrack transMapSyn hide
+    shortLabel TransMap GENCODE Comprehensive VM4
+    longLabel TransMap GENCODE Comprehensive VM4 Mappings using Syn Genomic Chain
+    group genes
+    type psl
+    priority 37.002
+    color 0,100,0
+    visibility hide
+    transMapInfo transMapInfoGencodeCompVM4syn
+    transMapSrc musStrainShared.transMapSrcGencodeCompVM4syn
+    transMapGene musStrainShared.transMapGeneGencodeCompVM4syn
+    transMapTypeDesc GENCODE
+    baseColorDefault diffCodons
+    baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM4
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeCompVM4 musStrainShared.transMapExtFileGencodeCompVM4
+    indelDoubleInsert on
+    indelQueryInsert on
+    showDiffBasesAllScales .
+    showDiffBasesMaxZoom 10000.0
+    showCdsAllScales .
+    showCdsMaxZoom 10000.0
+    label.acc 1
+    label.db 0
+    label.gene 1
+    label.orgAbbrv 0
+    label.orgCommon 0
+
+searchName transMapAlnGencodeCompVM4syn
+searchTable transMapAlnGencodeCompVM4syn
+searchType psl
+searchMethod prefix
+searchPriority 2.32
+
+searchName transMapAlnGencodeCompVM4syn_transcriptId
+searchTable transMapAlnGencodeCompVM4syn
+searchType psl
+searchMethod prefix
+searchPriority 2.325
+query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
+
+    track transMapAlnGencodePseudoGeneVM4syn
+    superTrack transMapSyn dense
+    shortLabel TransMap GENCODE Pseudo Gene VM4
+    longLabel TransMap GENCODE Pseudo Gene VM4 Mappings using Syn Genomic Chain
+    group genes
+    type psl
+    priority 37.003
+    color 255,51,255
+    visibility dense
+    transMapInfo transMapInfoGencodePseudoGeneVM4syn
+    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4syn
+    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4syn
+    transMapTypeDesc GENCODE
+    baseColorDefault diffCodons
+    baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM4
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodePseudoGeneVM4 musStrainShared.transMapExtFileGencodePseudoGeneVM4
+    indelDoubleInsert on
+    indelQueryInsert on
+    showDiffBasesAllScales .
+    showDiffBasesMaxZoom 10000.0
+    showCdsAllScales .
+    showCdsMaxZoom 10000.0
+    label.acc 1
+    label.db 0
+    label.gene 1
+    label.orgAbbrv 0
+    label.orgCommon 0
+
+searchName transMapAlnGencodePseudoGeneVM4syn
+searchTable transMapAlnGencodePseudoGeneVM4syn
+searchType psl
+searchMethod prefix
+searchPriority 2.33
+
+searchName transMapAlnGencodePseudoGeneVM4syn_transcriptId
+searchTable transMapAlnGencodePseudoGeneVM4syn
+searchType psl
+searchMethod prefix
+searchPriority 2.335
+query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
+

@@ -12,11 +12,10 @@ qNameCol = 9
 tStartCol = 15
 tEndCol = 16
 
-# drop very long maps as they are bogus and slow down the browser
-maxTLength = 3000000
-
 def parseArgs():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--maxSpan", dest="maxSpan", default=sys.maxint,
+                        help="""drop transcripts that exceed this target span""")
     parser.add_argument("srcDb", help="""insert this srcDb in qName""")
     parser.add_argument("db", help="""load into this database""")
     parser.add_argument("table", help="""name of table to load""")
@@ -30,11 +29,11 @@ def editWritePslRow(srcDb, pslRow, outPslFh):
 def getTLength(pslRow):
     return int(pslRow[tEndCol])-int(pslRow[tStartCol])
     
-def createEditedPsl(srcDb, transMapPsl, outPslFile):
+def createEditedPsl(srcDb, transMapPsl, maxSpan, outPslFile):
     "create PSL file with srcDB: for query"
     with open(outPslFile, "w") as outPslFh:
         for pslRow in TabFileReader(transMapPsl):
-            if getTLength(pslRow) <= maxTLength:
+            if getTLength(pslRow) <= maxSpan:
                 editWritePslRow(srcDb, pslRow, outPslFh)            
 
 def loadPslFile(db, table, outPslFile):
@@ -43,7 +42,7 @@ def loadPslFile(db, table, outPslFile):
 def main():
     args = parseArgs()
     tmpPslFile = fileOps.tmpFileGet("loadtransMapAln")
-    createEditedPsl(args.srcDb, args.transMapPsl, tmpPslFile)
+    createEditedPsl(args.srcDb, args.transMapPsl, args.maxSpan, tmpPslFile)
     loadPslFile(args.db, args.table, tmpPslFile)
     os.unlink(tmpPslFile)
 

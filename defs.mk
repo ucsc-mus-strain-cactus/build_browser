@@ -5,7 +5,7 @@
 
 include ../pipeline/defs.mk
 
-srcOrgDb = Mus${srcOrg}_${MSCA_VERSION}
+srcOrgDb = $(call orgToOrgDbFunc,${srcOrg})
 
 # all that are live in the browser
 liveSrcOrgDbs =  ${MSCA_LIVE_VERSIONS:%=Mus${srcOrg}_%}
@@ -32,9 +32,8 @@ halBrowserHtDocsFile = /scratch/msca_hal/$(notdir ${halBrowserFile})
 lodBrowserHtDocsFile = /scratch/msca_hal/$(notdir ${lodTxtFile})
 lodBrowserHtDocsDir = /scratch/msca_hal/$(notdir ${lodDir})
 
-# version letter so we can have multiple tables
-TRANS_MAP_TABLE_VERSION = a
 TRANS_MAP_DIR = ${MSCA_DATA_DIR}/comparative/${MSCA_VERSION}/transMap/${TRANS_MAP_VERSION}
+
 srcGencodeBasic = wgEncodeGencodeBasic${GENCODE_VERSION}
 srcGencodeComp = wgEncodeGencodeComp${GENCODE_VERSION}
 srcGencodePseudo = wgEncodeGencodePseudoGene${GENCODE_VERSION}

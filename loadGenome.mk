@@ -2,8 +2,8 @@ include defs.mk
 #########################################################################################
 # Creates databases and loads tracks for one specific genome. called by Makefile.
 #########################################################################################
-targetOrgDb = Mus${GENOME}_${MSCA_VERSION}
-allOrgsDbs = ${allOrgs:%=Mus%_${MSCA_VERSION}}
+targetOrgDb = $(call orgToOrgDbFunc,${GENOME})
+allOrgsDbs = ${allOrgs:%= $(call orgToOrgDbFunc,%)}
 GBDB_DIR = ${BASE_DATA_DIR}/gbdb/${GENOME}/${targetOrgDb}
 BED_DIR = ${BASE_DATA_DIR}/genomes/${targetOrgDb}/bed
 CHROM_INFO_DIR = ${BED_DIR}/chromInfo
@@ -20,8 +20,6 @@ repeatMaskerOut = $(wildcard ${ASM_GENOMES_DIR}/${GENOME}.*.out)
 ##
 dbCheckpointDir = ${CHECKPOINT_DIR}/${targetOrgDb}
 databaseCheckpoint = ${dbCheckpointDir}/init
-transMapGencodeLoadCheckpoints = ${transMapGencodeSubsets:%=${dbCheckpointDir}/%.aln.done} \
-	${transMapGencodeSubsets:%=${dbCheckpointDir}/%.info.done}
 loadTrackDbCheckpoint = ${dbCheckpointDir}/loadTrackDb.done
 chromInfoCheckpoint = ${dbCheckpointDir}/chromInfo.done
 goldGapCheckpoint =  ${dbCheckpointDir}/goldGap.done
@@ -176,17 +174,30 @@ ${agp}: ${ASM_GENOMES_DIR}/${GENOME}.fa
 ifeq (${GENOME},${srcOrg})
 loadTransMap:
 else
-loadTransMap: ${transMapGencodeLoadCheckpoints}
+loadTransMap: ${transMapChainingMethods:%=%.doTransMapChainingMethod}
 endif
 
-${dbCheckpointDir}/transMap%.aln.done: ${transMapDataDir}/transMap%.psl ${chromInfoCheckpoint}
+# target to recurisvely call make to do one chaining method
+%.doTransMapChainingMethod:
+	${MAKE} -f loadGenome.mk doTransMapChainingMethod GENOME=${GENOME} transMapChainingMethod=$*
+doTransMapChainingMethod: ${transMapGencodeSubsets:%=${dbCheckpointDir}/%.${transMapChainingMethod}.aln.done} \
+	${transMapGencodeSubsets:%=${dbCheckpointDir}/%.${transMapChainingMethod}.info.done}
+
+transMapDataDir = $(call transMapDataDirFunc,${GENOME},${transMapChainingMethod})
+ifeq (${transMapChainingMethod},simpleChain)
+    # discard absurdly long simpleChain transcripts
+    transMapMaxSpan = --maxSpan=3000000
+else
+    transMapMaxSpan =
+endif
+${dbCheckpointDir}/transMap%.${transMapChainingMethod}.aln.done: ${transMapDataDir}/transMap%.psl ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
-	./bin/loadTransMapAln ${srcOrgDb} ${targetOrgDb} transMapAln$*${TRANS_MAP_TABLE_VERSION} $<
+	./bin/loadTransMapAln ${transMapMaxSpan} ${srcOrgDb} ${targetOrgDb} transMapAln$*${transMapChainingMethod} $<
 	touch $@
 
-${dbCheckpointDir}/transMap%.info.done: ${transMapDataDir}/transMap%.psl ${chromInfoCheckpoint}
+${dbCheckpointDir}/transMap%.${transMapChainingMethod}.info.done: ${transMapDataDir}/transMap%.psl ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
-	./bin/loadTransMapInfo ${srcOrgDb} ${targetOrgDb} $< transMapInfo$*${TRANS_MAP_TABLE_VERSION} ${KENT_HG_LIB_DIR}/transMapInfo.sql
+	./bin/loadTransMapInfo ${srcOrgDb} ${targetOrgDb} $< transMapInfo$*${transMapChainingMethod} ${KENT_HG_LIB_DIR}/transMapInfo.sql
 	touch $@
 
 
