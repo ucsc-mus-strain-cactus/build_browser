@@ -19,8 +19,8 @@ label.orgCommon 0
     color 0,100,0
     visibility pack
     transMapInfo transMapInfoGencodeBasicVM4simpleChain
-    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4simpleChain
-    transMapGene musStrainShared.transMapGeneGencodeBasicVM4simpleChain
+    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4
+    transMapGene musStrainShared.transMapGeneGencodeBasicVM4
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
     baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM4
@@ -60,8 +60,8 @@ query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%
     color 0,100,0
     visibility hide
     transMapInfo transMapInfoGencodeCompVM4simpleChain
-    transMapSrc musStrainShared.transMapSrcGencodeCompVM4simpleChain
-    transMapGene musStrainShared.transMapGeneGencodeCompVM4simpleChain
+    transMapSrc musStrainShared.transMapSrcGencodeCompVM4
+    transMapGene musStrainShared.transMapGeneGencodeCompVM4
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
     baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM4
@@ -101,8 +101,8 @@ query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%
     color 255,51,255
     visibility dense
     transMapInfo transMapInfoGencodePseudoGeneVM4simpleChain
-    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4simpleChain
-    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4simpleChain
+    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4
+    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
     baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM4
@@ -153,8 +153,8 @@ label.orgCommon 0
     color 0,100,0
     visibility pack
     transMapInfo transMapInfoGencodeBasicVM4all
-    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4all
-    transMapGene musStrainShared.transMapGeneGencodeBasicVM4all
+    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4
+    transMapGene musStrainShared.transMapGeneGencodeBasicVM4
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
     baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM4
@@ -194,8 +194,8 @@ query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%
     color 0,100,0
     visibility hide
     transMapInfo transMapInfoGencodeCompVM4all
-    transMapSrc musStrainShared.transMapSrcGencodeCompVM4all
-    transMapGene musStrainShared.transMapGeneGencodeCompVM4all
+    transMapSrc musStrainShared.transMapSrcGencodeCompVM4
+    transMapGene musStrainShared.transMapGeneGencodeCompVM4
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
     baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM4
@@ -235,8 +235,8 @@ query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%
     color 255,51,255
     visibility dense
     transMapInfo transMapInfoGencodePseudoGeneVM4all
-    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4all
-    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4all
+    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4
+    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
     baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM4
@@ -287,8 +287,8 @@ label.orgCommon 0
     color 0,100,0
     visibility pack
     transMapInfo transMapInfoGencodeBasicVM4syn
-    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4syn
-    transMapGene musStrainShared.transMapGeneGencodeBasicVM4syn
+    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4
+    transMapGene musStrainShared.transMapGeneGencodeBasicVM4
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
     baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM4
@@ -328,8 +328,8 @@ query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%
     color 0,100,0
     visibility hide
     transMapInfo transMapInfoGencodeCompVM4syn
-    transMapSrc musStrainShared.transMapSrcGencodeCompVM4syn
-    transMapGene musStrainShared.transMapGeneGencodeCompVM4syn
+    transMapSrc musStrainShared.transMapSrcGencodeCompVM4
+    transMapGene musStrainShared.transMapGeneGencodeCompVM4
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
     baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM4
@@ -369,8 +369,8 @@ query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%
     color 255,51,255
     visibility dense
     transMapInfo transMapInfoGencodePseudoGeneVM4syn
-    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4syn
-    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4syn
+    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4
+    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
     baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM4
