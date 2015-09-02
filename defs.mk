@@ -55,3 +55,10 @@ rnaSeqStrains = 129S1 AJ AKRJ BALBcJ C3HHeJ C57B6NJ CASTEiJ CBAJ DBA2J LPJ NODSh
 
 # augustus dir containing the genePreds.
 augustusResultsDir = /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/${MSCA_VERSION}/augustus
+
+# Environment variables paralleling hg.conf variables to use a different hgcentral database for
+# some tables.  Use by loadTracks
+export HGDB_DBDBTABLE=musStrainShared.dbDb
+export HGDB_DEFAULTDBTABLE=musStrainShared.defaultDb
+export HGDB_GENOMECLADETABLE=musStrainShared.genomeClade
+export HGDB_CLADETABLE=musStrainShared.clade

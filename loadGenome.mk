@@ -115,6 +115,7 @@ ${augustusTrackDbCheckpoint}: bin/augustus_trackDb.py
 loadTrackDb: ${loadTrackDbCheckpoint}
 
 # tracks must be loaded first with -strict
+# NOTE: see HGDB_* environment variable sset in defs.mk
 ${loadTrackDbCheckpoint}: createTrackDb loadTracks $(wildcard ./trackDb/*trackDb.ra) $(wildcard ${trackDbOrgDir}/*trackDb.ra) $(wildcard ${trackDbGenomeDir}/*trackDb.ra)
 	@mkdir -p $(dir $@) locks
 	cd ./trackDb && flock ../locks/loadTracks.lock ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -strict -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib trackDb hgFindSpec ${targetOrgDb}
