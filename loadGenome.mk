@@ -26,6 +26,8 @@ goldGapCheckpoint =  ${dbCheckpointDir}/goldGap.done
 gcPercentCheckpoint = ${dbCheckpointDir}/gcPercent.done
 repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
 augustusTrackDbCheckpoint = ${dbCheckpointDir}/augustus.done
+chainsCheckpoint = ${dbCheckpointDir}/chains.done
+netsCheckpoint = ${dbCheckpointDir}/nets.done
 
 # structural variants (yalcin et al 2012) against reference genome
 ifeq (${GENOME},${srcOrg})
@@ -50,7 +52,7 @@ all: loadTracks loadTrackDb
 
 # this loads all tracks, but not trackDb.  This must be done first dur to -strict trackDb
 loadTracks: loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
-	loadCompAnn loadSv loadRepeatMasker loadAugustus
+	loadCompAnn loadSv loadRepeatMasker loadAugustus loadChains
 
 
 ###
@@ -75,15 +77,16 @@ ${trackDbOrgDir}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} b
 	mv -f $@.${tmpExt} $@
 
 # also depend on included files
+ifdef lodBrowserHtDocsFile
+    # use lod in snake tracks
+    halOrLod=${lodBrowserHtDocsFile}
+else
+    # use hal in snake tracks
+    halOrLod=${halBrowserHtDocsFile}
+endif
 ${trackDbGenomeDir}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${rnaSeqStarTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ${trackDbGenomeDir}/*.trackDb.ra) 
 	@mkdir -p $(dir $@)
-ifdef lodBrowserHtDocsFile
-# use lod in snake tracks
-	${python} bin/buildTrackDb.py --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --halOrLod ${lodBrowserHtDocsFile} $@.${tmpExt}
-else
-# use hal in snake tracks
-	${python} bin/buildTrackDb.py --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --halOrLod ${halBrowserHtDocsFile} $@.${tmpExt}
-endif
+	${python} bin/buildTrackDb.py --ref_genome=${srcOrgDb} --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --halOrLod ${halOrLod} $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
 # generate RNASeq trackDb entries 
@@ -201,7 +204,6 @@ ${dbCheckpointDir}/transMap%.${transMapChainingMethod}.info.done: ${transMapData
 	./bin/loadTransMapInfo ${srcOrgDb} ${targetOrgDb} $< transMapInfo$*${transMapChainingMethod} ${KENT_HG_LIB_DIR}/transMapInfo.sql
 	touch $@
 
-
 ##
 # gcPercent  need tmpdir due to static file name
 ##
@@ -299,6 +301,31 @@ ${repeatMaskerCheckpoint}: ${repeatMaskerOut} ${databaseCheckpoint} ${chromInfoC
 	cd ${rmskTmpDir} && hgLoadOut ${targetOrgDb} ${repeatMaskerOut}
 	rm -rf ${rmskTmpDir}
 	touch $@
+###
+# genomic chains/net from the reference
+###
+chainAll = $(wildcard $(call chainAllFunc,${srcOrg},${GENOME}))
+netAll = $(wildcard $(call netAllFunc,${srcOrg},${GENOME}))
+
+ifeq (${chainAll},)
+loadChains:
+else
+loadChains: ${chainsCheckpoint}
+
+# FIXME: can't load nets due to needing repeatMasker input for netClass
+# ${netsCheckpoint}
+
+${chainsCheckpoint}: ${chainAll}
+	@mkdir -p $(dir $@) locks
+	flock locks/loadChains.lock hgLoadChain ${targetOrgDb} chain${srcOrgDb} $<
+	touch $@
+
+${netsCheckpoint}: ${netAll}
+	@mkdir -p $(dir $@) locks
+	flock locks/loadNets.lock hgLoadNet ${targetOrgDb} net${srcOrgDb} $<
+	touch $@
+
+endif
 
 clean:
 	rm -rf ${GBDB_DIR} ${BED_DIR} ${dbCheckpointDir}

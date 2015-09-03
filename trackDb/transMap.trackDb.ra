@@ -10,6 +10,7 @@ label.orgAbbrv 0
 label.orgCommon 0
 
     track transMapAlnGencodeBasicVM4simpleChain
+    trackHandler transMap
     superTrack transMapSimpleChain pack
     shortLabel TransMap GENCODE Basic VM4
     longLabel TransMap GENCODE Basic VM4 Mappings using Simple Chain
@@ -51,6 +52,7 @@ searchPriority 2.315
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
     track transMapAlnGencodeCompVM4simpleChain
+    trackHandler transMap
     superTrack transMapSimpleChain hide
     shortLabel TransMap GENCODE Comprehensive VM4
     longLabel TransMap GENCODE Comprehensive VM4 Mappings using Simple Chain
@@ -92,6 +94,7 @@ searchPriority 2.325
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
     track transMapAlnGencodePseudoGeneVM4simpleChain
+    trackHandler transMap
     superTrack transMapSimpleChain dense
     shortLabel TransMap GENCODE Pseudo Gene VM4
     longLabel TransMap GENCODE Pseudo Gene VM4 Mappings using Simple Chain
@@ -144,6 +147,7 @@ label.orgAbbrv 0
 label.orgCommon 0
 
     track transMapAlnGencodeBasicVM4all
+    trackHandler transMap
     superTrack transMapAll pack
     shortLabel TransMap GENCODE Basic VM4
     longLabel TransMap GENCODE Basic VM4 Mappings using All Genomic Chain
@@ -185,6 +189,7 @@ searchPriority 2.315
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
     track transMapAlnGencodeCompVM4all
+    trackHandler transMap
     superTrack transMapAll hide
     shortLabel TransMap GENCODE Comprehensive VM4
     longLabel TransMap GENCODE Comprehensive VM4 Mappings using All Genomic Chain
@@ -226,6 +231,7 @@ searchPriority 2.325
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
     track transMapAlnGencodePseudoGeneVM4all
+    trackHandler transMap
     superTrack transMapAll dense
     shortLabel TransMap GENCODE Pseudo Gene VM4
     longLabel TransMap GENCODE Pseudo Gene VM4 Mappings using All Genomic Chain
@@ -278,6 +284,7 @@ label.orgAbbrv 0
 label.orgCommon 0
 
     track transMapAlnGencodeBasicVM4syn
+    trackHandler transMap
     superTrack transMapSyn pack
     shortLabel TransMap GENCODE Basic VM4
     longLabel TransMap GENCODE Basic VM4 Mappings using Syn Genomic Chain
@@ -319,6 +326,7 @@ searchPriority 2.315
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
     track transMapAlnGencodeCompVM4syn
+    trackHandler transMap
     superTrack transMapSyn hide
     shortLabel TransMap GENCODE Comprehensive VM4
     longLabel TransMap GENCODE Comprehensive VM4 Mappings using Syn Genomic Chain
@@ -360,6 +368,7 @@ searchPriority 2.325
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
     track transMapAlnGencodePseudoGeneVM4syn
+    trackHandler transMap
     superTrack transMapSyn dense
     shortLabel TransMap GENCODE Pseudo Gene VM4
     longLabel TransMap GENCODE Pseudo Gene VM4 Mappings using Syn Genomic Chain

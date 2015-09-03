@@ -62,8 +62,8 @@ transmapGencodeShared: ${transMapGencodeSrcLoadCheckpoints}
 
 ${sharedCheckpointDir}/transMap%.${transMapLiveVers}.seq.done: ${GBDB_SHARED_DIR}/transMap%.${transMapLiveVers}.fa ${sharedDatabaseCreateCheckpoint}
 	@mkdir -p $(dir $@)
-	hgLoadSeq -drop -seqTbl=transMapSeq$*${TRANS_MAP_TABLE_VERSION} -extFileTbl=transMapExtFile$*${TRANS_MAP_TABLE_VERSION} ${sharedDb} $<
-	rm -f transMapSeq$*${TRANS_MAP_TABLE_VERSION}.tab
+	hgLoadSeq -drop -seqTbl=transMapSeq$* -extFileTbl=transMapExtFile$* ${sharedDb} $<
+	rm -f transMapSeq$*.tab
 	touch $@
 
 ${GBDB_SHARED_DIR}/transMap%.${transMapLiveVers}.fa: ${TRANS_MAP_DIR}/data/wgEncode%.fa
@@ -73,7 +73,7 @@ ${GBDB_SHARED_DIR}/transMap%.${transMapLiveVers}.fa: ${TRANS_MAP_DIR}/data/wgEnc
 
 ${sharedCheckpointDir}/transMap%.${transMapLiveVers}.src.done: ${TRANS_MAP_DIR}/data/wgEncode%.psl ${sharedDatabaseCreateCheckpoint}
 	@mkdir -p $(dir $@)
-	bin/loadTransMapSrc ${sharedDb} $< transMapSrc$*${TRANS_MAP_TABLE_VERSION}  ${KENT_HG_LIB_DIR}/transMapSrc.sql ${liveSrcOrgDbs}
+	bin/loadTransMapSrc ${sharedDb} $< transMapSrc$*  ${KENT_HG_LIB_DIR}/transMapSrc.sql ${liveSrcOrgDbs}
 	touch $@
 
 ${sharedCheckpointDir}/transMap%.${transMapLiveVers}.gene.done: ${TRANS_MAP_DIR}/data/wgEncode%.cds \
@@ -81,7 +81,7 @@ ${sharedCheckpointDir}/transMap%.${transMapLiveVers}.gene.done: ${TRANS_MAP_DIR}
 					${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv \
 					${sharedDatabaseCreateCheckpoint}
 	@mkdir -p $(dir $@)
-	bin/loadTransMapGene ${sharedDb} ${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv  ${TRANS_MAP_DIR}/data/wgEncode$*.cds  ${TRANS_MAP_DIR}/data/wgEncode$*.psl transMapGene$*${TRANS_MAP_TABLE_VERSION}  ${KENT_HG_LIB_DIR}/transMapGene.sql ${liveSrcOrgDbs}
+	bin/loadTransMapGene ${sharedDb} ${TRANS_MAP_DIR}/data/wgEncodeGencodeAttrs${GENCODE_VERSION}.tsv  ${TRANS_MAP_DIR}/data/wgEncode$*.cds  ${TRANS_MAP_DIR}/data/wgEncode$*.psl transMapGene$*  ${KENT_HG_LIB_DIR}/transMapGene.sql ${liveSrcOrgDbs}
 	touch $@
 
 # error about pipeline not being run
