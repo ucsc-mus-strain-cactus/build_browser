@@ -1,4 +1,8 @@
 """
+UPDATE: for 1509 we now have all tracks for all assemblies. Obviously the reference tracks
+remain unchanged.
+
+
 Produces trackDb files for the STAR alignments star generated both against the reference (by Ian)
 and against the individual assemblies (1505 release from Sanger).
 The individual assembly does not have wiggle tracks.
@@ -17,7 +21,7 @@ def parse_args():
     return parser.parse_args()
 
 
-composite_trackline_reference = """track rnaseq_star
+composite_trackline_wiggles = """track rnaseq_star
 compositeTrack on
 group regulation
 shortLabel RNAseq
@@ -34,7 +38,7 @@ noInherit on
 
 """
 
-composite_trackline_individual = """track rnaseq_star
+composite_trackline_no_wiggles = """track rnaseq_star
 compositeTrack on
 group regulation
 shortLabel RNAseq
@@ -176,19 +180,19 @@ def make_signal_tracks(file_map, target_handle):
                                                                   file_path=f))
 
 
-def make_ref_tracks(file_map, file_handle):
+def make_tracks_with_wiggles(file_map, file_handle):
     genome_string = find_genomes(file_map)
     tissue_string = find_tissues(file_map)
-    file_handle.write(composite_trackline_reference.format(genome_string=genome_string, tissue_string=tissue_string))
+    file_handle.write(composite_trackline_wiggles.format(genome_string=genome_string, tissue_string=tissue_string))
     make_signal_tracks(file_map, file_handle)
     make_bam_tracks(file_map, file_handle)
     make_sj_tracks(file_map, file_handle)
 
 
-def make_individual_tracks(file_map, file_handle):
+def make_tracks_no_wiggles(file_map, file_handle):
     genome = file_map.keys()[0]
     tissue_string = find_tissues(file_map)
-    file_handle.write(composite_trackline_individual.format(tissue_string=tissue_string, genome=genome))
+    file_handle.write(composite_trackline_no_wiggles.format(tissue_string=tissue_string, genome=genome))
     make_bam_tracks(file_map, file_handle)
     make_sj_tracks(file_map, file_handle)    
 
@@ -201,15 +205,19 @@ def main():
         file_map = walk_source_dir(os.path.join(args.munged_data_dir, "GRCm38"))
         target_file = target_file_template.format(args.ref_genome, args.assembly_version)
         with open(target_file, "w") as outf:
-            make_ref_tracks(file_map, outf)
-    elif args.assembly_version == "1504":
+            make_tracks_with_wiggles(file_map, outf)
+    elif args.assembly_version == "1504" or args.assembly_version == "1509":
         path = os.path.join(args.munged_data_dir, "REL-1504-chromosomes")
         file_map = walk_source_dir(path, target_genome=args.genome)
         target_file = target_file_template.format(args.genome, args.assembly_version)
-        with open(target_file, "w") as outf:
-            make_individual_tracks(file_map, outf)
+        if args.assembly_version == "1509":
+            with open(target_file, "w") as outf:
+                make_tracks_with_wiggles(file_map, outf)
+        else:
+            with open(target_file, "w") as outf:
+                make_tracks_no_wiggles(file_map, outf)  
     else:
-        print "This script was called on a release that was not 1504 or not on the reference. Did nothing."
+        print "This script was called on a release that was not 1504 or 1509 or not on the reference. Did nothing."
         sys.exit(1)
 
 
