@@ -20,7 +20,7 @@ def main():
             name = fields[0]
             pattern = r''
             if opts.nameType == 'augustus':
-                pattern = r'aug-([0-9]+-|)(?P<name2>.*)-[0-9]+'
+                pattern = r"^(((augI[0-9]+-[0-9]+)|(augI[0-9]+))-)(?P<name2>.*)-[0-9]+"
             elif opts.nameType == 'transmap':
                 pattern = r'(?P<name2>.*)-[0-9]+'
             match = re.search(pattern, name)
