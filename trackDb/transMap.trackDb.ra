@@ -283,8 +283,8 @@ label.orgCommon 0
 
     track compAnnGencodeBasicVM4_all_alignmentErrors
     superTrack transMapAll hide
-    shortLabel GENCODE Basic VM4 Alignment Errors using all
-    longLabel $Organism GENCODE Basic VM4 Alignment Errors using all
+    shortLabel GENCODE Basic VM4 Alignment Errors using all chain
+    longLabel $Organism GENCODE Basic VM4 Alignment Errors using all chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -298,8 +298,8 @@ label.orgCommon 0
 
     track compAnnGencodeBasicVM4_all_assemblyErrors
     superTrack transMapAll hide
-    shortLabel GENCODE Basic VM4 Assembly Errors using all
-    longLabel $Organism GENCODE Basic VM4 Assembly Errors using all
+    shortLabel GENCODE Basic VM4 Assembly Errors using all chain
+    longLabel $Organism GENCODE Basic VM4 Assembly Errors using all chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -313,8 +313,8 @@ label.orgCommon 0
 
     track compAnnGencodeBasicVM4_all_allProblems
     superTrack transMapAll hide
-    shortLabel GENCODE Basic VM4 All Problems using all
-    longLabel $Organism GENCODE Basic VM4 All Problems using all
+    shortLabel GENCODE Basic VM4 All Problems using all chain
+    longLabel $Organism GENCODE Basic VM4 All Problems using all chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -328,8 +328,8 @@ label.orgCommon 0
 
     track compAnnGencodeCompVM4_all_alignmentErrors
     superTrack transMapAll hide
-    shortLabel GENCODE Comprehensive VM4 Alignment Errors using all
-    longLabel $Organism GENCODE Comprehensive VM4 Alignment Errors using all
+    shortLabel GENCODE Comprehensive VM4 Alignment Errors using all chain
+    longLabel $Organism GENCODE Comprehensive VM4 Alignment Errors using all chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -343,8 +343,8 @@ label.orgCommon 0
 
     track compAnnGencodeCompVM4_all_assemblyErrors
     superTrack transMapAll hide
-    shortLabel GENCODE Comprehensive VM4 Assembly Errors using all
-    longLabel $Organism GENCODE Comprehensive VM4 Assembly Errors using all
+    shortLabel GENCODE Comprehensive VM4 Assembly Errors using all chain
+    longLabel $Organism GENCODE Comprehensive VM4 Assembly Errors using all chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -358,8 +358,8 @@ label.orgCommon 0
 
     track compAnnGencodeCompVM4_all_allProblems
     superTrack transMapAll hide
-    shortLabel GENCODE Comprehensive VM4 All Problems using all
-    longLabel $Organism GENCODE Comprehensive VM4 All Problems using all
+    shortLabel GENCODE Comprehensive VM4 All Problems using all chain
+    longLabel $Organism GENCODE Comprehensive VM4 All Problems using all chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -373,8 +373,8 @@ label.orgCommon 0
 
     track compAnnGencodePseudoGeneVM4_all_alignmentErrors
     superTrack transMapAll hide
-    shortLabel GENCODE Pseudogenes VM4 Alignment Errors using all
-    longLabel $Organism GENCODE Pseudogenes VM4 Alignment Errors using all
+    shortLabel GENCODE Pseudogenes VM4 Alignment Errors using all chain
+    longLabel $Organism GENCODE Pseudogenes VM4 Alignment Errors using all chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -388,8 +388,8 @@ label.orgCommon 0
 
     track compAnnGencodePseudoGeneVM4_all_assemblyErrors
     superTrack transMapAll hide
-    shortLabel GENCODE Pseudogenes VM4 Assembly Errors using all
-    longLabel $Organism GENCODE Pseudogenes VM4 Assembly Errors using all
+    shortLabel GENCODE Pseudogenes VM4 Assembly Errors using all chain
+    longLabel $Organism GENCODE Pseudogenes VM4 Assembly Errors using all chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -403,8 +403,8 @@ label.orgCommon 0
 
     track compAnnGencodePseudoGeneVM4_all_allProblems
     superTrack transMapAll hide
-    shortLabel GENCODE Pseudogenes VM4 All Problems using all
-    longLabel $Organism GENCODE Pseudogenes VM4 All Problems using all
+    shortLabel GENCODE Pseudogenes VM4 All Problems using all chain
+    longLabel $Organism GENCODE Pseudogenes VM4 All Problems using all chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -556,8 +556,8 @@ label.orgCommon 0
 
     track compAnnGencodeBasicVM4_syn_alignmentErrors
     superTrack transMapSyn hide
-    shortLabel GENCODE Basic VM4 Alignment Errors using syn
-    longLabel $Organism GENCODE Basic VM4 Alignment Errors using syn
+    shortLabel GENCODE Basic VM4 Alignment Errors using syn chain
+    longLabel $Organism GENCODE Basic VM4 Alignment Errors using syn chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -571,8 +571,8 @@ label.orgCommon 0
 
     track compAnnGencodeBasicVM4_syn_assemblyErrors
     superTrack transMapSyn hide
-    shortLabel GENCODE Basic VM4 Assembly Errors using syn
-    longLabel $Organism GENCODE Basic VM4 Assembly Errors using syn
+    shortLabel GENCODE Basic VM4 Assembly Errors using syn chain
+    longLabel $Organism GENCODE Basic VM4 Assembly Errors using syn chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -586,8 +586,8 @@ label.orgCommon 0
 
     track compAnnGencodeBasicVM4_syn_allProblems
     superTrack transMapSyn hide
-    shortLabel GENCODE Basic VM4 All Problems using syn
-    longLabel $Organism GENCODE Basic VM4 All Problems using syn
+    shortLabel GENCODE Basic VM4 All Problems using syn chain
+    longLabel $Organism GENCODE Basic VM4 All Problems using syn chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -601,8 +601,8 @@ label.orgCommon 0
 
     track compAnnGencodeCompVM4_syn_alignmentErrors
     superTrack transMapSyn hide
-    shortLabel GENCODE Comprehensive VM4 Alignment Errors using syn
-    longLabel $Organism GENCODE Comprehensive VM4 Alignment Errors using syn
+    shortLabel GENCODE Comprehensive VM4 Alignment Errors using syn chain
+    longLabel $Organism GENCODE Comprehensive VM4 Alignment Errors using syn chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -616,8 +616,8 @@ label.orgCommon 0
 
     track compAnnGencodeCompVM4_syn_assemblyErrors
     superTrack transMapSyn hide
-    shortLabel GENCODE Comprehensive VM4 Assembly Errors using syn
-    longLabel $Organism GENCODE Comprehensive VM4 Assembly Errors using syn
+    shortLabel GENCODE Comprehensive VM4 Assembly Errors using syn chain
+    longLabel $Organism GENCODE Comprehensive VM4 Assembly Errors using syn chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -631,8 +631,8 @@ label.orgCommon 0
 
     track compAnnGencodeCompVM4_syn_allProblems
     superTrack transMapSyn hide
-    shortLabel GENCODE Comprehensive VM4 All Problems using syn
-    longLabel $Organism GENCODE Comprehensive VM4 All Problems using syn
+    shortLabel GENCODE Comprehensive VM4 All Problems using syn chain
+    longLabel $Organism GENCODE Comprehensive VM4 All Problems using syn chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -646,8 +646,8 @@ label.orgCommon 0
 
     track compAnnGencodePseudoGeneVM4_syn_alignmentErrors
     superTrack transMapSyn hide
-    shortLabel GENCODE Pseudogenes VM4 Alignment Errors using syn
-    longLabel $Organism GENCODE Pseudogenes VM4 Alignment Errors using syn
+    shortLabel GENCODE Pseudogenes VM4 Alignment Errors using syn chain
+    longLabel $Organism GENCODE Pseudogenes VM4 Alignment Errors using syn chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -661,8 +661,8 @@ label.orgCommon 0
 
     track compAnnGencodePseudoGeneVM4_syn_assemblyErrors
     superTrack transMapSyn hide
-    shortLabel GENCODE Pseudogenes VM4 Assembly Errors using syn
-    longLabel $Organism GENCODE Pseudogenes VM4 Assembly Errors using syn
+    shortLabel GENCODE Pseudogenes VM4 Assembly Errors using syn chain
+    longLabel $Organism GENCODE Pseudogenes VM4 Assembly Errors using syn chain
     group musStrain
     type bed 12 .
     visibility hide
@@ -676,8 +676,8 @@ label.orgCommon 0
 
     track compAnnGencodePseudoGeneVM4_syn_allProblems
     superTrack transMapSyn hide
-    shortLabel GENCODE Pseudogenes VM4 All Problems using syn
-    longLabel $Organism GENCODE Pseudogenes VM4 All Problems using syn
+    shortLabel GENCODE Pseudogenes VM4 All Problems using syn chain
+    longLabel $Organism GENCODE Pseudogenes VM4 All Problems using syn chain
     group musStrain
     type bed 12 .
     visibility hide
