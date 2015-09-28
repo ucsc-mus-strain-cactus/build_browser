@@ -11,7 +11,7 @@ def parse_args():
     parser.add_argument('--assembly_version', help='genome assembly version (1504, etc)', required=True)
     parser.add_argument('--ref_genome', help='reference genome', required=True)
     parser.add_argument('--genome', help='genome', required=True)
-    parser.add_argument('--base_data_dir', default="/hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1504/augustus/using_rnaseq/cmp/aug11/")
+    parser.add_argument('--base_data_dir', required=True)
     return parser.parse_args()
 
 supertrack = """track augustus
@@ -135,16 +135,20 @@ cgp_full = """    track augustusCGPFull
 """
 
 
-def make_ref_tracks(file_handle, full_cgp_path):
+def make_ref_tracks(file_handle, full_cgp_path, assembly_version):
     file_handle.write(supertrack)
-    file_handle.write(cgp)
+    if assembly_version == "1504":
+        file_handle.write(cgp)
     file_handle.write(cgp_full.format(full_cgp_path))
     file_handle.write(searchcgp)
 
 
-def make_individual_tracks(file_handle, full_cgp_path):
+def make_individual_tracks(file_handle, full_cgp_path, assembly_version):
     file_handle.write(supertrack)
-    dirs = ["tm", "tmr", "cgp"]
+    if assembly_version == "1504":
+        dirs = ["tm", "tmr", "cgp"]
+    elif assembly_version == "1509":
+        dirs = ["tmr"]
     for d in dirs:
         file_handle.write(eval(d))
     file_handle.write(cgp_full.format(full_cgp_path))
@@ -161,20 +165,23 @@ def make_rat_track(file_handle, full_cgp_path):
 def main():
     args = parse_args()
     target_file_template = "trackDb/{0}/Mus{0}_{1}/augustus.trackDb.ra"
-    full_cgp_path = os.path.join(args.base_data_dir, "Mus{}_{}.cgp.jg.bb".format(args.genome, args.assembly_version))
+    if args.assembly_version == "1504":
+        full_cgp_path = os.path.join(args.base_data_dir, "Mus{}_{}.cgp.jg.bb".format(args.genome, args.assembly_version))
+    elif args.assembly_version == "1509":
+        full_cgp_path = os.path.join(args.base_data_dir, "{}.cgp.bb".format(args.genome, args.assembly_version))
     if args.genome == args.ref_genome:
         target_file = target_file_template.format(args.ref_genome, args.assembly_version)
         with open(target_file, "w") as outf:
-            make_ref_tracks(outf, full_cgp_path)
+            make_ref_tracks(outf, full_cgp_path, args.assembly_version)
     elif args.assembly_version == "1504" or args.assembly_version == "1509":
         target_file = target_file_template.format(args.genome, args.assembly_version)
         with open(target_file, "w") as outf:
             if args.genome == "Rattus":
                 make_rat_track(outf, full_cgp_path)
             else:
-                make_individual_tracks(outf, full_cgp_path)
+                make_individual_tracks(outf, full_cgp_path, args.assembly_version)
     else:
-        print "This script was called on a release that was not 1504 or not on the reference. Did nothing."
+        print "This script was called on a release that was not 1504/1509 or not on the reference. Did nothing."
         sys.exit(1)
 
 

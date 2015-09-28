@@ -109,7 +109,7 @@ ${svTrackDbCheckpoint}: bin/structural_variants_yalcin_2012.py
 
 ${augustusTrackDbCheckpoint}: bin/augustus_trackDb.py
 	@mkdir -p $(dir $@)
-	${python} bin/augustus_trackDb.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
+	${python} bin/augustus_trackDb.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg} --base_data_dir ${augustusResultsDir}/cgp
 	touch $@
 
 ###
@@ -258,6 +258,7 @@ ${dbCheckpointDir}/structural_variants/%.sv.done: ${yalcinSvDir}/%.bed
 	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed4 -ignoreEmpty ${targetOrgDb} $*_yalcin_svs $<
 	touch $@
 
+
 ##
 # load augustus tracks as genePred
 ##
@@ -265,7 +266,7 @@ ifneq (${GENOME},${srcOrg})
 # make has no or operator? oh god
 ifneq (${GENOME},Rattus)
 # rule for species with all augustus tracks (all except C57B6J and Rattus)
-loadAugustus: ${dbCheckpointDir}/augustusTM.done ${dbCheckpointDir}/augustusTMR.done ${dbCheckpointDir}/augustusCGP.done
+loadAugustus: ${dbCheckpointDir}/augustusTMR.done ${dbCheckpointDir}/augustusCGP.done
 else
 # rule for Rattus (has new full genome CGP)
 loadAugustus: ${dbCheckpointDir}/augustusCGP.done
