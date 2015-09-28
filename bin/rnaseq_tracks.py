@@ -2,7 +2,6 @@
 UPDATE: for 1509 we now have all tracks for all assemblies. Obviously the reference tracks
 remain unchanged.
 
-
 Produces trackDb files for the STAR alignments star generated both against the reference (by Ian)
 and against the individual assemblies (1505 release from Sanger).
 The individual assembly does not have wiggle tracks.
