@@ -206,8 +206,8 @@ def main():
         target_file = target_file_template.format(args.ref_genome, args.assembly_version)
         with open(target_file, "w") as outf:
             make_tracks_with_wiggles(file_map, outf)
-    elif args.assembly_version == "1504" or args.assembly_version == "1509":
-        path = os.path.join(args.munged_data_dir, "REL-1504-chromosomes")
+    elif args.assembly_version == "1504"or  args.assembly_version == "1509":
+        path = os.path.join(args.munged_data_dir, "REL-{}-chromosomes".format(args.assembly_version))
         file_map = walk_source_dir(path, target_genome=args.genome)
         target_file = target_file_template.format(args.genome, args.assembly_version)
         if args.assembly_version == "1509":

@@ -3,7 +3,7 @@
 # this file contains variables shared across all of the individual makefiles
 #########################################################################################
 
-include ../pipeline/defs.mk
+include ../pipeline_msca/defs.mk
 
 srcOrgDb = $(call orgToOrgDbFunc,${srcOrg})
 
@@ -29,8 +29,8 @@ halBrowserHtDocsFile = /scratch/msca_hal/$(notdir ${halBrowserFile})
 
 # Comment these two lines out if you have not yet created LODs, and
 # the browser will use the raw hal file instead.
-lodBrowserHtDocsFile = /scratch/msca_hal/$(notdir ${lodTxtFile})
-lodBrowserHtDocsDir = /scratch/msca_hal/$(notdir ${lodDir})
+#lodBrowserHtDocsFile = /scratch/msca_hal/$(notdir ${lodTxtFile})
+#lodBrowserHtDocsDir = /scratch/msca_hal/$(notdir ${lodDir})
 
 TRANS_MAP_DIR = ${MSCA_DATA_DIR}/comparative/${MSCA_VERSION}/transMap/${TRANS_MAP_VERSION}
 

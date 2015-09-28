@@ -13,7 +13,7 @@ chromSizes = ${ASM_GENOMES_DIR}/${GENOME}.chrom.sizes
 svDir = /hive/groups/recon/projs/mus_strain_cactus/data/yalcin_structural_variants
 
 # some basic tracks we will need to build
-repeatMaskerOut = $(wildcard ${ASM_GENOMES_DIR}/${GENOME}.*.out)
+#repeatMaskerOut = $(wildcard ${ASM_GENOMES_DIR}/${GENOME}.*.out)
 
 ##
 # placeholder done files - used to checkpoint sql loading commands
@@ -24,7 +24,7 @@ loadTrackDbCheckpoint = ${dbCheckpointDir}/loadTrackDb.done
 chromInfoCheckpoint = ${dbCheckpointDir}/chromInfo.done
 goldGapCheckpoint =  ${dbCheckpointDir}/goldGap.done
 gcPercentCheckpoint = ${dbCheckpointDir}/gcPercent.done
-repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
+#repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
 augustusTrackDbCheckpoint = ${dbCheckpointDir}/augustus.done
 chainsCheckpoint = ${dbCheckpointDir}/chains.done
 netsCheckpoint = ${dbCheckpointDir}/nets.done
@@ -33,16 +33,16 @@ netsCheckpoint = ${dbCheckpointDir}/nets.done
 ifeq (${GENOME},${srcOrg})
 svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
 svCheckpoints = ${yalcinSvGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.done}
-# RNAseq tracks - against reference (by Ian) 
+# RNAseq tracks - against reference
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
 kallistoTrackDbCheckpoint = ${dbCheckpointDir}/kallistoTrackDb.done
 endif
 
-# RNAseq tracks - against strains (by Sanger - on 1504 only)
+# RNAseq tracks - against strains (on 1504/1509)
 ifneq (${GENOME},${srcOrg})
 ifeq (${haveRnaSeq},yes)
 ifneq ($(filter ${GENOME},${rnaSeqStrains}),)
-# only 1504 has RNAseq alignments
+# only 1504/1509 has RNAseq alignments
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
 endif
 endif
@@ -50,7 +50,7 @@ endif
 
 all: loadTracks loadTrackDb
 
-# this loads all tracks, but not trackDb.  This must be done first dur to -strict trackDb
+# this loads all tracks, but not trackDb.  This must be done first due to -strict trackDb
 loadTracks: loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
 	loadCompAnn loadSv loadRepeatMasker loadAugustus loadChains
 
@@ -218,8 +218,8 @@ ${gcPercentCheckpoint}: ${twoBit} ${databaseCheckpoint}
 
 
 ##
-# comparative annotation tracks.  This calls a recurisve target with
-# compAnnGencodeSubset=
+# comparative annotation tracks. This calls two nested a recurisve target with
+# compAnnGencodeSubset= and chaining=
 ##
 ifeq (${GENOME},${srcOrg})
 loadCompAnn:
@@ -231,12 +231,19 @@ endif
 	${MAKE} -f loadGenome.mk loadCompAnnGencodeSubset GENOME="${GENOME}" compAnnGencodeSubset=$*
 
 ifneq (${compAnnGencodeSubset},)
-loadCompAnnGencodeSubset: ${compAnnTypes:%=${dbCheckpointDir}/compAnn${compAnnGencodeSubset}_%.done}
+loadCompAnnGencodeSubset: ${transMapChainingMethods:%=%.loadCompAnnChaining}
+endif
 
-#  e.g. compAnnotation/2015-05-29/GencodeBasicVM4/bedfiles/inFrameStop/AJ/AJ.bed
-${dbCheckpointDir}/compAnn${compAnnGencodeSubset}_%.done: ${ANNOTATION_DIR}/${compAnnGencodeSubset}/bedfiles/%/${GENOME}/${GENOME}.bed
+%.loadCompAnnChaining: ${chromInfoCheckpoint}
+	${MAKE} -f loadGenome.mk loadCompAnnGencodeSubsetChaining compAnnGencodeSubset=${compAnnGencodeSubset} chaining=$*
+
+ifneq (${chaining},)
+loadCompAnnGencodeSubsetChaining: ${compAnnTypes:%=${dbCheckpointDir}/compAnn${compAnnGencodeSubset}_${chaining}_%.done}
+
+#  e.g. compAnnotation/2015-05-29/GencodeBasicVM4/syn/bedfiles/inFrameStop/AJ/AJ.bed
+${dbCheckpointDir}/compAnn${compAnnGencodeSubset}_${chaining}_%.done: ${ANNOTATION_DIR}/${compAnnGencodeSubset}/${chaining}/bedfiles/%/${GENOME}/${GENOME}.bed
 	@mkdir -p $(dir $@)
-	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed12 -ignoreEmpty ${targetOrgDb} compAnn${compAnnGencodeSubset}_$* $<
+	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed12 -ignoreEmpty ${targetOrgDb} compAnn${compAnnGencodeSubset}_${chaining}_$* $<
 	touch $@
 endif
 
