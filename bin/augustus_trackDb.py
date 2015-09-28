@@ -166,7 +166,7 @@ def main():
         target_file = target_file_template.format(args.ref_genome, args.assembly_version)
         with open(target_file, "w") as outf:
             make_ref_tracks(outf, full_cgp_path)
-    elif args.assembly_version == "1504":
+    elif args.assembly_version == "1504" or args.assembly_version == "1509":
         target_file = target_file_template.format(args.genome, args.assembly_version)
         with open(target_file, "w") as outf:
             if args.genome == "Rattus":
