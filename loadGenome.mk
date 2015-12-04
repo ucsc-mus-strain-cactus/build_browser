@@ -13,7 +13,7 @@ chromSizes = ${ASM_GENOMES_DIR}/${GENOME}.chrom.sizes
 svDir = /hive/groups/recon/projs/mus_strain_cactus/data/yalcin_structural_variants
 
 # some basic tracks we will need to build
-#repeatMaskerOut = $(wildcard ${ASM_GENOMES_DIR}/${GENOME}.*.out)
+repeatMaskerOut = $(wildcard ${ASM_GENOMES_DIR}/${GENOME}.out)
 
 ##
 # placeholder done files - used to checkpoint sql loading commands
@@ -24,7 +24,7 @@ loadTrackDbCheckpoint = ${dbCheckpointDir}/loadTrackDb.done
 chromInfoCheckpoint = ${dbCheckpointDir}/chromInfo.done
 goldGapCheckpoint =  ${dbCheckpointDir}/goldGap.done
 gcPercentCheckpoint = ${dbCheckpointDir}/gcPercent.done
-#repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
+repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
 augustusTrackDbCheckpoint = ${dbCheckpointDir}/augustus.done
 chainsCheckpoint = ${dbCheckpointDir}/chains.done
 netsCheckpoint = ${dbCheckpointDir}/nets.done
@@ -52,7 +52,7 @@ all: loadTracks loadTrackDb
 
 # this loads all tracks, but not trackDb.  This must be done first due to -strict trackDb
 loadTracks: loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
-	loadCompAnn loadSv loadRepeatMasker loadAugustus loadChains
+	loadCompAnn loadSv loadRepeatMasker loadAugustus loadConsensus loadChains
 
 
 ###
@@ -92,25 +92,31 @@ ${trackDbGenomeDir}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint
 # generate RNASeq trackDb entries 
 ${rnaSeqTrackDbCheckpoint}: bin/rnaseq_tracks.py
 	@mkdir -p $(dir $@) ${trackDbGenomeDir}
-	${python} bin/rnaseq_tracks.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
+	${python} bin/rnaseq_tracks.py --assembly_version ${VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
 	touch $@
 
 # Kallisto isoform-level expression (reference genome only)
 ${kallistoTrackDbCheckpoint}: bin/kallisto_trackDb.py
 	@mkdir -p $(dir $@) ${trackDbGenomeDir}
-	${python} bin/kallisto_trackDb.py --assembly_version ${MSCA_VERSION} --ref_genome ${srcOrg}
+	${python} bin/kallisto_trackDb.py --assembly_version ${VERSION} --ref_genome ${srcOrg}
 	touch $@
 
 # structural variant trackDb entries (reference genome only)
 ${svTrackDbCheckpoint}: bin/structural_variants_yalcin_2012.py
 	@mkdir -p $(dir $@)
-	${python} bin/structural_variants_yalcin_2012.py --assembly_version ${MSCA_VERSION} --ref_genome ${srcOrg}
+	${python} bin/structural_variants_yalcin_2012.py --assembly_version ${VERSION} --ref_genome ${srcOrg}
 	touch $@
 
 ${augustusTrackDbCheckpoint}: bin/augustus_trackDb.py
 	@mkdir -p $(dir $@)
-	${python} bin/augustus_trackDb.py --assembly_version ${MSCA_VERSION} --genome ${GENOME} --ref_genome ${srcOrg} --base_data_dir ${augustusResultsDir}/cgp
+	${python} bin/augustus_trackDb.py --assembly_version ${VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
 	touch $@
+
+${consensusTrackDbCheckpoint}: bin/consensus_trackDb.py
+	@mkdir -p $(dir $@)
+	${python} bin/consensus_trackDb.py --assembly_version ${VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
+	touch $@
+
 
 ###
 # load trackDb files into tables
@@ -178,30 +184,19 @@ ${agp}: ${ASM_GENOMES_DIR}/${GENOME}.fa
 ifeq (${GENOME},${srcOrg})
 loadTransMap:
 else
-loadTransMap: ${transMapChainingMethods:%=%.doTransMapChainingMethod}
+transMapDataDir = ${TRANS_MAP_DIR}/${GENOME}
+loadTransMap: ${transMapGencodeSubsets:%=${dbCheckpointDir}/%.aln.done} \
+	${transMapGencodeSubsets:%=${dbCheckpointDir}/%.info.done}
 endif
 
-# target to recurisvely call make to do one chaining method
-%.doTransMapChainingMethod:
-	${MAKE} -f loadGenome.mk doTransMapChainingMethod GENOME=${GENOME} transMapChainingMethod=$*
-doTransMapChainingMethod: ${transMapGencodeSubsets:%=${dbCheckpointDir}/%.${transMapChainingMethod}.aln.done} \
-	${transMapGencodeSubsets:%=${dbCheckpointDir}/%.${transMapChainingMethod}.info.done}
-
-transMapDataDir = $(call transMapDataDirFunc,${GENOME},${transMapChainingMethod})
-ifeq (${transMapChainingMethod},simpleChain)
-    # discard absurdly long simpleChain transcripts
-    transMapMaxSpan = --maxSpan=3000000
-else
-    transMapMaxSpan =
-endif
-${dbCheckpointDir}/transMap%.${transMapChainingMethod}.aln.done: ${transMapDataDir}/transMap%.psl ${chromInfoCheckpoint}
+${dbCheckpointDir}/transMap%.aln.done: ${transMapDataDir}/transMap%.psl ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
-	./bin/loadTransMapAln ${transMapMaxSpan} ${srcOrgDb} ${targetOrgDb} transMapAln$*${transMapChainingMethod} $<
+	./bin/loadTransMapAln ${srcOrgDb} ${targetOrgDb} transMapAln$* $<
 	touch $@
 
-${dbCheckpointDir}/transMap%.${transMapChainingMethod}.info.done: ${transMapDataDir}/transMap%.psl ${chromInfoCheckpoint}
+${dbCheckpointDir}/transMap%.info.done: ${transMapDataDir}/transMap%.psl ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
-	./bin/loadTransMapInfo ${srcOrgDb} ${targetOrgDb} $< transMapInfo$*${transMapChainingMethod} ${KENT_HG_LIB_DIR}/transMapInfo.sql
+	./bin/loadTransMapInfo ${srcOrgDb} ${targetOrgDb} $< transMapInfo$* ${KENT_HG_LIB_DIR}/transMapInfo.sql
 	touch $@
 
 ##
@@ -218,8 +213,7 @@ ${gcPercentCheckpoint}: ${twoBit} ${databaseCheckpoint}
 
 
 ##
-# comparative annotation tracks. This calls two nested a recurisve target with
-# compAnnGencodeSubset= and chaining=
+# comparative annotation tracks.
 ##
 ifeq (${GENOME},${srcOrg})
 loadCompAnn:
@@ -231,21 +225,14 @@ endif
 	${MAKE} -f loadGenome.mk loadCompAnnGencodeSubset GENOME="${GENOME}" compAnnGencodeSubset=$*
 
 ifneq (${compAnnGencodeSubset},)
-loadCompAnnGencodeSubset: ${transMapChainingMethods:%=%.loadCompAnnChaining}
+loadCompAnnGencodeSubset: ${compAnnTypes:%=${dbCheckpointDir}/compAnn${compAnnGencodeSubset}_%.done}
 endif
 
-%.loadCompAnnChaining: ${chromInfoCheckpoint}
-	${MAKE} -f loadGenome.mk loadCompAnnGencodeSubsetChaining compAnnGencodeSubset=${compAnnGencodeSubset} chaining=$*
-
-ifneq (${chaining},)
-loadCompAnnGencodeSubsetChaining: ${compAnnTypes:%=${dbCheckpointDir}/compAnn${compAnnGencodeSubset}_${chaining}_%.done}
-
-#  e.g. compAnnotation/2015-05-29/GencodeBasicVM4/syn/bedfiles/inFrameStop/AJ/AJ.bed
-${dbCheckpointDir}/compAnn${compAnnGencodeSubset}_${chaining}_%.done: ${ANNOTATION_DIR}/${compAnnGencodeSubset}/${chaining}/bedfiles/%/${GENOME}/${GENOME}.bed
+#  e.g. compAnnotation/2015-05-29/GencodeBasicVM4/bedfiles/inFrameStop/AJ/AJ.bed
+${dbCheckpointDir}/compAnn${compAnnGencodeSubset}_%.done: ${ANNOTATION_DIR}/${compAnnGencodeSubset}/bedfiles/%/${GENOME}/${GENOME}.bed
 	@mkdir -p $(dir $@)
-	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed12 -ignoreEmpty ${targetOrgDb} compAnn${compAnnGencodeSubset}_${chaining}_$* $<
+	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed12 -ignoreEmpty ${targetOrgDb} compAnn${compAnnGencodeSubset}_$* $<
 	touch $@
-endif
 
 
 ##
@@ -263,36 +250,54 @@ ${dbCheckpointDir}/structural_variants/%.sv.done: ${yalcinSvDir}/%.bed
 # load augustus tracks as genePred
 ##
 ifneq (${GENOME},${srcOrg})
-# make has no or operator? oh god
 ifneq (${GENOME},Rattus)
 # rule for species with all augustus tracks (all except C57B6J and Rattus)
-loadAugustus: ${dbCheckpointDir}/augustusTMR.done ${dbCheckpointDir}/augustusCGP.done
+loadAugustus: ${dbCheckpointDir}/augustusTMR.done ${dbCheckpointDir}/augustusCGP.done ${dbCheckpointDir}/augustusCGP_unfiltered.done
 else
-# rule for Rattus (has new full genome CGP)
-loadAugustus: ${dbCheckpointDir}/augustusCGP.done
+# rule for Rattus (has CGP)
+loadAugustus: ${dbCheckpointDir}/augustusCGP.done ${dbCheckpointDir}/augustusCGP_unfiltered.done
 endif
 else
-# rule for C57B6J (has chr11 and full CGP)
-loadAugustus: ${dbCheckpointDir}/augustusCGP.done
+# rule for C57B6J (has CGP)
+loadAugustus: ${dbCheckpointDir}/augustusCGP.done ${dbCheckpointDir}/augustusCGP_unfiltered.done
 endif
-
-${dbCheckpointDir}/augustusTM.done: ${augustusResultsDir}/tm/${GENOME}.coding.gp ${chromInfoCheckpoint}
-	@mkdir -p $(dir $@)
-# hgLoadGenePred uses the current directory for scratch space,
-# interfering with other running copies, and doesn't have an option to
-# use a different dir. So we have to use a lock every time.
-	./bin/addName2ToGenePred.py $< transmap | flock locks/augustusTM hgLoadGenePred -genePredExt ${targetOrgDb} augustusTM stdin
-	touch $@
 
 ${dbCheckpointDir}/augustusTMR.done: ${augustusResultsDir}/tmr/${GENOME}.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
 	./bin/addName2ToGenePred.py $< augustus | flock locks/augustusTMR hgLoadGenePred -genePredExt ${targetOrgDb} augustusTMR stdin
 	touch $@
 
-${dbCheckpointDir}/augustusCGP.done: ${augustusResultsDir}/cgp/${GENOME}.gp ${chromInfoCheckpoint}
+${dbCheckpointDir}/augustusCGP.done: ${augustusResultsDir}/cgp/filteredCGP_forBrowser/${GENOME}.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
 	flock locks/augustusCGP hgLoadGenePred -genePredExt ${targetOrgDb} augustusCGP $<
 	touch $@
+
+${dbCheckpointDir}/augustusCGP_unfiltered.done: ${augustusResultsDir}/cgp/${GENOME}.gp ${chromInfoCheckpoint}
+	@mkdir -p $(dir $@)
+	flock locks/augustusCGP_unfiltered hgLoadGenePred -genePredExt ${targetOrgDb} augustusCGP_unfiltered $<
+	touch $@
+
+
+##
+# load consensus tracks as genePred
+##
+ifneq (${GENOME},${srcOrg})
+ifneq (${GENOME},Rattus)
+# rule for species with all augustus tracks (all except C57B6J and Rattus)
+loadConsensus: ${dbCheckpointDir}/consensusTMR.done ${dbCheckpointDir}/consensusCGP.done
+endif
+endif
+
+${dbCheckpointDir}/consensusTMR.done: ${consensusBaseDir}/${GENOME}.gp ${chromInfoCheckpoint}
+	@mkdir -p $(dir $@)
+	flock locks/TMR_consensus hgLoadGenePred -genePredExt ${targetOrgDb} TMR_consensus $<
+	touch $@
+
+${dbCheckpointDir}/consensusCGP.done: ${cgpConsensusBaseDir}/${GENOME}.gp ${chromInfoCheckpoint}
+	@mkdir -p $(dir $@)
+	flock locks/TMR_CGP_consensus hgLoadGenePred -genePredExt ${targetOrgDb} TMR_CGP_consensus $<
+	touch $@
+
 
 ###
 # repeat masker data, if available (not on Rat or all assemblies)

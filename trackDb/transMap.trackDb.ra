@@ -1,7 +1,7 @@
-track transMapSimpleChain
+track transMap
 superTrack on hide
-shortLabel TransMap Simple Chain 
-longLabel TransMap Simple Chain Alignments
+shortLabel TransMap
+longLabel TransMap Alignments
 group genes
 label.acc 1
 label.db 0
@@ -9,158 +9,23 @@ label.gene 1
 label.orgAbbrv 0
 label.orgCommon 0
 
-    track compAnnGencodeBasicVM4_simpleChain_alignmentErrors
-    superTrack transMapSimpleChain hide
-    shortLabel GENCODE Basic VM4 Alignment Errors using simpleChain
-    longLabel $Organism GENCODE Basic VM4 Alignment Errors using simpleChain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.004
-
-    searchTable compAnnGencodeBasicVM4_simpleChain_alignmentErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeBasicVM4_simpleChain_assemblyErrors
-    superTrack transMapSimpleChain hide
-    shortLabel GENCODE Basic VM4 Assembly Errors using simpleChain
-    longLabel $Organism GENCODE Basic VM4 Assembly Errors using simpleChain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.005
-
-    searchTable compAnnGencodeBasicVM4_simpleChain_assemblyErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeBasicVM4_simpleChain_allProblems
-    superTrack transMapSimpleChain hide
-    shortLabel GENCODE Basic VM4 All Problems using simpleChain
-    longLabel $Organism GENCODE Basic VM4 All Problems using simpleChain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.006
-
-    searchTable compAnnGencodeBasicVM4_simpleChain_allProblems
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM4_simpleChain_alignmentErrors
-    superTrack transMapSimpleChain hide
-    shortLabel GENCODE Comprehensive VM4 Alignment Errors using simpleChain
-    longLabel $Organism GENCODE Comprehensive VM4 Alignment Errors using simpleChain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.004
-
-    searchTable compAnnGencodeCompVM4_simpleChain_alignmentErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM4_simpleChain_assemblyErrors
-    superTrack transMapSimpleChain hide
-    shortLabel GENCODE Comprehensive VM4 Assembly Errors using simpleChain
-    longLabel $Organism GENCODE Comprehensive VM4 Assembly Errors using simpleChain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.005
-
-    searchTable compAnnGencodeCompVM4_simpleChain_assemblyErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM4_simpleChain_allProblems
-    superTrack transMapSimpleChain hide
-    shortLabel GENCODE Comprehensive VM4 All Problems using simpleChain
-    longLabel $Organism GENCODE Comprehensive VM4 All Problems using simpleChain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.006
-
-    searchTable compAnnGencodeCompVM4_simpleChain_allProblems
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_simpleChain_alignmentErrors
-    superTrack transMapSimpleChain hide
-    shortLabel GENCODE Pseudogenes VM4 Alignment Errors using simpleChain
-    longLabel $Organism GENCODE Pseudogenes VM4 Alignment Errors using simpleChain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.004
-
-    searchTable compAnnGencodePseudoGeneVM4_simpleChain_alignmentErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_simpleChain_assemblyErrors
-    superTrack transMapSimpleChain hide
-    shortLabel GENCODE Pseudogenes VM4 Assembly Errors using simpleChain
-    longLabel $Organism GENCODE Pseudogenes VM4 Assembly Errors using simpleChain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.005
-
-    searchTable compAnnGencodePseudoGeneVM4_simpleChain_assemblyErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_simpleChain_allProblems
-    superTrack transMapSimpleChain hide
-    shortLabel GENCODE Pseudogenes VM4 All Problems using simpleChain
-    longLabel $Organism GENCODE Pseudogenes VM4 All Problems using simpleChain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.006
-
-    searchTable compAnnGencodePseudoGeneVM4_simpleChain_allProblems
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track transMapAlnGencodeBasicVM4simpleChain
+    track transMapAlnGencodeBasicVM7
     trackHandler transMap
-    superTrack transMapSimpleChain pack
-    shortLabel TransMap GENCODE Basic VM4
-    longLabel TransMap GENCODE Basic VM4 Mappings using Simple Chain
+    superTrack transMap pack
+    shortLabel TransMap GENCODE Basic VM7
+    longLabel TransMap GENCODE Basic VM7 Mappings
     group genes
     type psl
     priority 37.001
     color 0,100,0
     visibility hide
-    transMapInfo transMapInfoGencodeBasicVM4simpleChain
-    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4
-    transMapGene musStrainShared.transMapGeneGencodeBasicVM4
+    transMapInfo transMapInfoGencodeBasicVM7
+    transMapSrc musStrainShared.transMapSrcGencodeBasicVM7
+    transMapGene musStrainShared.transMapGeneGencodeBasicVM7
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM4
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeBasicVM4 musStrainShared.transMapExtFileGencodeBasicVM4
+    baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM7
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeBasicVM7 musStrainShared.transMapExtFileGencodeBasicVM7
     indelDoubleInsert on
     indelQueryInsert on
     showDiffBasesAllScales .
@@ -173,266 +38,37 @@ label.orgCommon 0
     label.orgAbbrv 0
     label.orgCommon 0
 
-searchName transMapAlnGencodeBasicVM4simpleChain
-searchTable transMapAlnGencodeBasicVM4simpleChain
+searchName transMapAlnGencodeBasicVM7
+searchTable transMapAlnGencodeBasicVM7
 searchType psl
 searchMethod prefix
 searchPriority 2.31
 
-searchName transMapAlnGencodeBasicVM4simpleChain_transcriptId
-searchTable transMapAlnGencodeBasicVM4simpleChain
+searchName transMapAlnGencodeBasicVM7_transcriptId
+searchTable transMapAlnGencodeBasicVM7
 searchType psl
 searchMethod prefix
 searchPriority 2.315
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
-    track transMapAlnGencodeCompVM4simpleChain
+
+    track transMapAlnGencodeCompVM7
     trackHandler transMap
-    superTrack transMapSimpleChain hide
-    shortLabel TransMap GENCODE Comprehensive VM4
-    longLabel TransMap GENCODE Comprehensive VM4 Mappings using Simple Chain
-    group genes
-    type psl
-    priority 37.002
-    color 0,100,0
-    visibility hide
-    transMapInfo transMapInfoGencodeCompVM4simpleChain
-    transMapSrc musStrainShared.transMapSrcGencodeCompVM4
-    transMapGene musStrainShared.transMapGeneGencodeCompVM4
-    transMapTypeDesc GENCODE
-    baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM4
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeCompVM4 musStrainShared.transMapExtFileGencodeCompVM4
-    indelDoubleInsert on
-    indelQueryInsert on
-    showDiffBasesAllScales .
-    showDiffBasesMaxZoom 10000.0
-    showCdsAllScales .
-    showCdsMaxZoom 10000.0
-    label.acc 1
-    label.db 0
-    label.gene 1
-    label.orgAbbrv 0
-    label.orgCommon 0
-
-searchName transMapAlnGencodeCompVM4simpleChain
-searchTable transMapAlnGencodeCompVM4simpleChain
-searchType psl
-searchMethod prefix
-searchPriority 2.32
-
-searchName transMapAlnGencodeCompVM4simpleChain_transcriptId
-searchTable transMapAlnGencodeCompVM4simpleChain
-searchType psl
-searchMethod prefix
-searchPriority 2.325
-query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
-
-    track transMapAlnGencodePseudoGeneVM4simpleChain
-    trackHandler transMap
-    superTrack transMapSimpleChain dense
-    shortLabel TransMap GENCODE Pseudo Gene VM4
-    longLabel TransMap GENCODE Pseudo Gene VM4 Mappings using Simple Chain
-    group genes
-    type psl
-    priority 37.003
-    color 255,51,255
-    visibility hide
-    transMapInfo transMapInfoGencodePseudoGeneVM4simpleChain
-    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4
-    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4
-    transMapTypeDesc GENCODE
-    baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM4
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodePseudoGeneVM4 musStrainShared.transMapExtFileGencodePseudoGeneVM4
-    indelDoubleInsert on
-    indelQueryInsert on
-    showDiffBasesAllScales .
-    showDiffBasesMaxZoom 10000.0
-    showCdsAllScales .
-    showCdsMaxZoom 10000.0
-    label.acc 1
-    label.db 0
-    label.gene 1
-    label.orgAbbrv 0
-    label.orgCommon 0
-
-searchName transMapAlnGencodePseudoGeneVM4simpleChain
-searchTable transMapAlnGencodePseudoGeneVM4simpleChain
-searchType psl
-searchMethod prefix
-searchPriority 2.33
-
-searchName transMapAlnGencodePseudoGeneVM4simpleChain_transcriptId
-searchTable transMapAlnGencodePseudoGeneVM4simpleChain
-searchType psl
-searchMethod prefix
-searchPriority 2.335
-query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
-
-track transMapAll
-superTrack on show
-shortLabel TransMap All Genomic Chain
-longLabel TransMap All Genomic Chain Alignments
-group genes
-label.acc 1
-label.db 0
-label.gene 1
-label.orgAbbrv 0
-label.orgCommon 0
-
-    track compAnnGencodeBasicVM4_all_alignmentErrors
-    superTrack transMapAll hide
-    shortLabel GENCODE Basic VM4 Alignment Errors using all chain
-    longLabel $Organism GENCODE Basic VM4 Alignment Errors using all chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.006
-
-    searchTable compAnnGencodeBasicVM4_all_alignmentErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeBasicVM4_all_assemblyErrors
-    superTrack transMapAll hide
-    shortLabel GENCODE Basic VM4 Assembly Errors using all chain
-    longLabel $Organism GENCODE Basic VM4 Assembly Errors using all chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.007
-
-    searchTable compAnnGencodeBasicVM4_all_assemblyErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeBasicVM4_all_allProblems
-    superTrack transMapAll hide
-    shortLabel GENCODE Basic VM4 All Problems using all chain
-    longLabel $Organism GENCODE Basic VM4 All Problems using all chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.008
-
-    searchTable compAnnGencodeBasicVM4_all_allProblems
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM4_all_alignmentErrors
-    superTrack transMapAll hide
-    shortLabel GENCODE Comprehensive VM4 Alignment Errors using all chain
-    longLabel $Organism GENCODE Comprehensive VM4 Alignment Errors using all chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.006
-
-    searchTable compAnnGencodeCompVM4_all_alignmentErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM4_all_assemblyErrors
-    superTrack transMapAll hide
-    shortLabel GENCODE Comprehensive VM4 Assembly Errors using all chain
-    longLabel $Organism GENCODE Comprehensive VM4 Assembly Errors using all chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.007
-
-    searchTable compAnnGencodeCompVM4_all_assemblyErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM4_all_allProblems
-    superTrack transMapAll hide
-    shortLabel GENCODE Comprehensive VM4 All Problems using all chain
-    longLabel $Organism GENCODE Comprehensive VM4 All Problems using all chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.008
-
-    searchTable compAnnGencodeCompVM4_all_allProblems
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_all_alignmentErrors
-    superTrack transMapAll hide
-    shortLabel GENCODE Pseudogenes VM4 Alignment Errors using all chain
-    longLabel $Organism GENCODE Pseudogenes VM4 Alignment Errors using all chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.006
-
-    searchTable compAnnGencodePseudoGeneVM4_all_alignmentErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_all_assemblyErrors
-    superTrack transMapAll hide
-    shortLabel GENCODE Pseudogenes VM4 Assembly Errors using all chain
-    longLabel $Organism GENCODE Pseudogenes VM4 Assembly Errors using all chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.007
-
-    searchTable compAnnGencodePseudoGeneVM4_all_assemblyErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_all_allProblems
-    superTrack transMapAll hide
-    shortLabel GENCODE Pseudogenes VM4 All Problems using all chain
-    longLabel $Organism GENCODE Pseudogenes VM4 All Problems using all chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.008
-
-    searchTable compAnnGencodePseudoGeneVM4_all_allProblems
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-    
-    track transMapAlnGencodeBasicVM4all
-    trackHandler transMap
-    superTrack transMapAll pack
-    shortLabel TransMap GENCODE Basic VM4
-    longLabel TransMap GENCODE Basic VM4 Mappings using All Genomic Chain
+    superTrack transMap pack
+    shortLabel TransMap GENCODE Comp VM7
+    longLabel TransMap GENCODE Comp VM7 Mappings
     group genes
     type psl
     priority 37.001
     color 0,100,0
     visibility hide
-    transMapInfo transMapInfoGencodeBasicVM4all
-    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4
-    transMapGene musStrainShared.transMapGeneGencodeBasicVM4
+    transMapInfo transMapInfoGencodeCompVM7
+    transMapSrc musStrainShared.transMapSrcGencodeCompVM7
+    transMapGene musStrainShared.transMapGeneGencodeCompVM7
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM4
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeBasicVM4 musStrainShared.transMapExtFileGencodeBasicVM4
+    baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM7
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeCompVM7 musStrainShared.transMapExtFileGencodeCompVM7
     indelDoubleInsert on
     indelQueryInsert on
     showDiffBasesAllScales .
@@ -445,267 +81,37 @@ label.orgCommon 0
     label.orgAbbrv 0
     label.orgCommon 0
 
-searchName transMapAlnGencodeBasicVM4all
-searchTable transMapAlnGencodeBasicVM4all
+searchName transMapAlnGencodeCompVM7
+searchTable transMapAlnGencodeCompVM7
 searchType psl
 searchMethod prefix
 searchPriority 2.31
 
-searchName transMapAlnGencodeBasicVM4all_transcriptId
-searchTable transMapAlnGencodeBasicVM4all
+searchName transMapAlnGencodeCompVM7_transcriptId
+searchTable transMapAlnGencodeCompVM7
 searchType psl
 searchMethod prefix
 searchPriority 2.315
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
-    track transMapAlnGencodeCompVM4all
+
+    track transMapAlnGencodePseudoGeneVM7
     trackHandler transMap
-    superTrack transMapAll hide
-    shortLabel TransMap GENCODE Comprehensive VM4
-    longLabel TransMap GENCODE Comprehensive VM4 Mappings using All Genomic Chain
-    group genes
-    type psl
-    priority 37.002
-    color 0,100,0
-    visibility hide
-    transMapInfo transMapInfoGencodeCompVM4all
-    transMapSrc musStrainShared.transMapSrcGencodeCompVM4
-    transMapGene musStrainShared.transMapGeneGencodeCompVM4
-    transMapTypeDesc GENCODE
-    baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM4
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeCompVM4 musStrainShared.transMapExtFileGencodeCompVM4
-    indelDoubleInsert on
-    indelQueryInsert on
-    showDiffBasesAllScales .
-    showDiffBasesMaxZoom 10000.0
-    showCdsAllScales .
-    showCdsMaxZoom 10000.0
-    label.acc 1
-    label.db 0
-    label.gene 1
-    label.orgAbbrv 0
-    label.orgCommon 0
-
-searchName transMapAlnGencodeCompVM4all
-searchTable transMapAlnGencodeCompVM4all
-searchType psl
-searchMethod prefix
-searchPriority 2.32
-
-searchName transMapAlnGencodeCompVM4all_transcriptId
-searchTable transMapAlnGencodeCompVM4all
-searchType psl
-searchMethod prefix
-searchPriority 2.325
-query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
-
-    track transMapAlnGencodePseudoGeneVM4all
-    trackHandler transMap
-    superTrack transMapAll dense
-    shortLabel TransMap GENCODE Pseudo Gene VM4
-    longLabel TransMap GENCODE Pseudo Gene VM4 Mappings using All Genomic Chain
-    group genes
-    type psl
-    priority 37.003
-    color 255,51,255
-    visibility hide
-    transMapInfo transMapInfoGencodePseudoGeneVM4all
-    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4
-    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4
-    transMapTypeDesc GENCODE
-    baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM4
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodePseudoGeneVM4 musStrainShared.transMapExtFileGencodePseudoGeneVM4
-    indelDoubleInsert on
-    indelQueryInsert on
-    showDiffBasesAllScales .
-    showDiffBasesMaxZoom 10000.0
-    showCdsAllScales .
-    showCdsMaxZoom 10000.0
-    label.acc 1
-    label.db 0
-    label.gene 1
-    label.orgAbbrv 0
-    label.orgCommon 0
-
-searchName transMapAlnGencodePseudoGeneVM4all
-searchTable transMapAlnGencodePseudoGeneVM4all
-searchType psl
-searchMethod prefix
-searchPriority 2.33
-
-searchName transMapAlnGencodePseudoGeneVM4all_transcriptId
-searchTable transMapAlnGencodePseudoGeneVM4all
-searchType psl
-searchMethod prefix
-searchPriority 2.335
-query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
-
-track transMapSyn
-superTrack on show
-shortLabel TransMap Syn Genomic Chain
-longLabel TransMap Syn Genomic Chain Alignments
-group genes
-label.acc 1
-label.db 0
-label.gene 1
-label.orgAbbrv 0
-label.orgCommon 0
-
-
-    track compAnnGencodeBasicVM4_syn_alignmentErrors
-    superTrack transMapSyn hide
-    shortLabel GENCODE Basic VM4 Alignment Errors using syn chain
-    longLabel $Organism GENCODE Basic VM4 Alignment Errors using syn chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.005
-
-    searchTable compAnnGencodeBasicVM4_syn_alignmentErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeBasicVM4_syn_assemblyErrors
-    superTrack transMapSyn hide
-    shortLabel GENCODE Basic VM4 Assembly Errors using syn chain
-    longLabel $Organism GENCODE Basic VM4 Assembly Errors using syn chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.006
-
-    searchTable compAnnGencodeBasicVM4_syn_assemblyErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeBasicVM4_syn_allProblems
-    superTrack transMapSyn hide
-    shortLabel GENCODE Basic VM4 All Problems using syn chain
-    longLabel $Organism GENCODE Basic VM4 All Problems using syn chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.007
-
-    searchTable compAnnGencodeBasicVM4_syn_allProblems
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM4_syn_alignmentErrors
-    superTrack transMapSyn hide
-    shortLabel GENCODE Comprehensive VM4 Alignment Errors using syn chain
-    longLabel $Organism GENCODE Comprehensive VM4 Alignment Errors using syn chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.005
-
-    searchTable compAnnGencodeCompVM4_syn_alignmentErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM4_syn_assemblyErrors
-    superTrack transMapSyn hide
-    shortLabel GENCODE Comprehensive VM4 Assembly Errors using syn chain
-    longLabel $Organism GENCODE Comprehensive VM4 Assembly Errors using syn chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.006
-
-    searchTable compAnnGencodeCompVM4_syn_assemblyErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM4_syn_allProblems
-    superTrack transMapSyn hide
-    shortLabel GENCODE Comprehensive VM4 All Problems using syn chain
-    longLabel $Organism GENCODE Comprehensive VM4 All Problems using syn chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.007
-
-    searchTable compAnnGencodeCompVM4_syn_allProblems
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_syn_alignmentErrors
-    superTrack transMapSyn hide
-    shortLabel GENCODE Pseudogenes VM4 Alignment Errors using syn chain
-    longLabel $Organism GENCODE Pseudogenes VM4 Alignment Errors using syn chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.005
-
-    searchTable compAnnGencodePseudoGeneVM4_syn_alignmentErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_syn_assemblyErrors
-    superTrack transMapSyn hide
-    shortLabel GENCODE Pseudogenes VM4 Assembly Errors using syn chain
-    longLabel $Organism GENCODE Pseudogenes VM4 Assembly Errors using syn chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.006
-
-    searchTable compAnnGencodePseudoGeneVM4_syn_assemblyErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_syn_allProblems
-    superTrack transMapSyn hide
-    shortLabel GENCODE Pseudogenes VM4 All Problems using syn chain
-    longLabel $Organism GENCODE Pseudogenes VM4 All Problems using syn chain
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 37.007
-
-    searchTable compAnnGencodePseudoGeneVM4_syn_allProblems
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track transMapAlnGencodeBasicVM4syn
-    trackHandler transMap
-    superTrack transMapSyn pack
-    shortLabel TransMap GENCODE Basic VM4
-    longLabel TransMap GENCODE Basic VM4 Mappings using Syn Genomic Chain
+    superTrack transMap pack
+    shortLabel TransMap GENCODE PseudoGene VM7
+    longLabel TransMap GENCODE PseudoGene VM7 Mappings
     group genes
     type psl
     priority 37.001
     color 0,100,0
-    visibility pack
-    transMapInfo transMapInfoGencodeBasicVM4syn
-    transMapSrc musStrainShared.transMapSrcGencodeBasicVM4
-    transMapGene musStrainShared.transMapGeneGencodeBasicVM4
+    visibility hide
+    transMapInfo transMapInfoGencodePseudoGeneVM7
+    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM7
+    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM7
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM4
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeBasicVM4 musStrainShared.transMapExtFileGencodeBasicVM4
+    baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM7
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodePseudoGeneVM7 musStrainShared.transMapExtFileGencodePseudoGeneVM7
     indelDoubleInsert on
     indelQueryInsert on
     showDiffBasesAllScales .
@@ -718,100 +124,15 @@ label.orgCommon 0
     label.orgAbbrv 0
     label.orgCommon 0
 
-searchName transMapAlnGencodeBasicVM4syn
-searchTable transMapAlnGencodeBasicVM4syn
+searchName transMapAlnGencodePseudoGeneVM7
+searchTable transMapAlnGencodePseudoGeneVM7
 searchType psl
 searchMethod prefix
 searchPriority 2.31
 
-searchName transMapAlnGencodeBasicVM4syn_transcriptId
-searchTable transMapAlnGencodeBasicVM4syn
+searchName transMapAlnGencodePseudoGeneVM7_transcriptId
+searchTable transMapAlnGencodePseudoGeneVM7
 searchType psl
 searchMethod prefix
 searchPriority 2.315
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
-
-    track transMapAlnGencodeCompVM4syn
-    trackHandler transMap
-    superTrack transMapSyn hide
-    shortLabel TransMap GENCODE Comprehensive VM4
-    longLabel TransMap GENCODE Comprehensive VM4 Mappings using Syn Genomic Chain
-    group genes
-    type psl
-    priority 37.002
-    color 0,100,0
-    visibility hide
-    transMapInfo transMapInfoGencodeCompVM4syn
-    transMapSrc musStrainShared.transMapSrcGencodeCompVM4
-    transMapGene musStrainShared.transMapGeneGencodeCompVM4
-    transMapTypeDesc GENCODE
-    baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM4
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeCompVM4 musStrainShared.transMapExtFileGencodeCompVM4
-    indelDoubleInsert on
-    indelQueryInsert on
-    showDiffBasesAllScales .
-    showDiffBasesMaxZoom 10000.0
-    showCdsAllScales .
-    showCdsMaxZoom 10000.0
-    label.acc 1
-    label.db 0
-    label.gene 1
-    label.orgAbbrv 0
-    label.orgCommon 0
-
-searchName transMapAlnGencodeCompVM4syn
-searchTable transMapAlnGencodeCompVM4syn
-searchType psl
-searchMethod prefix
-searchPriority 2.32
-
-searchName transMapAlnGencodeCompVM4syn_transcriptId
-searchTable transMapAlnGencodeCompVM4syn
-searchType psl
-searchMethod prefix
-searchPriority 2.325
-query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
-
-    track transMapAlnGencodePseudoGeneVM4syn
-    trackHandler transMap
-    superTrack transMapSyn dense
-    shortLabel TransMap GENCODE Pseudo Gene VM4
-    longLabel TransMap GENCODE Pseudo Gene VM4 Mappings using Syn Genomic Chain
-    group genes
-    type psl
-    priority 37.003
-    color 255,51,255
-    visibility hide
-    transMapInfo transMapInfoGencodePseudoGeneVM4syn
-    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM4
-    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM4
-    transMapTypeDesc GENCODE
-    baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM4
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodePseudoGeneVM4 musStrainShared.transMapExtFileGencodePseudoGeneVM4
-    indelDoubleInsert on
-    indelQueryInsert on
-    showDiffBasesAllScales .
-    showDiffBasesMaxZoom 10000.0
-    showCdsAllScales .
-    showCdsMaxZoom 10000.0
-    label.acc 1
-    label.db 0
-    label.gene 1
-    label.orgAbbrv 0
-    label.orgCommon 0
-
-searchName transMapAlnGencodePseudoGeneVM4syn
-searchTable transMapAlnGencodePseudoGeneVM4syn
-searchType psl
-searchMethod prefix
-searchPriority 2.33
-
-searchName transMapAlnGencodePseudoGeneVM4syn_transcriptId
-searchTable transMapAlnGencodePseudoGeneVM4syn
-searchType psl
-searchMethod prefix
-searchPriority 2.335
-query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
-

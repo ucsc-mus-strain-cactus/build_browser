@@ -14,7 +14,7 @@ liveSrcOrgDbs =  ${MSCA_LIVE_VERSIONS:%=Mus${srcOrg}_%}
 BASE_DATA_DIR = ${MSCA_PROJ_DIR}/browser
 GBDB_SHARED_DIR = ${BASE_DATA_DIR}/gbdb/${sharedDb}
 
-CHECKPOINT_DIR = ${BASE_DATA_DIR}/checkpoints/${MSCA_VERSION}
+CHECKPOINT_DIR = ${BASE_DATA_DIR}/checkpoints/${VERSION}
 
 # misc
 sciName = "Mus musculus"
@@ -32,7 +32,7 @@ halBrowserHtDocsFile = /scratch/msca_hal/$(notdir ${halBrowserFile})
 #lodBrowserHtDocsFile = /scratch/msca_hal/$(notdir ${lodTxtFile})
 #lodBrowserHtDocsDir = /scratch/msca_hal/$(notdir ${lodDir})
 
-TRANS_MAP_DIR = ${MSCA_DATA_DIR}/comparative/${MSCA_VERSION}/transMap/${TRANS_MAP_VERSION}
+TRANS_MAP_DIR = ${MSCA_DATA_DIR}/comparative/${VERSION}/transMap/${TRANS_MAP_VERSION}
 
 srcGencodeBasic = wgEncodeGencodeBasic${GENCODE_VERSION}
 srcGencodeComp = wgEncodeGencodeComp${GENCODE_VERSION}
@@ -52,7 +52,11 @@ transMapGencodeSubsets = ${transMapGencodeBasic} ${transMapGencodeComp} ${transM
 #yalcinSvGenomes = LPJ DBA2J CBAJ C3HHeJ BALBcJ AKRJ AJ
 
 # augustus dir containing the genePreds.
-augustusResultsDir = /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/${MSCA_VERSION}/augustus
+augustusResultsDir = ${AUGUSTUS_DIR}
+
+# consensus location
+consensusBaseDir = {ANNOTATION_DIR}/${GENCODE_VERSION}/consensus/for_browser
+cgpConsensusBaseDir = ${ANNOTATION_DIR}/${GENCODE_VERSION}/cgp_consensus/for_browser
 
 # Environment variables paralleling hg.conf variables to use a different hgcentral database for
 # some tables.  Use by loadTracks

@@ -1,287 +1,140 @@
-track compAnnGencodeBasicVM4_super
+track transMapEvaluations
 superTrack on hide
-shortLabel Basic Annotations
-longLabel GENCODE basic comparative annotations
+shortLabel transMap comparativeAnnotator Evaluations
+longLabel transMap comparativeAnnotator Evaluations
 group musStrain
 
-    track compAnnGencodeBasicVM4_allProblems
-    superTrack compAnnGencodeBasicVM4_super hide
-    shortLabel All Annotation Problems
-    longLabel $Organism GENCODE Basic All Annotation Problems
+    track compAnnGencodeCompVM7_alignmentErrors
+    superTrack transMapEvaluations hide
+    shortLabel GENCODE Comprehensive VM7 Alignment Errors
+    longLabel $Organism GENCODE Comprehensive VM7 Alignment Errors
     group musStrain
     type bed 12 .
-    visibility hide
+    visibility pack
     itemRgb On
-    priority 10
+    priority 37.004
 
-    searchTable compAnnGencodeBasicVM4_allProblems
+    searchTable compAnnGencodeCompVM7_alignmentErrors
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodeBasicVM4_assemblyErrors
-    superTrack compAnnGencodeBasicVM4_super hide
-    shortLabel Assembly Errors
-    longLabel $Organism GENCODE Basic Assembly Errors
+    track compAnnGencodeCompVM7_assemblyErrors
+    superTrack transMapEvaluations hide
+    shortLabel GENCODE Comprehensive VM7 Assembly Errors
+    longLabel $Organism GENCODE Comprehensive VM7 Assembly Errors
     group musStrain
     type bed 12 .
-    visibility hide
+    visibility pack
     itemRgb On
-    priority 3
+    priority 37.005
 
-    searchTable compAnnGencodeBasicVM4_assemblyErrors
+    searchTable compAnnGencodeCompVM7_assemblyErrors
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodeBasicVM4_alignmentErrors
-    superTrack compAnnGencodeBasicVM4_super hide
-    shortLabel Alignment Errors
-    longLabel $Organism GENCODE Basic Alignment Errors
+    track compAnnGencodeCompVM7_allProblems
+    superTrack transMapEvaluations hide
+    shortLabel GENCODE Comprehensive VM7 All Problems
+    longLabel $Organism GENCODE Comprehensive VM7 All Problems
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
-    priority 4
+    priority 37.006
 
-    searchTable compAnnGencodeBasicVM4_alignmentErrors
+    searchTable compAnnGencodeCompVM7_allProblems
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodeBasicVM4_interestingBiology
-    superTrack compAnnGencodeBasicVM4_super pack
-    shortLabel Interesting Biology
-    longLabel $Organism GENCODE Basic Potentially Interesting Biology
+    track compAnnGencodeBasicVM7_alignmentErrors
+    superTrack transMapEvaluations hide
+    shortLabel GENCODE Basic VM7 Alignment Errors
+    longLabel $Organism GENCODE Basic VM7 Alignment Errors
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
-    priority 5
+    priority 37.004
 
-    searchTable compAnnGencodeBasicVM4_interestingBiology
+    searchTable compAnnGencodeBasicVM7_alignmentErrors
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodeBasicVM4_compAnnotation
-    superTrack compAnnGencodeBasicVM4_super hide
-    shortLabel Comparative Annotation
-    longLabel $Organism GENCODE Basic Comparative Annotation
+    track compAnnGencodeBasicVM7_assemblyErrors
+    superTrack transMapEvaluations hide
+    shortLabel GENCODE Basic VM7 Assembly Errors
+    longLabel $Organism GENCODE Basic VM7 Assembly Errors
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
-    priority 2
+    priority 37.005
 
-    searchTable compAnnGencodeBasicVM4_compAnnotation
+    searchTable compAnnGencodeBasicVM7_assemblyErrors
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodeBasicVM4_inFrameStop
-    superTrack compAnnGencodeBasicVM4_super pack
-    shortLabel In Frame Stop
-    longLabel $Organism GENCODE Basic In Frame Stops
+    track compAnnGencodeBasicVM7_allProblems
+    superTrack transMapEvaluations hide
+    shortLabel GENCODE Basic VM7 All Problems
+    longLabel $Organism GENCODE Basic VM7 All Problems
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
-    priority 6
+    priority 37.006
 
-    searchTable compAnnGencodeBasicVM4_inFrameStop
+    searchTable compAnnGencodeBasicVM7_allProblems
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-track compAnnGencodeCompVM4_super
-superTrack on hide
-shortLabel Comprehensive Annotations
-longLabel GENCODE comp comparative annotations
-group musStrain
-
-    track compAnnGencodeCompVM4_allProblems
-    superTrack compAnnGencodeCompVM4_super hide
-    shortLabel All Annotation Problems
-    longLabel $Organism GENCODE Comprehensive All Annotation Problems
+    track compAnnGencodePseudoGeneVM7_alignmentErrors
+    superTrack transMapEvaluations hide
+    shortLabel GENCODE Pseudogenes VM7 Alignment Errors
+    longLabel $Organism GENCODE Pseudogenes VM7 Alignment Errors
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
-    priority 10
+    priority 37.004
 
-    searchTable compAnnGencodeCompVM4_allProblems
+    searchTable compAnnGencodePseudoGeneVM7_alignmentErrors
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodeCompVM4_assemblyErrors
-    superTrack compAnnGencodeCompVM4_super hide
-    shortLabel Assembly Errors
-    longLabel $Organism GENCODE Comprehensive Assembly Errors
+    track compAnnGencodePseudoGeneVM7_assemblyErrors
+    superTrack transMapEvaluations hide
+    shortLabel GENCODE Pseudogenes VM7 Assembly Errors
+    longLabel $Organism GENCODE Pseudogenes VM7 Assembly Errors
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
-    priority 3
+    priority 37.005
 
-    searchTable compAnnGencodeCompVM4_assemblyErrors
+    searchTable compAnnGencodePseudoGeneVM7_assemblyErrors
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodeCompVM4_alignmentErrors
-    superTrack compAnnGencodeCompVM4_super hide
-    shortLabel Alignment Errors
-    longLabel $Organism GENCODE Comprehensive Alignment Errors
+    track compAnnGencodePseudoGeneVM7_allProblems
+    superTrack transMapEvaluations hide
+    shortLabel GENCODE Pseudogenes VM7 All Problems
+    longLabel $Organism GENCODE Pseudogenes VM7 All Problems
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
-    priority 4
+    priority 37.006
 
-    searchTable compAnnGencodeCompVM4_alignmentErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM4_interestingBiology
-    superTrack compAnnGencodeCompVM4_super pack
-    shortLabel Interesting Biology
-    longLabel $Organism GENCODE Comprehensive Potentially Interesting Biology
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 5
-
-    searchTable compAnnGencodeCompVM4_interestingBiology
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM4_compAnnotation
-    superTrack compAnnGencodeCompVM4_super hide
-    shortLabel Comparative Annotation
-    longLabel $Organism GENCODE Comprehensive Comparative Annotation
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 2
-
-    searchTable compAnnGencodeCompVM4_compAnnotation
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM4_inFrameStop
-    superTrack compAnnGencodeCompVM4_super pack
-    shortLabel In Frame Stop
-    longLabel $Organism GENCODE Comprehensive In Frame Stops
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 6
-
-    searchTable compAnnGencodeCompVM4_inFrameStop
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-track compAnnGencodePseudoGeneVM4_super
-superTrack on hide
-shortLabel PseudoGene Annotations
-longLabel GENCODE Pseudogene comparative annotations
-group musStrain
-
-    track compAnnGencodePseudoGeneVM4_allProblems
-    superTrack compAnnGencodePseudoGeneVM4_super hide
-    shortLabel All Annotation Problems
-    longLabel $Organism GENCODE Pseudogene All Annotation Problems
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 10
-
-    searchTable compAnnGencodePseudoGeneVM4_allProblems
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_assemblyErrors
-    superTrack compAnnGencodePseudoGeneVM4_super hide
-    shortLabel Assembly Errors
-    longLabel $Organism GENCODE Pseudogene Assembly Errors
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 3
-
-    searchTable compAnnGencodePseudoGeneVM4_assemblyErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_alignmentErrors
-    superTrack compAnnGencodePseudoGeneVM4_super hide
-    shortLabel Alignment Errors
-    longLabel $Organism GENCODE Pseudogene Alignment Errors
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 4
-
-    searchTable compAnnGencodePseudoGeneVM4_alignmentErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_interestingBiology
-    superTrack compAnnGencodePseudoGeneVM4_super hide
-    shortLabel Interesting Biology
-    longLabel $Organism GENCODE Pseudogene Potentially Interesting Biology
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 5
-
-    searchTable compAnnGencodePseudoGeneVM4_interestingBiology
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_compAnnotation
-    superTrack compAnnGencodePseudoGeneVM4_super hide
-    shortLabel PseudoGenearative Annotation
-    longLabel $Organism GENCODE Pseudogene PseudoGenearative Annotation
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 2
-
-    searchTable compAnnGencodePseudoGeneVM4_compAnnotation
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodePseudoGeneVM4_inFrameStop
-    superTrack compAnnGencodePseudoGeneVM4_super hide
-    shortLabel In Frame Stop
-    longLabel $Organism GENCODE Pseudogene In Frame Stops
-    group musStrain
-    type bed 12 .
-    visibility hide
-    itemRgb On
-    priority 6
-
-    searchTable compAnnGencodePseudoGeneVM4_inFrameStop
+    searchTable compAnnGencodePseudoGeneVM7_allProblems
     searchType bed
     searchMethod prefix
     searchPriority 1
