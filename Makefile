@@ -9,7 +9,7 @@ hgCentralCreateCheckpoint = ${sharedCheckpointDir}/hgCentralCreateCheckpoint.don
 # tables would mean duplicating trackDb entries (with a program).  While duplicating
 # is easy by code, this one table is the way transmap was design to work.  Hence
 # we include all live versions 
-transMapLiveVers = $(shell echo ${MSCA_LIVE_VERSIONS} | tr " " "_")
+transMapLiveVers = $(shell echo ${LIVE_VERSIONS} | tr " " "_")
 transMapGencodeSrcLoadCheckpoints = \
 	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.${transMapLiveVers}.seq.done} \
 	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.${transMapLiveVers}.src.done} \
@@ -52,7 +52,7 @@ ${sharedDatabaseCreateCheckpoint}:
 # need to wait for chromInfo tables to be loaded in each database
 ${hgCentralCreateCheckpoint}: ${sharedDatabaseCreateCheckpoint} genomeDbs bin/hgCentralSetup
 	@mkdir -p $(dir $@)
-	${python} bin/hgCentralSetup --assemblies ${MSCA_LIVE_VERSIONS} -- hgcentraltest ${sharedDb}
+	${python} bin/hgCentralSetup --assemblies ${LIVE_VERSIONS} -- hgcentraltest ${sharedDb}
 	touch $@
 
 ##

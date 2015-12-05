@@ -11,6 +11,7 @@ twoBit = ${GBDB_DIR}/${targetOrgDb}.2bit
 agp = ${BED_DIR}/${targetOrgDb}.agp
 chromSizes = ${ASM_GENOMES_DIR}/${GENOME}.chrom.sizes
 svDir = /hive/groups/recon/projs/mus_strain_cactus/data/yalcin_structural_variants
+transMapDataDir = ${TRANS_MAP_DIR}/transMap/${GENOME}
 
 # some basic tracks we will need to build
 repeatMaskerOut = $(wildcard ${ASM_GENOMES_DIR}/${GENOME}.out)
@@ -181,12 +182,15 @@ ${agp}: ${ASM_GENOMES_DIR}/${GENOME}.fa
 # gencode mapped tracks, except on reference
 ##
 .PHONEY: loadTransMap
-ifeq (${GENOME},${srcOrg})
-loadTransMap:
-else
-transMapDataDir = ${TRANS_MAP_DIR}/${GENOME}
+ifneq (${GENOME},${srcOrg})
+ifneq (${GENOME},Rattus)
 loadTransMap: ${transMapGencodeSubsets:%=${dbCheckpointDir}/%.aln.done} \
 	${transMapGencodeSubsets:%=${dbCheckpointDir}/%.info.done}
+else
+loadTransMap:
+endif
+else
+loadTransMap:
 endif
 
 ${dbCheckpointDir}/transMap%.aln.done: ${transMapDataDir}/transMap%.psl ${chromInfoCheckpoint}
@@ -215,10 +219,14 @@ ${gcPercentCheckpoint}: ${twoBit} ${databaseCheckpoint}
 ##
 # comparative annotation tracks.
 ##
-ifeq (${GENOME},${srcOrg})
-loadCompAnn:
-else
+ifneq (${GENOME},${srcOrg})
+ifneq (${GENOME},Rattus)
 loadCompAnn: ${gencodeSubsets:%=%.loadCompAnn}
+else
+loadCompAnn:
+endif
+else
+loadCompAnn: 
 endif
 
 %.loadCompAnn: ${chromInfoCheckpoint}
@@ -285,7 +293,11 @@ ifneq (${GENOME},${srcOrg})
 ifneq (${GENOME},Rattus)
 # rule for species with all augustus tracks (all except C57B6J and Rattus)
 loadConsensus: ${dbCheckpointDir}/consensusTMR.done ${dbCheckpointDir}/consensusCGP.done
+else
+loadConsensus: 
 endif
+else
+loadConsensus: 
 endif
 
 ${dbCheckpointDir}/consensusTMR.done: ${consensusBaseDir}/${GENOME}.gp ${chromInfoCheckpoint}
