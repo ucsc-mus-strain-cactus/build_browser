@@ -123,7 +123,7 @@ def make_tmr_tracks(file_handle):
 
 def main():
     args = parse_args()
-    if args.assembly != "1509":
+    if args.assembly_version != "1509":
         print "This script was called on a release that was not 1509 or not on the reference. Did nothing."
         sys.exit(1)
     target_file_template = "trackDb/{0}/Mus{0}_{1}/augustus.trackDb.ra"
