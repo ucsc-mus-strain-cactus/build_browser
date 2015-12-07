@@ -30,6 +30,12 @@ augustusTrackDbCheckpoint = ${dbCheckpointDir}/augustus.done
 chainsCheckpoint = ${dbCheckpointDir}/chains.done
 netsCheckpoint = ${dbCheckpointDir}/nets.done
 
+ifneq (${GENOME},Rattus)
+ifneq (${GENOME},${srcOrg})
+consensusTrackDbCheckpoint = ${dbCheckpointDir}/consensus.done
+endif
+endif
+
 # structural variants (yalcin et al 2012) against reference genome
 ifeq (${GENOME},${srcOrg})
 svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
@@ -70,7 +76,8 @@ ${databaseCheckpoint}:
 ##
 trackDbOrgDir=./trackDb/${GENOME}
 trackDbGenomeDir=${trackDbOrgDir}/${targetOrgDb}
-createTrackDb: ${trackDbOrgDir}/trackDb.ra ${trackDbGenomeDir}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${kallistoTrackDbCheckpoint} ${augustusTrackDbCheckpoint}
+createTrackDb: ${trackDbOrgDir}/trackDb.ra ${trackDbGenomeDir}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} \
+	${kallistoTrackDbCheckpoint} ${augustusTrackDbCheckpoint} ${consensusTrackDbCheckpoint}
 
 ${trackDbOrgDir}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ${trackDbOrgDir}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
@@ -115,7 +122,7 @@ ${augustusTrackDbCheckpoint}: bin/augustus_trackDb.py
 
 ${consensusTrackDbCheckpoint}: bin/consensus_trackDb.py
 	@mkdir -p $(dir $@)
-	${python} bin/consensus_trackDb.py --assembly_version ${VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
+	${python} bin/consensus_trackDb.py --assembly_version ${VERSION} --genome ${GENOME}
 	touch $@
 
 
