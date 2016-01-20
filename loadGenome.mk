@@ -302,12 +302,12 @@ else
 loadConsensus: 
 endif
 
-${dbCheckpointDir}/consensusTMR.done: ${consensusBaseDir}/${GENOME}/protein_coding.augustus_consensus_gene_set.gp ${chromInfoCheckpoint}
+${dbCheckpointDir}/consensusTMR.done: ${consensusBaseDir}/${GENOME}.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
 	flock locks/TMR_consensus hgLoadGenePred -genePredExt ${targetOrgDb} TMR_consensus $<
 	touch $@
 
-${dbCheckpointDir}/consensusCGP.done: ${cgpConsensusBaseDir}/${GENOME}.CGP.consensus.protein_coding.gp ${chromInfoCheckpoint}
+${dbCheckpointDir}/consensusCGP.done: ${cgpConsensusBaseDir}/${GENOME}.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
 	flock locks/TMR_CGP_consensus hgLoadGenePred -genePredExt ${targetOrgDb} TMR_CGP_consensus $<
 	touch $@
