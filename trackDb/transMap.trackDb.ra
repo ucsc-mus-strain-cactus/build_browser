@@ -9,23 +9,23 @@ label.gene 1
 label.orgAbbrv 0
 label.orgCommon 0
 
-    track transMapAlnGencodeBasicVM7
+    track transMapAlnGencodeBasicVM8
     trackHandler transMap
     superTrack transMap pack
-    shortLabel TransMap GENCODE Basic VM7
-    longLabel TransMap GENCODE Basic VM7 Mappings
+    shortLabel TransMap GENCODE Basic VM8
+    longLabel TransMap GENCODE Basic VM8 Mappings
     group genes
     type psl
     priority 37.001
     color 0,100,0
     visibility hide
-    transMapInfo transMapInfoGencodeBasicVM7
-    transMapSrc musStrainShared.transMapSrcGencodeBasicVM7
-    transMapGene musStrainShared.transMapGeneGencodeBasicVM7
+    transMapInfo transMapInfoGencodeBasicVM8
+    transMapSrc musStrainShared.transMapSrcGencodeBasicVM8
+    transMapGene musStrainShared.transMapGeneGencodeBasicVM8
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM7
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeBasicVM7 musStrainShared.transMapExtFileGencodeBasicVM7
+    baseColorUseCds table musStrainShared.transMapGeneGencodeBasicVM8
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeBasicVM8 musStrainShared.transMapExtFileGencodeBasicVM8
     indelDoubleInsert on
     indelQueryInsert on
     showDiffBasesAllScales .
@@ -38,37 +38,37 @@ label.orgCommon 0
     label.orgAbbrv 0
     label.orgCommon 0
 
-searchName transMapAlnGencodeBasicVM7
-searchTable transMapAlnGencodeBasicVM7
+searchName transMapAlnGencodeBasicVM8
+searchTable transMapAlnGencodeBasicVM8
 searchType psl
 searchMethod prefix
 searchPriority 2.31
 
-searchName transMapAlnGencodeBasicVM7_transcriptId
-searchTable transMapAlnGencodeBasicVM7
+searchName transMapAlnGencodeBasicVM8_transcriptId
+searchTable transMapAlnGencodeBasicVM8
 searchType psl
 searchMethod prefix
 searchPriority 2.315
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
 
-    track transMapAlnGencodeCompVM7
+    track transMapAlnGencodeCompVM8
     trackHandler transMap
     superTrack transMap pack
-    shortLabel TransMap GENCODE Comp VM7
-    longLabel TransMap GENCODE Comp VM7 Mappings
+    shortLabel TransMap GENCODE Comp VM8
+    longLabel TransMap GENCODE Comp VM8 Mappings
     group genes
     type psl
     priority 37.001
     color 0,100,0
     visibility hide
-    transMapInfo transMapInfoGencodeCompVM7
-    transMapSrc musStrainShared.transMapSrcGencodeCompVM7
-    transMapGene musStrainShared.transMapGeneGencodeCompVM7
+    transMapInfo transMapInfoGencodeCompVM8
+    transMapSrc musStrainShared.transMapSrcGencodeCompVM8
+    transMapGene musStrainShared.transMapGeneGencodeCompVM8
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM7
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeCompVM7 musStrainShared.transMapExtFileGencodeCompVM7
+    baseColorUseCds table musStrainShared.transMapGeneGencodeCompVM8
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodeCompVM8 musStrainShared.transMapExtFileGencodeCompVM8
     indelDoubleInsert on
     indelQueryInsert on
     showDiffBasesAllScales .
@@ -81,37 +81,37 @@ query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%
     label.orgAbbrv 0
     label.orgCommon 0
 
-searchName transMapAlnGencodeCompVM7
-searchTable transMapAlnGencodeCompVM7
+searchName transMapAlnGencodeCompVM8
+searchTable transMapAlnGencodeCompVM8
 searchType psl
 searchMethod prefix
 searchPriority 2.31
 
-searchName transMapAlnGencodeCompVM7_transcriptId
-searchTable transMapAlnGencodeCompVM7
+searchName transMapAlnGencodeCompVM8_transcriptId
+searchTable transMapAlnGencodeCompVM8
 searchType psl
 searchMethod prefix
 searchPriority 2.315
 query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%s%%'
 
 
-    track transMapAlnGencodePseudoGeneVM7
+    track transMapAlnGencodePseudoGeneVM8
     trackHandler transMap
     superTrack transMap pack
-    shortLabel TransMap GENCODE PseudoGene VM7
-    longLabel TransMap GENCODE PseudoGene VM7 Mappings
+    shortLabel TransMap GENCODE PseudoGene VM8
+    longLabel TransMap GENCODE PseudoGene VM8 Mappings
     group genes
     type psl
     priority 37.001
     color 0,100,0
     visibility hide
-    transMapInfo transMapInfoGencodePseudoGeneVM7
-    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM7
-    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM7
+    transMapInfo transMapInfoGencodePseudoGeneVM8
+    transMapSrc musStrainShared.transMapSrcGencodePseudoGeneVM8
+    transMapGene musStrainShared.transMapGeneGencodePseudoGeneVM8
     transMapTypeDesc GENCODE
     baseColorDefault diffCodons
-    baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM7
-    baseColorUseSequence extFile musStrainShared.transMapSeqGencodePseudoGeneVM7 musStrainShared.transMapExtFileGencodePseudoGeneVM7
+    baseColorUseCds table musStrainShared.transMapGeneGencodePseudoGeneVM8
+    baseColorUseSequence extFile musStrainShared.transMapSeqGencodePseudoGeneVM8 musStrainShared.transMapExtFileGencodePseudoGeneVM8
     indelDoubleInsert on
     indelQueryInsert on
     showDiffBasesAllScales .
@@ -124,14 +124,14 @@ query select tName, tStart, tEnd, qName from %s where qName like 'MusC57B6J_%%:%
     label.orgAbbrv 0
     label.orgCommon 0
 
-searchName transMapAlnGencodePseudoGeneVM7
-searchTable transMapAlnGencodePseudoGeneVM7
+searchName transMapAlnGencodePseudoGeneVM8
+searchTable transMapAlnGencodePseudoGeneVM8
 searchType psl
 searchMethod prefix
 searchPriority 2.31
 
-searchName transMapAlnGencodePseudoGeneVM7_transcriptId
-searchTable transMapAlnGencodePseudoGeneVM7
+searchName transMapAlnGencodePseudoGeneVM8_transcriptId
+searchTable transMapAlnGencodePseudoGeneVM8
 searchType psl
 searchMethod prefix
 searchPriority 2.315

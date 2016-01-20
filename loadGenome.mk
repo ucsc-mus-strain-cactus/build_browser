@@ -38,11 +38,11 @@ endif
 
 # structural variants (yalcin et al 2012) against reference genome
 ifeq (${GENOME},${srcOrg})
-svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
-svCheckpoints = ${yalcinSvGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.done}
+#svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
+#svCheckpoints = ${yalcinSvGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.done}
 # RNAseq tracks - against reference
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
-kallistoTrackDbCheckpoint = ${dbCheckpointDir}/kallistoTrackDb.done
+#kallistoTrackDbCheckpoint = ${dbCheckpointDir}/kallistoTrackDb.done
 endif
 
 # RNAseq tracks - against strains (on 1504/1509)
@@ -267,14 +267,14 @@ ${dbCheckpointDir}/structural_variants/%.sv.done: ${yalcinSvDir}/%.bed
 ifneq (${GENOME},${srcOrg})
 ifneq (${GENOME},Rattus)
 # rule for species with all augustus tracks (all except C57B6J and Rattus)
-loadAugustus: ${dbCheckpointDir}/augustusTMR.done ${dbCheckpointDir}/augustusCGP.done ${dbCheckpointDir}/augustusCGP_unfiltered.done
+loadAugustus: ${dbCheckpointDir}/augustusTMR.done ${dbCheckpointDir}/augustusCGP.done
 else
-# rule for Rattus (has CGP)
-loadAugustus: ${dbCheckpointDir}/augustusCGP.done ${dbCheckpointDir}/augustusCGP_unfiltered.done
+# rule for Rattus
+loadAugustus:
 endif
 else
-# rule for C57B6J (has CGP)
-loadAugustus: ${dbCheckpointDir}/augustusCGP.done ${dbCheckpointDir}/augustusCGP_unfiltered.done
+# rule for C57B6J
+loadAugustus:
 endif
 
 ${dbCheckpointDir}/augustusTMR.done: ${augustusResultsDir}/tmr/${GENOME}.gp ${chromInfoCheckpoint}
@@ -282,14 +282,9 @@ ${dbCheckpointDir}/augustusTMR.done: ${augustusResultsDir}/tmr/${GENOME}.gp ${ch
 	./bin/addName2ToGenePred.py $< augustus | flock locks/augustusTMR hgLoadGenePred -genePredExt ${targetOrgDb} augustusTMR stdin
 	touch $@
 
-${dbCheckpointDir}/augustusCGP.done: ${augustusResultsDir}/cgp/filteredCGP_forBrowser/${GENOME}.gp ${chromInfoCheckpoint}
+${dbCheckpointDir}/augustusCGP.done: ${augustusResultsDir}/cgp/${GENOME}.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
 	flock locks/augustusCGP hgLoadGenePred -genePredExt ${targetOrgDb} augustusCGP $<
-	touch $@
-
-${dbCheckpointDir}/augustusCGP_unfiltered.done: ${augustusResultsDir}/cgp/${GENOME}.gp ${chromInfoCheckpoint}
-	@mkdir -p $(dir $@)
-	flock locks/augustusCGP_unfiltered hgLoadGenePred -genePredExt ${targetOrgDb} augustusCGP_unfiltered $<
 	touch $@
 
 
@@ -307,12 +302,12 @@ else
 loadConsensus: 
 endif
 
-${dbCheckpointDir}/consensusTMR.done: ${consensusBaseDir}/${GENOME}.gp ${chromInfoCheckpoint}
+${dbCheckpointDir}/consensusTMR.done: ${consensusBaseDir}/${GENOME}/protein_coding.augustus_consensus_gene_set.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
 	flock locks/TMR_consensus hgLoadGenePred -genePredExt ${targetOrgDb} TMR_consensus $<
 	touch $@
 
-${dbCheckpointDir}/consensusCGP.done: ${cgpConsensusBaseDir}/${GENOME}.gp ${chromInfoCheckpoint}
+${dbCheckpointDir}/consensusCGP.done: ${cgpConsensusBaseDir}/${GENOME}.CGP.consensus.protein_coding.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
 	flock locks/TMR_CGP_consensus hgLoadGenePred -genePredExt ${targetOrgDb} TMR_CGP_consensus $<
 	touch $@

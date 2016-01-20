@@ -4,182 +4,182 @@ shortLabel transMap comparativeAnnotator Evaluations
 longLabel transMap comparativeAnnotator Evaluations
 group musStrain
 
-    track compAnnGencodeCompVM7_alignmentErrors
+    track compAnnGencodePseudoGeneVM8_alignmentErrors
     superTrack transMapEvaluations hide
-    shortLabel GENCODE Comprehensive VM7 Alignment Errors
-    longLabel $Organism GENCODE Comprehensive VM7 Alignment Errors
-    group musStrain
-    type bed 12 .
-    visibility pack
-    itemRgb On
-    priority 37.004
-
-    searchTable compAnnGencodeCompVM7_alignmentErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM7_assemblyErrors
-    superTrack transMapEvaluations hide
-    shortLabel GENCODE Comprehensive VM7 Assembly Errors
-    longLabel $Organism GENCODE Comprehensive VM7 Assembly Errors
-    group musStrain
-    type bed 12 .
-    visibility pack
-    itemRgb On
-    priority 37.005
-
-    searchTable compAnnGencodeCompVM7_assemblyErrors
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM7_allClassifiers
-    superTrack transMapEvaluations hide
-    shortLabel GENCODE Comprehensive VM7 All Classifiers
-    longLabel $Organism GENCODE Comprehensive VM7 All Classifiers
-    group musStrain
-    type bed 12 .
-    visibility pack
-    itemRgb On
-    priority 37.006
-
-    searchTable compAnnGencodeCompVM7_allClassifiers
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeCompVM7_potentiallyInterestingBiology
-    superTrack transMapEvaluations hide
-    shortLabel GENCODE Comprehensive VM7 Potentially Interesting Biology
-    longLabel $Organism GENCODE Comprehensive VM7 Potentially Interesting Biology
-    group musStrain
-    type bed 12 .
-    visibility pack
-    itemRgb On
-    priority 37.007
-
-    searchTable compAnnGencodeCompVM7_potentiallyInterestingBiology
-    searchType bed
-    searchMethod prefix
-    searchPriority 1
-
-    track compAnnGencodeBasicVM7_alignmentErrors
-    superTrack transMapEvaluations hide
-    shortLabel GENCODE Basic VM7 Alignment Errors
-    longLabel $Organism GENCODE Basic VM7 Alignment Errors
+    shortLabel GENCODE Pseudogenes VM8 Alignment Errors
+    longLabel $Organism GENCODE Pseudogenes VM8 Alignment Errors
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
     priority 37.004
 
-    searchTable compAnnGencodeBasicVM7_alignmentErrors
+    searchTable compAnnGencodePseudoGeneVM8_alignmentErrors
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodeBasicVM7_assemblyErrors
+    track compAnnGencodePseudoGeneVM8_assemblyErrors
     superTrack transMapEvaluations hide
-    shortLabel GENCODE Basic VM7 Assembly Errors
-    longLabel $Organism GENCODE Basic VM7 Assembly Errors
+    shortLabel GENCODE Pseudogenes VM8 Assembly Errors
+    longLabel $Organism GENCODE Pseudogenes VM8 Assembly Errors
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
     priority 37.005
 
-    searchTable compAnnGencodeBasicVM7_assemblyErrors
+    searchTable compAnnGencodePseudoGeneVM8_assemblyErrors
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodeBasicVM7_allClassifiers
+    track compAnnGencodePseudoGeneVM8_allClassifiers
     superTrack transMapEvaluations hide
-    shortLabel GENCODE Basic VM7 All Classifiers
-    longLabel $Organism GENCODE Basic VM7 All Classifiers
+    shortLabel GENCODE Pseudogenes VM8 All Classifiers
+    longLabel $Organism GENCODE Pseudogenes VM8 All Classifiers
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
     priority 37.006
 
-    searchTable compAnnGencodeBasicVM7_allClassifiers
+    searchTable compAnnGencodePseudoGeneVM8_allClassifiers
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodeBasicVM7_potentiallyInterestingBiology
+    track compAnnGencodePseudoGeneVM8_potentiallyInterestingBiology
     superTrack transMapEvaluations hide
-    shortLabel GENCODE Basic VM7 Potentially Interesting Biology
-    longLabel $Organism GENCODE Basic VM7 Potentially Interesting Biology
+    shortLabel GENCODE Pseudogenes VM8 Potentially Interesting Biology
+    longLabel $Organism GENCODE Pseudogenes VM8 Potentially Interesting Biology
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
     priority 37.007
 
-    searchTable compAnnGencodeBasicVM7_potentiallyInterestingBiology
+    searchTable compAnnGencodePseudoGeneVM8_potentiallyInterestingBiology
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodePseudoGeneVM7_alignmentErrors
+    track compAnnGencodeBasicVM8_alignmentErrors
     superTrack transMapEvaluations hide
-    shortLabel GENCODE Pseudogenes VM7 Alignment Errors
-    longLabel $Organism GENCODE Pseudogenes VM7 Alignment Errors
+    shortLabel GENCODE Basic VM8 Alignment Errors
+    longLabel $Organism GENCODE Basic VM8 Alignment Errors
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
     priority 37.004
 
-    searchTable compAnnGencodePseudoGeneVM7_alignmentErrors
+    searchTable compAnnGencodeBasicVM8_alignmentErrors
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodePseudoGeneVM7_assemblyErrors
+    track compAnnGencodeBasicVM8_assemblyErrors
     superTrack transMapEvaluations hide
-    shortLabel GENCODE Pseudogenes VM7 Assembly Errors
-    longLabel $Organism GENCODE Pseudogenes VM7 Assembly Errors
+    shortLabel GENCODE Basic VM8 Assembly Errors
+    longLabel $Organism GENCODE Basic VM8 Assembly Errors
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
     priority 37.005
 
-    searchTable compAnnGencodePseudoGeneVM7_assemblyErrors
+    searchTable compAnnGencodeBasicVM8_assemblyErrors
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodePseudoGeneVM7_allClassifiers
+    track compAnnGencodeBasicVM8_allClassifiers
     superTrack transMapEvaluations hide
-    shortLabel GENCODE Pseudogenes VM7 All Classifiers
-    longLabel $Organism GENCODE Pseudogenes VM7 All Classifiers
+    shortLabel GENCODE Basic VM8 All Classifiers
+    longLabel $Organism GENCODE Basic VM8 All Classifiers
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
     priority 37.006
 
-    searchTable compAnnGencodePseudoGeneVM7_allClassifiers
+    searchTable compAnnGencodeBasicVM8_allClassifiers
     searchType bed
     searchMethod prefix
     searchPriority 1
 
-    track compAnnGencodePseudoGeneVM7_potentiallyInterestingBiology
+    track compAnnGencodeBasicVM8_potentiallyInterestingBiology
     superTrack transMapEvaluations hide
-    shortLabel GENCODE Pseudogenes VM7 Potentially Interesting Biology
-    longLabel $Organism GENCODE Pseudogenes VM7 Potentially Interesting Biology
+    shortLabel GENCODE Basic VM8 Potentially Interesting Biology
+    longLabel $Organism GENCODE Basic VM8 Potentially Interesting Biology
     group musStrain
     type bed 12 .
     visibility hide
     itemRgb On
     priority 37.007
 
-    searchTable compAnnGencodePseudoGeneVM7_potentiallyInterestingBiology
+    searchTable compAnnGencodeBasicVM8_potentiallyInterestingBiology
+    searchType bed
+    searchMethod prefix
+    searchPriority 1
+
+    track compAnnGencodeCompVM8_alignmentErrors
+    superTrack transMapEvaluations hide
+    shortLabel GENCODE Comprehensive VM8 Alignment Errors
+    longLabel $Organism GENCODE Comprehensive VM8 Alignment Errors
+    group musStrain
+    type bed 12 .
+    visibility pack
+    itemRgb On
+    priority 37.004
+
+    searchTable compAnnGencodeCompVM8_alignmentErrors
+    searchType bed
+    searchMethod prefix
+    searchPriority 1
+
+    track compAnnGencodeCompVM8_assemblyErrors
+    superTrack transMapEvaluations hide
+    shortLabel GENCODE Comprehensive VM8 Assembly Errors
+    longLabel $Organism GENCODE Comprehensive VM8 Assembly Errors
+    group musStrain
+    type bed 12 .
+    visibility pack
+    itemRgb On
+    priority 37.005
+
+    searchTable compAnnGencodeCompVM8_assemblyErrors
+    searchType bed
+    searchMethod prefix
+    searchPriority 1
+
+    track compAnnGencodeCompVM8_allClassifiers
+    superTrack transMapEvaluations hide
+    shortLabel GENCODE Comprehensive VM8 All Classifiers
+    longLabel $Organism GENCODE Comprehensive VM8 All Classifiers
+    group musStrain
+    type bed 12 .
+    visibility pack
+    itemRgb On
+    priority 37.006
+
+    searchTable compAnnGencodeCompVM8_allClassifiers
+    searchType bed
+    searchMethod prefix
+    searchPriority 1
+
+    track compAnnGencodeCompVM8_potentiallyInterestingBiology
+    superTrack transMapEvaluations hide
+    shortLabel GENCODE Comprehensive VM8 Potentially Interesting Biology
+    longLabel $Organism GENCODE Comprehensive VM8 Potentially Interesting Biology
+    group musStrain
+    type bed 12 .
+    visibility pack
+    itemRgb On
+    priority 37.007
+
+    searchTable compAnnGencodeCompVM8_potentiallyInterestingBiology
     searchType bed
     searchMethod prefix
     searchPriority 1
