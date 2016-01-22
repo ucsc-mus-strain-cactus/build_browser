@@ -274,7 +274,7 @@ loadAugustus:
 endif
 else
 # rule for C57B6J
-loadAugustus:
+loadAugustus: ${dbCheckpointDir}/augustusCGP.done
 endif
 
 ${dbCheckpointDir}/augustusTMR.done: ${augustusResultsDir}/tmr/${GENOME}.gp ${chromInfoCheckpoint}
