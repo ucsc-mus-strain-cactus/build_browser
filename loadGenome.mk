@@ -224,7 +224,7 @@ ${gcPercentCheckpoint}: ${twoBit} ${databaseCheckpoint}
 ifeq (${GENOME},${srcOrg})
 loadCompAnn:
 else
-loadCompAnn: ${gencodeSubsets:%=%.loadCompAnn}
+loadCompAnn:# ${gencodeSubsets:%=%.loadCompAnn}
 endif
 
 %.loadCompAnn: ${chromInfoCheckpoint}
@@ -286,7 +286,7 @@ ${dbCheckpointDir}/augustusTM.done: ${augustusResultsDir}/tm/${GENOME}.coding.gp
 
 ${dbCheckpointDir}/augustusTMR.done: ${augustusResultsDir}/tmr/${GENOME}.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
-	./bin/addName2ToGenePred.py $< augustus | flock locks/augustusTMR hgLoadGenePred -genePredExt ${targetOrgDb} augustusTMR stdin
+	flock locks/augustusTMR hgLoadGenePred -genePredExt ${targetOrgDb} augustusTMR $<
 	touch $@
 
 ${dbCheckpointDir}/augustusCGP.done: ${augustusResultsDir}/cgp/${GENOME}.gp ${chromInfoCheckpoint}
