@@ -36,10 +36,10 @@ consensusTrackDbCheckpoint = ${dbCheckpointDir}/consensus.done
 endif
 endif
 
-# structural variants (yalcin et al 2012) against reference genome
+# structural variants against reference genome
 ifeq (${GENOME},${srcOrg})
-#svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
-#svCheckpoints = ${yalcinSvGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.done}
+svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
+svCheckpoints = ${svGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.done}
 # RNAseq tracks - against reference
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
 #kallistoTrackDbCheckpoint = ${dbCheckpointDir}/kallistoTrackDb.done
@@ -54,6 +54,7 @@ rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
 endif
 endif
 endif
+
 
 all: loadTracks loadTrackDb
 
@@ -97,7 +98,7 @@ ${trackDbGenomeDir}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint
 	${python} bin/buildTrackDb.py --ref_genome=${srcOrgDb} --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --halOrLod ${halOrLod} $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
 
-# generate RNASeq trackDb entries 
+# generate RNASeq trackDb entries
 ${rnaSeqTrackDbCheckpoint}: bin/rnaseq_tracks.py
 	@mkdir -p $(dir $@) ${trackDbGenomeDir}
 	${python} bin/rnaseq_tracks.py --assembly_version ${VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
@@ -109,12 +110,6 @@ ${kallistoTrackDbCheckpoint}: bin/kallisto_trackDb.py
 	${python} bin/kallisto_trackDb.py --assembly_version ${VERSION} --ref_genome ${srcOrg}
 	touch $@
 
-# structural variant trackDb entries (reference genome only)
-${svTrackDbCheckpoint}: bin/structural_variants_yalcin_2012.py
-	@mkdir -p $(dir $@)
-	${python} bin/structural_variants_yalcin_2012.py --assembly_version ${VERSION} --ref_genome ${srcOrg}
-	touch $@
-
 ${augustusTrackDbCheckpoint}: bin/augustus_trackDb.py
 	@mkdir -p $(dir $@)
 	${python} bin/augustus_trackDb.py --assembly_version ${VERSION} --genome ${GENOME} --ref_genome ${srcOrg}
@@ -123,6 +118,12 @@ ${augustusTrackDbCheckpoint}: bin/augustus_trackDb.py
 ${consensusTrackDbCheckpoint}: bin/consensus_trackDb.py
 	@mkdir -p $(dir $@)
 	${python} bin/consensus_trackDb.py --assembly_version ${VERSION} --genome ${GENOME}
+	touch $@
+
+# structural variant trackDb entries (reference genome only)
+${svTrackDbCheckpoint}: bin/structural_variants.py
+	@mkdir -p $(dir $@)
+	${python} bin/consensus_trackDb.py --assembly_version ${VERSION} --ref_genome ${srcOrg}
 	touch $@
 
 
@@ -233,7 +234,7 @@ else
 loadCompAnn:
 endif
 else
-loadCompAnn: 
+loadCompAnn:
 endif
 
 %.loadCompAnn: ${chromInfoCheckpoint}
@@ -255,9 +256,9 @@ ${dbCheckpointDir}/compAnn${compAnnGencodeSubset}_%.done: ${ANNOTATION_DIR}/${co
 ##
 loadSv: ${svCheckpoints}
 
-${dbCheckpointDir}/structural_variants/%.sv.done: ${yalcinSvDir}/%.bed
+${dbCheckpointDir}/structural_variants/%.sv.done: ${svDir}/%.svs.bed
 	@mkdir -p $(dir $@)
-	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed4 -ignoreEmpty ${targetOrgDb} $*_yalcin_svs $<
+	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed4 -ignoreEmpty ${targetOrgDb} $*_svs $<
 	touch $@
 
 

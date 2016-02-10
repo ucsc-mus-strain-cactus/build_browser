@@ -32,9 +32,10 @@ halBrowserHtDocsFile = /scratch/msca_hal/$(notdir ${halBrowserFile})
 #lodBrowserHtDocsFile = /scratch/msca_hal/$(notdir ${lodTxtFile})
 #lodBrowserHtDocsDir = /scratch/msca_hal/$(notdir ${lodDir})
 
-# structural variants from yalcin et al 2012
-#yalcinSvDir = ${PROJ_DIR}/data/yalcin_structural_variants
-#yalcinSvGenomes = LPJ DBA2J CBAJ C3HHeJ BALBcJ AKRJ AJ
+# structural variants calls
+svDir = ${PROJ_DIR}/rel-1410-sv
+# no SVs on pahari/caroli
+svGenomes = NOD_ShiLtJ BALB_cJ LP_J NZO_HlLtJ AKR_J PWK_PhJ WSB_EiJ CAST_EiJ CBA_J DBA_2J C3H_HeJ SPRET_EiJ 129S1_SvImJ FVB_NJ A_J C57BL_6NJ
 
 # augustus dir containing the genePreds.
 augustusResultsDir = ${AUGUSTUS_DIR}

@@ -1,12 +1,13 @@
 """
-Produces trackDb files for the chr19 splice junctions seen in Yalcin et al 2012
-Which are present at /hive/groups/recon/projs/mus_strain_cactus/data/yalcin_structural_variants
-These BEDs are lifted over from mm9 to mm10 by Joel
+Produces trackDb files for the structural variant calls found in
+ftp://ftp-mouse.sanger.ac.uk/REL-1410-SV/
+And munged to beds with the parse_SDP.py script.
 """
 
 import sys
 import os
 import argparse
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -15,13 +16,10 @@ def parse_args():
     return parser.parse_args()
 
 
-bed_dir = "/hive/groups/recon/projs/mus_strain_cactus/data/yalcin_structural_variants"
-
-
-composite_track = """track yalcin_structural_variants
+composite_track = """track structural_variants
 compositeTrack on
 shortLabel Structural Variants
-longLabel Gold Standard Structural Variants (Yalcin et al 2012)
+longLabel Structural Variant Calls (Release 1410)
 allButtonPair on
 dragAndDrop subTracks
 type bed 4
@@ -30,11 +28,11 @@ group compGeno
 
 """
 
-per_bed_track = """    track {genome}_yalcin_svs
+per_bed_track = """    track {genome}_svs
     shortLabel {genome}
     longLabel {genome} Structural Variants
     type bed 4
-    parent yalcin_structural_variants
+    parent structural_variants
 
 """
 
