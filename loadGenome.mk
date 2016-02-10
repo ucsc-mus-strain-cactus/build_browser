@@ -10,7 +10,8 @@ CHROM_INFO_DIR = ${BED_DIR}/chromInfo
 twoBit = ${GBDB_DIR}/${targetOrgDb}.2bit
 agp = ${BED_DIR}/${targetOrgDb}.agp
 chromSizes = ${ASM_GENOMES_DIR}/${GENOME}.chrom.sizes
-svDir = /hive/groups/recon/projs/mus_strain_cactus/data/yalcin_structural_variants
+# structural variants calls
+svDir = ${PROJ_DIR}/data/rel-1410-sv
 transMapDataDir = ${TRANS_MAP_DIR}/transMap/${GENOME}
 
 # some basic tracks we will need to build
@@ -123,7 +124,7 @@ ${consensusTrackDbCheckpoint}: bin/consensus_trackDb.py
 # structural variant trackDb entries (reference genome only)
 ${svTrackDbCheckpoint}: bin/structural_variants.py
 	@mkdir -p $(dir $@)
-	${python} bin/consensus_trackDb.py --assembly_version ${VERSION} --ref_genome ${srcOrg}
+	${python} bin/structural_variants.py --assembly_version ${VERSION} --ref_genome ${srcOrg} --sv_dir ${svDir}
 	touch $@
 
 
