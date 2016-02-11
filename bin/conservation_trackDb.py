@@ -20,7 +20,7 @@ longLabel PHAST Conservation
 visibility hide
 group compGeno
 
-    track dless
+    track dless1
     superTrack conservation_tracks
     shortLabel dless
     longLabel Detection of Lineage Specific Selection
@@ -37,6 +37,7 @@ group compGeno
     shortLabel Phast Conservation
     longLabel PhastCons Conservation Scores
     type bigWig
+    autoScale on
     bigDataUrl {}
 
 """

@@ -292,7 +292,7 @@ loadConservation: ${conservationCheckpoint}
 
 ${conservationCheckpoint}:
 	@mkdir -p $(dir $@)
-	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed6 -ignoreEmpty ${targetOrgDb} dless ${dlessBed}
+	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed6 -ignoreEmpty ${targetOrgDb} dless1 ${dlessBed}
 	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed6 -ignoreEmpty ${targetOrgDb} phast_bed ${phastConsBed}
 
 
