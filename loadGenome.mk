@@ -10,9 +10,21 @@ CHROM_INFO_DIR = ${BED_DIR}/chromInfo
 twoBit = ${GBDB_DIR}/${targetOrgDb}.2bit
 agp = ${BED_DIR}/${targetOrgDb}.agp
 chromSizes = ${ASM_GENOMES_DIR}/${GENOME}.chrom.sizes
+
 # structural variants calls
 svDir = ${PROJ_DIR}/data/rel-1410-sv
+
+# transMap data
 transMapDataDir = ${TRANS_MAP_DIR}/transMap/${GENOME}
+
+# dless BED for interesting subtree
+dlessBed = /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1509/phastAnalysis/SPRET_EiJ.PWK_PhJ.WSB_EiJ.NOD_ShiLtJ.CAROLI_EiJ.Pahari_EiJ.Rattus.C57B6J/dless/dless.bed
+
+# phastCons BED and wig
+phastConsDir = /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1509/phastAnalysis/SPRET_EiJ.PWK_PhJ.WSB_EiJ.NOD_ShiLtJ.CAROLI_EiJ.Pahari_EiJ.Rattus.C57B6J/phastCons
+phastConsBed = ${phastConsDir}/phastCons.bed
+phastConsWig = ${phastConsDir}/phastCons.bw
+
 
 # some basic tracks we will need to build
 repeatMaskerOut = $(wildcard ${ASM_GENOMES_DIR}/${GENOME}.out)
@@ -31,19 +43,24 @@ augustusTrackDbCheckpoint = ${dbCheckpointDir}/augustus.done
 chainsCheckpoint = ${dbCheckpointDir}/chains.done
 netsCheckpoint = ${dbCheckpointDir}/nets.done
 
+# non-ref non-rat tracks
 ifneq (${GENOME},Rattus)
 ifneq (${GENOME},${srcOrg})
 consensusTrackDbCheckpoint = ${dbCheckpointDir}/consensus.done
 endif
 endif
 
-# structural variants against reference genome
+
+# reference specific tracks
 ifeq (${GENOME},${srcOrg})
+# structural variants against reference genome
 svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
 svCheckpoints = ${svGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.done}
 # RNAseq tracks - against reference
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
-#kallistoTrackDbCheckpoint = ${dbCheckpointDir}/kallistoTrackDb.done
+# conservation tracks using reference
+conservationTrackDbCheckpoint = ${dbCheckpointDir}/conservationTrackDb.done
+conservationCheckpoint = ${dbCheckpointDir}/conservation.done
 endif
 
 # RNAseq tracks - against strains (on 1504/1509)
@@ -61,7 +78,7 @@ all: loadTracks loadTrackDb
 
 # this loads all tracks, but not trackDb.  This must be done first due to -strict trackDb
 loadTracks: loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
-	loadCompAnn loadSv loadRepeatMasker loadAugustus loadConsensus loadChains
+	loadCompAnn loadSv loadConservation loadRepeatMasker loadAugustus loadConsensus loadChains
 
 
 ###
@@ -81,7 +98,7 @@ trackDbGenomeDir=${trackDbOrgDir}/${targetOrgDb}
 createTrackDb: ${trackDbOrgDir}/trackDb.ra ${trackDbGenomeDir}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} \
 	${kallistoTrackDbCheckpoint} ${augustusTrackDbCheckpoint} ${consensusTrackDbCheckpoint}
 
-${trackDbOrgDir}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ${trackDbOrgDir}/*.trackDb.ra)
+${trackDbOrgDir}/trackDb.ra: ${consensusTrackDbCheckpoint} ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ${trackDbOrgDir}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
 	${python} bin/buildTrackDb.py $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
@@ -94,7 +111,7 @@ else
     # use hal in snake tracks
     halOrLod=${halBrowserHtDocsFile}
 endif
-${trackDbGenomeDir}/trackDb.ra: ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${rnaSeqStarTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ${trackDbGenomeDir}/*.trackDb.ra) 
+${trackDbGenomeDir}/trackDb.ra: ${conservationTrackDbCheckpoint} ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${rnaSeqStarTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ${trackDbGenomeDir}/*.trackDb.ra) 
 	@mkdir -p $(dir $@)
 	${python} bin/buildTrackDb.py --ref_genome=${srcOrgDb} --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --halOrLod ${halOrLod} $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
@@ -125,6 +142,11 @@ ${consensusTrackDbCheckpoint}: bin/consensus_trackDb.py
 ${svTrackDbCheckpoint}: bin/structural_variants.py
 	@mkdir -p $(dir $@)
 	${python} bin/structural_variants.py --assembly_version ${VERSION} --ref_genome ${srcOrg} --sv_dir ${svDir}
+	touch $@
+
+${conservationTrackDbCheckpoint}: bin/conservation_trackDb.py
+	@mkdir -p $(dir $@)
+	${python} bin/conservation_trackDb.py --assembly_version ${VERSION} --ref_genome ${srcOrg} --wigpath ${phastConsWig}
 	touch $@
 
 
@@ -261,6 +283,17 @@ ${dbCheckpointDir}/structural_variants/%.sv.done: ${svDir}/%.svs.bed
 	@mkdir -p $(dir $@)
 	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed4 -ignoreEmpty ${targetOrgDb} $*_svs $<
 	touch $@
+
+
+##
+# conservation tracks
+##
+loadConservation: ${conservationCheckpoint}
+
+${conservationCheckpoint}:
+	@mkdir -p $(dir $@)
+	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed6 -ignoreEmpty ${targetOrgDb} dless ${dlessBed}
+	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed6 -ignoreEmpty ${targetOrgDb} phast_bed ${phastConsBed}
 
 
 ##
