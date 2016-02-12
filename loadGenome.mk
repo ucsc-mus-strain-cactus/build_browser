@@ -14,6 +14,9 @@ chromSizes = ${ASM_GENOMES_DIR}/${GENOME}.chrom.sizes
 # structural variants calls
 svDir = ${PROJ_DIR}/data/rel-1410-sv
 
+# SV calls made from the alignment
+halSVDir = ${PROJ_DIR}/pipeline_data/comparative/${VERSION}/sv/halSVCalls/
+
 # transMap data
 transMapDataDir = ${TRANS_MAP_DIR}/transMap/${GENOME}
 
@@ -56,6 +59,9 @@ ifeq (${GENOME},${srcOrg})
 # structural variants against reference genome
 svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
 svCheckpoints = ${svGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.done}
+# alignment SV calls against reference genome
+alignmentSVCheckpoints = ${mappedOrgs:%=${dbCheckpointDir}/alignmentSvCalls/%.hal.done}
+alignmentSVTrackDbCheckpoint = ${dbCheckpointDir}/alignmentSvCallsTrackDb.done}
 # RNAseq tracks - against reference
 rnaSeqTrackDbCheckpoint = ${dbCheckpointDir}/rnaSeqTrackDb.done
 # conservation tracks using reference
@@ -78,7 +84,8 @@ all: loadTracks loadTrackDb
 
 # this loads all tracks, but not trackDb.  This must be done first due to -strict trackDb
 loadTracks: loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
-	loadCompAnn loadSv loadConservation loadRepeatMasker loadAugustus loadConsensus loadChains
+	loadCompAnn loadSv loadConservation loadRepeatMasker loadAugustus loadConsensus loadChains \
+	loadAlignmentSVCalls
 
 
 ###
@@ -96,7 +103,7 @@ ${databaseCheckpoint}:
 trackDbOrgDir=./trackDb/${GENOME}
 trackDbGenomeDir=${trackDbOrgDir}/${targetOrgDb}
 createTrackDb: ${trackDbOrgDir}/trackDb.ra ${trackDbGenomeDir}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} \
-	${kallistoTrackDbCheckpoint} ${augustusTrackDbCheckpoint} ${consensusTrackDbCheckpoint}
+	${kallistoTrackDbCheckpoint} ${augustusTrackDbCheckpoint} ${consensusTrackDbCheckpoint} ${alignmentSVTrackDbCheckpoint}
 
 ${trackDbOrgDir}/trackDb.ra: ${consensusTrackDbCheckpoint} ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ${trackDbOrgDir}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
@@ -142,6 +149,11 @@ ${consensusTrackDbCheckpoint}: bin/consensus_trackDb.py
 ${svTrackDbCheckpoint}: bin/structural_variants.py
 	@mkdir -p $(dir $@)
 	${python} bin/structural_variants.py --assembly_version ${VERSION} --ref_genome ${srcOrg} --sv_dir ${svDir}
+	touch $@
+
+${alignmentSVTrackDbCheckpoint}: bin/alignment_sv_calls_trackDb.py
+	@mkdir -p $(dir $@)
+	${python} bin/alignment_sv_calls_trackDb.py --assembly_version ${VERSION} --ref_genome ${srcOrg} --halSVDir ${halSVDir}
 	touch $@
 
 ${conservationTrackDbCheckpoint}: bin/conservation_trackDb.py
@@ -284,6 +296,16 @@ ${dbCheckpointDir}/structural_variants/%.sv.done: ${svDir}/%.svs.bed
 	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed4 -ignoreEmpty ${targetOrgDb} $*_svs $<
 	touch $@
 
+
+##
+# SV calls from the alignment
+##
+loadAlignmentSVCalls: ${alignmentSVCheckpoints}
+
+${dbCheckpointDir}/alignmentSvCalls/%.hal.done: ${halSVDir}/%.bed
+	@mkdir -p $(dir $@)
+	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed4 -ignoreEmpty ${targetOrgDb} $*_hal_sv_calls $<
+	touch $@
 
 ##
 # conservation tracks
