@@ -28,8 +28,8 @@ group compGeno
 
     track phast_bed
     superTrack conservation_tracks
-    shortLabel Phast Ultra Conserved
-    longLabel PhastCons Ultra Conserved Regions
+    shortLabel Phast Most Conserved
+    longLabel PhastCons Most Conserved Regions (coverage target = 5%)
     type bed 6
 
     track phast_wig
