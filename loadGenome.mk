@@ -39,13 +39,13 @@ chromInfoCheckpoint = ${dbCheckpointDir}/chromInfo.done
 goldGapCheckpoint =  ${dbCheckpointDir}/goldGap.done
 gcPercentCheckpoint = ${dbCheckpointDir}/gcPercent.done
 repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
-augustusTrackDbCheckpoint = ${dbCheckpointDir}/augustus.done
 chainsCheckpoint = ${dbCheckpointDir}/chains.done
 netsCheckpoint = ${dbCheckpointDir}/nets.done
 
 # non-ref non-rat tracks
 ifneq (${GENOME},Rattus)
 ifneq (${GENOME},${srcOrg})
+augustusTrackDbCheckpoint = ${dbCheckpointDir}/augustus.done
 consensusTrackDbCheckpoint = ${dbCheckpointDir}/consensus.done
 endif
 endif
@@ -111,7 +111,7 @@ else
     # use hal in snake tracks
     halOrLod=${halBrowserHtDocsFile}
 endif
-${trackDbGenomeDir}/trackDb.ra: ${conservationTrackDbCheckpoint} ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${rnaSeqStarTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ${trackDbGenomeDir}/*.trackDb.ra) 
+${trackDbGenomeDir}/trackDb.ra: ${conservationTrackDbCheckpoint} ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} ${rnaSeqStarTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ${trackDbGenomeDir}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
 	${python} bin/buildTrackDb.py --ref_genome=${srcOrgDb} --genomes ${allOrgsDbs} --this_genome ${targetOrgDb} --halOrLod ${halOrLod} $@.${tmpExt}
 	mv -f $@.${tmpExt} $@
@@ -331,10 +331,10 @@ ifneq (${GENOME},Rattus)
 # rule for species with all augustus tracks (all except C57B6J and Rattus)
 loadConsensus: ${dbCheckpointDir}/consensusTMR.done ${dbCheckpointDir}/consensusCGP.done
 else
-loadConsensus: 
+loadConsensus:
 endif
 else
-loadConsensus: 
+loadConsensus:
 endif
 
 ${dbCheckpointDir}/consensusTMR.done: ${consensusBaseDir}/${GENOME}.gp ${chromInfoCheckpoint}
