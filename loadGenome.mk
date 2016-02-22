@@ -12,6 +12,7 @@ agp = ${BED_DIR}/${targetOrgDb}.agp
 chromSizes = ${ASM_GENOMES_DIR}/${GENOME}.chrom.sizes
 
 # structural variants calls
+svGenomes = C57BL_6NJ NZO_HlLtJ 129S1_SvImJ FVB_NJ NOD_ShiLtJ LP_J A_J AKR_J BALB_cJ DBA_2J C3H_HeJ CBA_J WSB_EiJ CAST_EiJ PWK_PhJ SPRET_EiJ
 svDir = ${PROJ_DIR}/data/rel-1410-sv
 
 # SV calls made from the alignment
