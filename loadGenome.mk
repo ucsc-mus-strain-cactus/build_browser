@@ -25,9 +25,9 @@ transMapDataDir = ${TRANS_MAP_DIR}/transMap/${GENOME}
 dlessBed = /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1509/phastAnalysis/SPRET_EiJ.PWK_PhJ.WSB_EiJ.NOD_ShiLtJ.CAROLI_EiJ.Pahari_EiJ.Rattus.C57B6J/dless/dless.bed
 
 # phastCons BED and wig
-phastConsDir = /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1509/phastAnalysis/SPRET_EiJ.PWK_PhJ.WSB_EiJ.NOD_ShiLtJ.CAROLI_EiJ.Pahari_EiJ.Rattus.C57B6J/phastCons
-phastConsBed = ${phastConsDir}/phastCons.bed
-phastConsWig = ${phastConsDir}/phastCons.bw
+phastConsDir = /hive/users/ifiddes/comparativeAnnotator/mammal_phastcons
+phastConsBed = ${phastConsDir}/phast_cons_rescaled.bed
+phastConsWig = ${phastConsDir}/phast_cons.bw
 
 
 # some basic tracks we will need to build

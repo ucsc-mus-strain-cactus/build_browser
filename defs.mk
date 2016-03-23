@@ -36,8 +36,8 @@ halBrowserHtDocsFile = /scratch/msca_hal/$(notdir ${halBrowserFile})
 augustusResultsDir = ${AUGUSTUS_DIR}
 
 # consensus location
-consensusBaseDir = ${ANNOTATION_DIR}/${augustusGencodeSet}/consensus/for_browser
-cgpConsensusBaseDir = ${ANNOTATION_DIR}/${augustusGencodeSet}/cgp_consensus/for_browser
+consensusBaseDir = /hive/users/ifiddes/ihategit/pipeline/mouse_output/C57B6J/GencodeCompVM8/consensus_for_browser
+cgpConsensusBaseDir = /hive/users/ifiddes/ihategit/pipeline/mouse_output/CGP_consensus/for_browser
 
 # Environment variables paralleling hg.conf variables to use a different hgcentral database for
 # some tables.  Use by loadTracks
