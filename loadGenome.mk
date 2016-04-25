@@ -85,7 +85,7 @@ all: loadTracks loadTrackDb
 
 # this loads all tracks, but not trackDb.  This must be done first due to -strict trackDb
 loadTracks: loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
-	loadCompAnn loadSv loadConservation loadRepeatMasker loadAugustus loadConsensus loadChains \
+	loadSv loadConservation loadRepeatMasker loadAugustus loadConsensus loadChains \
 	loadAlignmentSVCalls
 
 
@@ -237,12 +237,12 @@ else
 loadTransMap:
 endif
 
-${dbCheckpointDir}/transMap%.aln.done: ${transMapDataDir}/transMap%.psl ${chromInfoCheckpoint}
+${dbCheckpointDir}/transMap%.aln.done: ${transMapDataDir}/%.psl ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
 	./bin/loadTransMapAln ${srcOrgDb} ${targetOrgDb} transMapAln$* $<
 	touch $@
 
-${dbCheckpointDir}/transMap%.info.done: ${transMapDataDir}/transMap%.psl ${chromInfoCheckpoint}
+${dbCheckpointDir}/transMap%.info.done: ${transMapDataDir}/%.psl ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
 	./bin/loadTransMapInfo ${srcOrgDb} ${targetOrgDb} $< transMapInfo$* ${KENT_HG_LIB_DIR}/transMapInfo.sql
 	touch $@
@@ -335,12 +335,12 @@ else
 loadAugustus: ${dbCheckpointDir}/augustusCGP.done
 endif
 
-${dbCheckpointDir}/augustusTMR.done: ${augustusResultsDir}/tmr/${GENOME}.gp ${chromInfoCheckpoint}
+${dbCheckpointDir}/augustusTMR.done: ${tmrDir}/${GENOME}.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
 	./bin/addName2ToGenePred.py $< augustus | flock locks/augustusTMR hgLoadGenePred -genePredExt ${targetOrgDb} augustusTMR stdin
 	touch $@
 
-${dbCheckpointDir}/augustusCGP.done: ${augustusResultsDir}/cgp/${GENOME}.gp ${chromInfoCheckpoint}
+${dbCheckpointDir}/augustusCGP.done: ${cgpDir}/${GENOME}.gp ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
 	flock locks/augustusCGP hgLoadGenePred -genePredExt ${targetOrgDb} augustusCGP $<
 	touch $@

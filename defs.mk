@@ -33,11 +33,16 @@ halBrowserHtDocsFile = /scratch/msca_hal/$(notdir ${halBrowserFile})
 #lodBrowserHtDocsDir = /scratch/msca_hal/$(notdir ${lodDir})
 
 # augustus dir containing the genePreds.
-augustusResultsDir = ${AUGUSTUS_DIR}
+tmrDir = /hive/users/ifiddes/ihategit/pipeline/mouse_work_v3/C57B6J/GencodeCompVM8/AugustusTMR_consensus_gene_set/for_browser
+cgpDir = /hive/groups/recon/projs/mus_strain_cactus/pipeline_data/comparative/1509/augustus/cgp/for_browser
+
+
+# transMap dir
+transMapDataDir = /hive/users/ifiddes/ihategit/pipeline/mouse_work_v3/C57B6J/GencodeCompVM8/transMap
 
 # consensus location
-consensusBaseDir = /hive/users/ifiddes/ihategit/pipeline/mouse_output/C57B6J/GencodeCompVM8/consensus_for_browser
-cgpConsensusBaseDir = /hive/users/ifiddes/ihategit/pipeline/mouse_output/CGP_consensus/for_browser
+consensusBaseDir = /hive/users/ifiddes/ihategit/pipeline/mouse_output_v3/C57B6J/GencodeCompVM8/AugustusTMR_consensus_gene_set/for_browser
+cgpConsensusBaseDir = /hive/users/ifiddes/ihategit/pipeline/mouse_output_v3/combined_gene_sets/for_browser
 
 # Environment variables paralleling hg.conf variables to use a different hgcentral database for
 # some tables.  Use by loadTracks
