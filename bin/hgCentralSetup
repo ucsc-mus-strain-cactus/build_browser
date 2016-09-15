@@ -71,8 +71,8 @@ def getDescriptionHtmlPath(genomeDb):
     return os.path.join(gbdb, genomeDb, "html/description.html")
 
 def createDescriptionHtmlItem(fh, genomeDb, assembly, description):
-    fh.write('<li><a href="/cgi-bin/hgTracks?db={genomeDb}">{description} ({genomeDb} {assembly})</a></li>\n'
-             .format(genomeDb=genomeDb, description=description, assembly=assembly))
+    fh.write('<li><a href="/cgi-bin/hgTracks?db={genomeDb}">{description} ({genomeDb})</a></li>\n'
+             .format(genomeDb=genomeDb, description=description))
 
 def createDescriptionAssemblyLinks(conn, assembly, fh):
     fh.write("<h3>{} assembly</h3>\n".format(assembly))
