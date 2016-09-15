@@ -30,7 +30,7 @@ tmr = """    track TMR_consensus
     type genePred
     priority 1.0
     color 255,0,0
-    visibility pack
+    visibility hide
 
 """
 
@@ -46,9 +46,20 @@ cgp = """    track TMR_CGP_consensus
 
 """
 
+basic = """    track TMR_CGP_consensus_basic
+    shortLabel Basic subset of CGP consensus
+    longLabel Basic subset of CGP consensus
+    group genes
+    type genePred
+    priority 1.0
+    color 195,144,212
+    visibility pack
+
+"""
+
 
 def make_track(file_handle):
-    for x in [supertrack, tmr, cgp]:
+    for x in [supertrack, tmr, cgp, basic]:
         file_handle.write(x)
 
 

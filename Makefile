@@ -8,7 +8,7 @@ hgCentralCreateCheckpoint = ${sharedCheckpointDir}/hgCentralCreateCheckpoint.don
 # for the shared database, build tables with all source versions.   Per-assembly
 # tables would mean duplicating trackDb entries (with a program).  While duplicating
 # is easy by code, this one table is the way transmap was design to work.  Hence
-# we include all live versions 
+# we include all live versions
 transMapLiveVers = $(shell echo ${LIVE_VERSIONS} | tr " " "_")
 transMapGencodeSrcLoadCheckpoints = \
 	${transMapGencodeSubsets:%=${sharedCheckpointDir}/%.${transMapLiveVers}.seq.done} \
@@ -58,7 +58,7 @@ ${hgCentralCreateCheckpoint}: ${sharedDatabaseCreateCheckpoint} genomeDbs bin/hg
 ##
 ## transmap shared source tables.
 ##
-transmapGencodeShared: ${transMapGencodeSrcLoadCheckpoints} 
+transmapGencodeShared: ${transMapGencodeSrcLoadCheckpoints}
 
 ${sharedCheckpointDir}/transMap%.${transMapLiveVers}.seq.done: ${GBDB_SHARED_DIR}/transMap%.${transMapLiveVers}.fa ${sharedDatabaseCreateCheckpoint}
 	@mkdir -p $(dir $@)
@@ -145,7 +145,7 @@ ${srcOrgCheckpointDir}/%.tab.done: refGenome
 	touch $@
 
 
-clean: ${allOrgs:%=%.cleanGenome}
+clean: ${mappedOrgs:%=%.cleanGenome}
 
 %.cleanGenome:
 	${MAKE} -f loadGenome.mk GENOME=$* clean

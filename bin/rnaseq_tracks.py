@@ -57,7 +57,7 @@ noInherit on
 raw_sig = """    track {genome}_expression_star
     shortLabel {genome}_Expression
     view Expression
-    visibility pack
+    visibility dense
     subTrack rnaseq_star
     maxHeightPixels 100:24:16
     autoScale on
@@ -78,7 +78,7 @@ base_wig_trackline = """        track wig_star_{genome}_{institute}_{tissue}
 junctions = """    track {genome}_splice_junctions_star
     shortLabel Splice Junctions
     view Junctions
-    visibility pack
+    visibility squish
     subTrack rnaseq_star
 
 """
@@ -97,7 +97,7 @@ base_sj_trackline = """        track {genome}_{tissue}_{institute}_splice_juncti
 alignments = """    track {genome}_rnaseq_alignments_star
     shortLabel Raw Alignments
     view Alignments
-    visibility dense
+    visibility hide
     subTrack rnaseq_star
 
 """

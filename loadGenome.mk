@@ -237,12 +237,12 @@ else
 loadTransMap:
 endif
 
-${dbCheckpointDir}/transMap%.aln.done: ${transMapDataDir}/%.psl ${chromInfoCheckpoint}
+${dbCheckpointDir}/transMap%.aln.done: ${transMapDataDir}/transMap%.psl ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
 	./bin/loadTransMapAln ${srcOrgDb} ${targetOrgDb} transMapAln$* $<
 	touch $@
 
-${dbCheckpointDir}/transMap%.info.done: ${transMapDataDir}/%.psl ${chromInfoCheckpoint}
+${dbCheckpointDir}/transMap%.info.done: ${transMapDataDir}/transMap%.psl ${chromInfoCheckpoint}
 	@mkdir -p $(dir $@)
 	./bin/loadTransMapInfo ${srcOrgDb} ${targetOrgDb} $< transMapInfo$* ${KENT_HG_LIB_DIR}/transMapInfo.sql
 	touch $@
@@ -352,7 +352,7 @@ ${dbCheckpointDir}/augustusCGP.done: ${cgpDir}/${GENOME}.gp ${chromInfoCheckpoin
 ifneq (${GENOME},${srcOrg})
 ifneq (${GENOME},Rattus)
 # rule for species with all augustus tracks (all except C57B6J and Rattus)
-loadConsensus: ${dbCheckpointDir}/consensusTMR.done ${dbCheckpointDir}/consensusCGP.done
+loadConsensus: ${dbCheckpointDir}/consensusTMR.done ${dbCheckpointDir}/consensusCGP.done ${dbCheckpointDir}/consensusBasic.done
 else
 loadConsensus:
 endif
@@ -370,6 +370,10 @@ ${dbCheckpointDir}/consensusCGP.done: ${cgpConsensusBaseDir}/${GENOME}.gp ${chro
 	flock locks/TMR_CGP_consensus hgLoadGenePred -genePredExt ${targetOrgDb} TMR_CGP_consensus $<
 	touch $@
 
+${dbCheckpointDir}/consensusBasic.done: ${cgpConsensusBasicDir}/${GENOME}.basic.gp ${chromInfoCheckpoint}
+	@mkdir -p $(dir $@)
+	flock locks/basic_consensus hgLoadGenePred -genePredExt ${targetOrgDb} basic_consensus $<
+	touch $@
 
 ###
 # repeat masker data, if available (not on Rat or all assemblies)
