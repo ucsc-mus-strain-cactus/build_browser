@@ -14,7 +14,7 @@ import argparse
 import collections
 import subprocess
 sys.path.append("/hive/groups/recon/local/pycbio/lib")
-from pycbio.sys import dbOps
+from pycbio.sys import dbOps, fileOps
 from pycbio.hgdata import hgDb
 
 dbOps.mySqlSetErrorOnWarn()
@@ -24,28 +24,28 @@ gbdb = "/hive/groups/recon/projs/mus_strain_cactus/pipeline_data/browser/gbdb"
 clade = "musStrains"
 cladeLabel = "Mus Strains"
 
-# table of genome definitions
+# table of genome definitions; taxid is faked to make gateway work
 GDef = collections.namedtuple("GDef", ("genome", "scientificName", "taxid"))
 genomeDefs = (
-    GDef("129S1_SvImJ",   "Mus musculus 129S1/SvImJ", 10090),
-    GDef("A_J",           "Mus musculus A/J",         10090),
-    GDef("AKR_J",         "Mus musculus AKR/J",       10090),
-    GDef("BALB_cJ",       "Mus musculus BALB/cJ",     10090),
-    GDef("C3H_HeJ",       "Mus musculus C3H/HeJ",     10090),
-    GDef("C57B6J",        "Mus musculus C57BL/6J",    10090),
-    GDef("C57BL_6NJ",     "Mus musculus C57BL/6NJ",   10090),
+    GDef("129S1_SvImJ",   "Mus musculus 129S1/SvImJ", 10090001),
+    GDef("A_J",           "Mus musculus A/J",         10090002),
+    GDef("AKR_J",         "Mus musculus AKR/J",       10090003),
+    GDef("BALB_cJ",       "Mus musculus BALB/cJ",     10090004),
+    GDef("C3H_HeJ",       "Mus musculus C3H/HeJ",     10090005),
+    GDef("C57B6J",        "Mus musculus C57BL/6J",    10090006),
+    GDef("C57BL_6NJ",     "Mus musculus C57BL/6NJ",   10090007),
     GDef("CAROLI_EiJ",    "Mus caroli/EiJ",           10089),
-    GDef("CAST_EiJ",      "Mus castaneus/EiJ",        10090),
-    GDef("CBA_J",         "Mus musculus CBA/J",       10090),
-    GDef("DBA_2J",        "Mus musculus DBA/2J",      10090),
-    GDef("FVB_NJ",        "Mus musculus FVB/NJ",      10090),
-    GDef("LP_J",          "Mus musculus LP/J",        10090),
-    GDef("NOD_ShiLtJ",    "Mus musculus NOD/ShiLtJ",  10090),
-    GDef("NZO_HlLtJ",     "Mus musculus NZO/HILtJ",   10090),
-    GDef("PWK_PhJ",       "Mus musculus PWK/PhJ",     10090),
+    GDef("CAST_EiJ",      "Mus castaneus/EiJ",        10090008),
+    GDef("CBA_J",         "Mus musculus CBA/J",       10090009),
+    GDef("DBA_2J",        "Mus musculus DBA/2J",      10090010),
+    GDef("FVB_NJ",        "Mus musculus FVB/NJ",      10090011),
+    GDef("LP_J",          "Mus musculus LP/J",        10090012),
+    GDef("NOD_ShiLtJ",    "Mus musculus NOD/ShiLtJ",  10090013),
+    GDef("NZO_HlLtJ",     "Mus musculus NZO/HILtJ",   10090014),
+    GDef("PWK_PhJ",       "Mus musculus PWK/PhJ",     10090015),
     GDef("Pahari_EiJ",    "Mus pahari/EiJ",           10093),
     GDef("SPRET_EiJ",     "Mus spretus/EiJ",          10096),
-    GDef("WSB_EiJ",       "Mus musculus WSB/EiJ",     10090),
+    GDef("WSB_EiJ",       "Mus musculus WSB/EiJ",     10090016),
 )
 
 def parseArgs():
@@ -61,6 +61,50 @@ def parseArgs():
         parser.error("databases not allowed as a target due to health paranoid: " + args.hgCentralDb)
     return args
 
+def activeGenomeDefs(conn, assembly):
+    "generator of genome defs for genomes with chromInfo tables"
+    for gdef in genomeDefs:
+        if haveDbChromInfo(conn, genomeDbName(gdef.genome, assembly)):
+            yield gdef
+
+def getDescriptionHtmlPath(genomeDb):
+    return os.path.join(gbdb, genomeDb, "html/description.html")
+
+def createDescriptionHtmlItem(fh, genomeDb, assembly, description):
+    fh.write('<li><a href="/cgi-bin/hgTracks?db={genomeDb}">{description} ({genomeDb} {assembly})</a></li>\n'
+             .format(genomeDb=genomeDb, description=description, assembly=assembly))
+
+def createDescriptionAssemblyLinks(conn, assembly, fh):
+    fh.write("<h3>{} assembly</h3>\n".format(assembly))
+    fh.write("<ul>\n")
+    for gdef in activeGenomeDefs(conn, assembly):
+        createDescriptionHtmlItem(fh, genomeDbName(gdef.genome, assembly), assembly, gdef.scientificName)
+    fh.write("</ul>\n")
+
+def createDescriptionHtmlPage(conn, assemblies, fh):
+    fh.write("<h2>Mouse strain project browsers</h2>\n")
+    for assembly in reversed(assemblies):
+        createDescriptionAssemblyLinks(conn, assembly, fh)
+
+def createDescriptionHtml(conn, genomeDb, assemblies):
+    """create description.html, can be used to override standard mouse description file.
+    This provides links to all of the mus project assemblies, as well as standard UCSC one."""
+    htmlPath = getDescriptionHtmlPath(genomeDb)
+    fileOps.ensureFileDir(htmlPath)
+    with open(htmlPath, "w") as fh:
+        createDescriptionHtmlPage(conn, assemblies, fh)
+
+def buildDescriptionHtmls(conn, assemblies):
+    for assembly in assemblies:
+        for gdef in activeGenomeDefs(conn, assembly):
+            createDescriptionHtml(conn, genomeDbName(gdef.genome, assembly), assemblies)
+    # add link from standard mouse
+    ucscRefDb = "mm10"
+    createDescriptionHtml(conn, ucscRefDb, assemblies)
+    dbExecute(conn, "UPDATE dbDb SET htmlPath = %(htmlPath)s WHERE name = %(genome)s",
+              {"htmlPath": getDescriptionHtmlPath(ucscRefDb),
+               "genome": ucscRefDb})
+    
 def dbExecute(conn, sql, args=None):
     "execute SQL query on a connection that returns no result"
     cur = conn.cursor()
@@ -124,7 +168,7 @@ def dbDbTableAdd(conn, gdef, assembly, orderKey):
                "orderKey": orderKey,
                "genome": gdef.scientificName,
                "scientificName": gdef.scientificName,
-               "htmlPath": os.path.join(gbdb, genomeDb, "html/description.html"),
+               "htmlPath": getDescriptionHtmlPath(genomeDb),
                "hgNearOk": 0, 
                "hgPbOk": 0,
                "sourceName": "Sanger",
@@ -132,14 +176,10 @@ def dbDbTableAdd(conn, gdef, assembly, orderKey):
 
 def dbDbTableBuildAssembly(conn, assembly):
     orderKey = 1
-    for gdef in genomeDefs:
-        if haveDbChromInfo(conn, genomeDbName(gdef.genome, assembly)):
-            verbosePrGenome("add to dbDb", gdef, assembly)
-            dbDbTableAdd(conn, gdef, assembly, orderKey)
-            orderKey += 1
-        else:
-            verbosePrGenome("skip dbDb, database or chromInfo not found", gdef, assembly)
-
+    for gdef in activeGenomeDefs(conn, assembly):
+        verbosePrGenome("add to dbDb", gdef, assembly)
+        dbDbTableAdd(conn, gdef, assembly, orderKey)
+        orderKey += 1
 
 def dbDbTableBuild(conn, assemblies):
     for assembly in assemblies:
@@ -175,6 +215,7 @@ def main():
     defaultDbTableBuild(conn, args.assemblies[-1])
     cladeTableBuild(conn)
     genomeCladeTableBuild(conn)
+    buildDescriptionHtmls(conn, args.assemblies)
     conn.close()
 
 main()
