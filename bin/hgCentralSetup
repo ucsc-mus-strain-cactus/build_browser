@@ -34,8 +34,8 @@ genomeDefs = (
     GDef("C3H_HeJ",       "Mus musculus C3H/HeJ",     10090005),
     GDef("C57B6J",        "Mus musculus C57BL/6J",    10090006),
     GDef("C57BL_6NJ",     "Mus musculus C57BL/6NJ",   10090007),
-    GDef("CAROLI_EiJ",    "Mus caroli/EiJ",           10089),
-    GDef("CAST_EiJ",      "Mus castaneus/EiJ",        10090008),
+    GDef("CAROLI_EiJ",    "Mus caroli",               10089),
+    GDef("CAST_EiJ",      "Mus castaneus",            10090008),
     GDef("CBA_J",         "Mus musculus CBA/J",       10090009),
     GDef("DBA_2J",        "Mus musculus DBA/2J",      10090010),
     GDef("FVB_NJ",        "Mus musculus FVB/NJ",      10090011),
@@ -43,8 +43,8 @@ genomeDefs = (
     GDef("NOD_ShiLtJ",    "Mus musculus NOD/ShiLtJ",  10090013),
     GDef("NZO_HlLtJ",     "Mus musculus NZO/HILtJ",   10090014),
     GDef("PWK_PhJ",       "Mus musculus PWK/PhJ",     10090015),
-    GDef("Pahari_EiJ",    "Mus pahari/EiJ",           10093),
-    GDef("SPRET_EiJ",     "Mus spretus/EiJ",          10096),
+    GDef("Pahari_EiJ",    "Mus pahari",               10093),
+    GDef("SPRET_EiJ",     "Mus spretus",              10096),
     GDef("WSB_EiJ",       "Mus musculus WSB/EiJ",     10090016),
 )
 
