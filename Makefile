@@ -144,8 +144,19 @@ ${srcOrgCheckpointDir}/%.tab.done: refGenome
 	hgsql -e 'insert $* select * from ${srcOrgHgDb}.$*' ${srcOrgDb}
 	touch $@
 
+loadTrackDb: ${allOrgs:%=%.loadTrackDbGenome}
 
-clean: ${mappedOrgs:%=%.cleanGenome}
+%.loadTrackDbGenome:
+	${MAKE} -f loadGenome.mk GENOME=$* loadTrackDb
+
+
+clean: ${allOrgs:%=%.cleanGenome}
 
 %.cleanGenome:
 	${MAKE} -f loadGenome.mk GENOME=$* clean
+
+cleanTrackDb: ${allOrgs:%=%.cleanTrackDbGenome}
+
+%.cleanTrackDbGenome:
+	${MAKE} -f loadGenome.mk GENOME=$* cleanTrackDb
+

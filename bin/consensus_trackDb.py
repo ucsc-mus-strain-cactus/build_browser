@@ -5,6 +5,8 @@ Produces trackDb files for the consensus sets - both CGP and regular
 import sys
 import os
 import argparse
+sys.path.append("/hive/groups/recon/local/pycbio/lib")
+from pycbio.sys import fileOps
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -68,6 +70,7 @@ def main():
     target_file_template = "trackDb/{0}/Mus{0}_{1}/consensus.trackDb.ra"
     if args.assembly_version == "1509":
         target_file = target_file_template.format(args.genome, args.assembly_version)
+        fileOps.ensureFileDir(target_file)
         with open(target_file, "w") as outf:
             make_track(outf)
     else:

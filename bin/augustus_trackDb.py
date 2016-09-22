@@ -28,7 +28,7 @@ searchTable augustusTMR
 searchMethod prefix
 searchType genePred
 query select chrom, txStart, txEnd, name from %s where name2 like '%s'
-xrefTable MusC57B6J_1509.wgEncodeGencodeAttrsVM7
+xrefTable MusC57B6J_1509.wgEncodeGencodeAttrsVM8
 xrefQuery select transcriptId,geneName from %s where geneName like '%s%%'
 
 # search by augustus ID

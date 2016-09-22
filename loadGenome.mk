@@ -56,8 +56,7 @@ endif
 
 
 # reference specific tracks
-ifeq (${GENOME},${srcOrg})
-# structural variants against reference genome
+ifeq (${GENOME},${srcOrg}) # structural variants against reference genome
 svTrackDbCheckpoint = ${dbCheckpointDir}/svTrackDb.done
 svCheckpoints = ${svGenomes:%=${dbCheckpointDir}/structural_variants/%.sv.done}
 # alignment SV calls against reference genome
@@ -103,8 +102,9 @@ ${databaseCheckpoint}:
 ##
 trackDbOrgDir=./trackDb/${GENOME}
 trackDbGenomeDir=${trackDbOrgDir}/${targetOrgDb}
-createTrackDb: ${trackDbOrgDir}/trackDb.ra ${trackDbGenomeDir}/trackDb.ra ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} \
-	${kallistoTrackDbCheckpoint} ${augustusTrackDbCheckpoint} ${consensusTrackDbCheckpoint} ${alignmentSVTrackDbCheckpoint}
+trackDbRaCheckpoints =  ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} \
+		${kallistoTrackDbCheckpoint} ${augustusTrackDbCheckpoint} ${consensusTrackDbCheckpoint} ${alignmentSVTrackDbCheckpoint}
+createTrackDb: ${trackDbOrgDir}/trackDb.ra ${trackDbGenomeDir}/trackDb.ra ${trackDbRaCheckpoints}
 
 ${trackDbOrgDir}/trackDb.ra: ${consensusTrackDbCheckpoint} ${rnaSeqTrackDbCheckpoint} ${svTrackDbCheckpoint} bin/buildTrackDb.py $(wildcard ${trackDbOrgDir}/*.trackDb.ra)
 	@mkdir -p $(dir $@)
@@ -169,7 +169,7 @@ ${conservationTrackDbCheckpoint}: bin/conservation_trackDb.py
 loadTrackDb: ${loadTrackDbCheckpoint}
 
 # tracks must be loaded first with -strict
-# NOTE: see HGDB_* environment variable sset in defs.mk
+# NOTE: see HGDB_* environment variable set in defs.mk
 ${loadTrackDbCheckpoint}: createTrackDb loadTracks $(wildcard ./trackDb/*trackDb.ra) $(wildcard ${trackDbOrgDir}/*trackDb.ra) $(wildcard ${trackDbGenomeDir}/*trackDb.ra)
 	@mkdir -p $(dir $@) locks
 	cd ./trackDb && flock ../locks/loadTracks.lock ${KENT_DIR}/src/hg/makeDb/trackDb/loadTracks -strict -grpSql=./grp.sql -sqlDir=${KENT_DIR}/src/hg/lib trackDb hgFindSpec ${targetOrgDb}
@@ -317,6 +317,7 @@ ${conservationCheckpoint}:
 	@mkdir -p $(dir $@)
 	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed6 -ignoreEmpty ${targetOrgDb} dless1 ${dlessBed}
 	hgLoadBed -tmpDir=$${TMPDIR} -allowStartEqualEnd -tab -type=bed6 -ignoreEmpty ${targetOrgDb} phast_bed ${phastConsBed}
+	touch $@
 
 
 ##
@@ -416,7 +417,10 @@ ${netsCheckpoint}: ${netAll}
 
 endif
 
-clean:
+clean: cleanTrackDb
 	rm -rf ${GBDB_DIR} ${BED_DIR} ${dbCheckpointDir}
-	rm -f trackDb/*/trackDb.ra trackDb/*/*/trackDb.ra
 	hgsql -e "DROP DATABASE IF EXISTS ${targetOrgDb};"
+
+
+cleanTrackDb:
+	rm -f trackDb/*/trackDb.ra trackDb/*/*/trackDb.ra ${trackDbRaCheckpoints} ${loadTrackDbCheckpoint}
