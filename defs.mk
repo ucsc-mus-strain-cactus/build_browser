@@ -41,6 +41,10 @@ consensusBaseDir = /hive/users/ifiddes/ihategit/pipeline/mouse_output_v5/C57B6J/
 cgpConsensusBaseDir = /hive/users/ifiddes/ihategit/pipeline/mouse_output_v5/comprehensive_gene_sets/for_browser
 cgpConsensusBasicDir = /hive/users/ifiddes/ihategit/pipeline/mouse_output_v5/basic_gene_sets/for_browser
 
+# joel's false tandem dup predictions
+# from  /hive/users/jcarmstr/cactusStuff/analysis-purgatory/mouseScaffoldDups/mouseBeds/*.bed
+falseTandemDupsDir = /hive/groups/recon/projs/mus_strain_cactus/data/rel-1509-false-tandem-dups
+
 # Environment variables paralleling hg.conf variables to use a different hgcentral database for
 # some tables.  Use by loadTracks
 export HGDB_DBDBTABLE=musStrainShared.dbDb

@@ -45,6 +45,7 @@ gcPercentCheckpoint = ${dbCheckpointDir}/gcPercent.done
 repeatMaskerCheckpoint = ${dbCheckpointDir}/repeatMasker.done
 chainsCheckpoint = ${dbCheckpointDir}/chains.done
 netsCheckpoint = ${dbCheckpointDir}/nets.done
+falseTandemDupsCheckpoint = ${dbCheckpointDir}/falseTandemDups.done
 
 # non-ref non-rat tracks
 ifneq (${GENOME},Rattus)
@@ -85,7 +86,7 @@ all: loadTracks loadTrackDb
 # this loads all tracks, but not trackDb.  This must be done first due to -strict trackDb
 loadTracks: loadTransMap loadGenomeSeqs loadGoldGap loadGcPercent \
 	loadSv loadConservation loadRepeatMasker loadAugustus loadConsensus loadChains \
-	loadAlignmentSVCalls
+	loadAlignmentSVCalls loadFalseTandemDups
 
 
 ###
@@ -416,6 +417,17 @@ ${netsCheckpoint}: ${netAll}
 	touch $@
 
 endif
+
+ifneq (${GENOME},${srcOrg})
+loadFalseTandemDups: ${falseTandemDupsCheckpoint}
+else
+loadFalseTandemDups:
+endif
+
+${falseTandemDupsCheckpoint}: ${falseTandemDupsDir}/${GENOME}.bed
+	@mkdir -p $(dir $@) locks
+	flock locks/falseTandemDups.lock hgLoadBed -type=bed3 ${targetOrgDb} falseTandemDups $<
+	touch $@
 
 clean: cleanTrackDb
 	rm -rf ${GBDB_DIR} ${BED_DIR} ${dbCheckpointDir}
